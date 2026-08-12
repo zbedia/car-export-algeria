@@ -1,0 +1,28 @@
+<div class="search-container">
+  <form (ngSubmit)="onSearch()" class="search-form">
+    <input [(ngModel)]="brand" name="brand" placeholder="Brand (e.g. Peugeot)" />
+    <input [(ngModel)]="model" name="model" placeholder="Model (e.g. 308)" />
+    <input [(ngModel)]="maxPrice" name="maxPrice" type="number" placeholder="Max price (€)" />
+    <button type="submit" [disabled]="loading">Search</button>
+  </form>
+
+  <div *ngIf="loading" class="loading">Searching...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div *ngIf="hasSearched && !loading && groupedResults.length === 0" class="no-results">
+    No vehicles found for these criteria.
+  </div>
+
+  <div class="group-section" *ngFor="let group of groupedResults">
+    <h2>{{ group.brand }} {{ group.model }}</h2>
+    <div class="results-grid">
+      <div class="vehicle-card" *ngFor="let v of group.vehicles" [class.best-price]="v.bestPrice">
+        <span *ngIf="v.bestPrice" class="badge">Best price</span>
+        <p>{{ v.mileageKm | number }} km — {{ v.garageCity }}</p>
+        <p class="price">{{ v.price | currency:v.currency }}</p>
+        <p class="source">Source: {{ v.source }}</p>
+        <a [href]="v.externalUrl" target="_blank" rel="noopener">View listing</a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+# --- Backend (Java/Maven) ---
+backend/target/
+*.class
+
+# --- Frontend (Angular) ---
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/out-tsc/
+
+# --- Common ---
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+*.log
+.DS_Store
+Thumbs.db
+.env

@@ -1,0 +1,110 @@
+.search-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.search-form input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  flex: 1;
+  min-width: 140px;
+}
+
+.search-form button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading,
+.no-results {
+  padding: 16px;
+  color: #666;
+}
+
+.error {
+  padding: 12px;
+  background: #fdecea;
+  color: #b71c1c;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.group-section {
+  margin-bottom: 32px;
+}
+
+.group-section h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 6px;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.vehicle-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  background: white;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+
+.vehicle-card.best-price {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.3);
+}
+
+.badge {
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  background: #2e7d32;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.price {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+.source {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.vehicle-card a {
+  display: inline-block;
+  margin-top: 8px;
+  color: #1a1a1a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.vehicle-card a:hover {
+  text-decoration: underline;
+}
