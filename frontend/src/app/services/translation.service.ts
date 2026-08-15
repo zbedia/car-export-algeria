@@ -4,7 +4,7 @@ import { Lang, TRANSLATIONS } from '../i18n/translations';
 
 @Injectable({ providedIn: 'root' })
 export class TranslationService {
-  private readonly currentLang = signal<Lang>('en');
+  private readonly currentLang = signal<Lang>('fr');
 
   readonly lang = this.currentLang.asReadonly();
   readonly direction = computed<'ltr' | 'rtl'>(() =>
