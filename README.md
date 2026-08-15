@@ -30,11 +30,28 @@ The backend enforces the import rules for private individuals (Decret executif n
 - **3-year age rule**: computed to the day between first registration and today, with a 2-year-10-month safety margin applied instead of the full 3 years, to absorb delays before customs clearance.
 - **Allowed fuel types only**: Essence ⛽, Hybrid 🔋 and Electric ⚡. Diesel 🚫 is strictly banned for private import of vehicles under 3 years old.
 - **Customs duty reduction**, shown for each result:
-    - Electric: -80%
-    - Essence/Hybrid ≤ 1800 cm³: -50%
-    - Essence/Hybrid > 1800 cm³: -20%
+  - Electric: -80%
+  - Essence/Hybrid ≤ 1800 cm³: -50%
+  - Essence/Hybrid > 1800 cm³: -20%
 
 This logic lives in `ImportEligibilityService`, kept separate from the search logic so it can evolve independently if the regulation changes.
+
+## Currency converter (EUR / DZD)
+
+Instant conversion between Euros and Algerian Dinars, with a toggle between two rates:
+- **Official** — Banque d'Algerie published rate
+- **Parallel market** — informal market rate (Square Port Said)
+
+Rates are configured in `application.properties` (`currency.rate.*`) rather than fetched live — there is no single authoritative, machine-readable source for the parallel rate. Update them manually to keep conversions accurate, or replace `ExchangeRateService` with a live data source later.
+
+`GET /api/currency/rates` — current official and parallel rates
+`GET /api/currency/convert?amount=&from=&to=&rateType=` — convert an amount
+
+## RoRo shipping cost estimator
+
+Estimates Roll-on/Roll-off freight costs for the supported Europe → Algeria routes (Marseille / Alicante / Sete → Alger / Oran / Bejaia). Base freight rates are indicative placeholders in `ShippingCostService` — replace them with real carrier rates before relying on this for actual budgeting.
+
+`GET /api/shipping/estimate?originPort=&destinationPort=` — freight cost breakdown (base rate + handling fee)
 
 ## Running locally
 
@@ -65,6 +82,8 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 - Results grouped by model, with a "Best price" badge on the cheapest vehicle in each group
 - Loading, error, and no-results states
 - Extensible scraping architecture (Strategy pattern) to easily add new sources
+- EUR / DZD currency converter with official and parallel market rates
+- RoRo shipping cost estimator for supported Europe → Algeria routes
 
 ## Roadmap
 
@@ -77,4 +96,3 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 ## License
 
 This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
-

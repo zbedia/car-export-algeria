@@ -1,0 +1,36 @@
+<div class="estimator-card">
+  <h2>RoRo shipping cost estimator</h2>
+
+  <div class="form-row">
+    <select [(ngModel)]="originPort" name="originPort">
+      <option *ngFor="let port of originPorts" [value]="port">{{ port }}</option>
+    </select>
+    <span class="arrow">→</span>
+    <select [(ngModel)]="destinationPort" name="destinationPort">
+      <option *ngFor="let port of destinationPorts" [value]="port">{{ port }}</option>
+    </select>
+    <button type="button" (click)="onEstimate()" [disabled]="loading">Estimate</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">Calculating...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <div *ngIf="result" class="result-breakdown">
+    <div class="line">
+      <span>Base freight</span>
+      <span>{{ result.baseFreightCost | currency:result.currency }}</span>
+    </div>
+    <div class="line">
+      <span>Handling fee</span>
+      <span>{{ result.handlingFee | currency:result.currency }}</span>
+    </div>
+    <div class="line total">
+      <span>Total</span>
+      <span>{{ result.totalCost | currency:result.currency }}</span>
+    </div>
+  </div>
+
+  <p class="disclaimer">
+    Indicative rates for planning purposes — actual carrier quotes may vary.
+  </p>
+</div>

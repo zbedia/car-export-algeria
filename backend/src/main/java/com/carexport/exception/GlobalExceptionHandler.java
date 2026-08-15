@@ -1,5 +1,7 @@
 package com.carexport.exception;
 
+import com.carexport.currency.UnsupportedConversionException;
+import com.carexport.shipping.RouteNotSupportedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidSearchCriteriaException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCriteria(
             InvalidSearchCriteriaException ex, HttpServletRequest request) {
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(), "Bad Request", ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(RouteNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleRouteNotSupported(
+            RouteNotSupportedException ex, HttpServletRequest request) {
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(), "Bad Request", ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(UnsupportedConversionException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedConversion(
+            UnsupportedConversionException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
             HttpStatus.BAD_REQUEST.value(), "Bad Request", ex.getMessage(), request.getRequestURI());
         return ResponseEntity.badRequest().body(error);

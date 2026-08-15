@@ -1,0 +1,83 @@
+.estimator-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.estimator-card h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.form-row select {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.arrow {
+  color: #888;
+}
+
+.form-row button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.form-row button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading, .error {
+  padding: 8px 0;
+  color: #666;
+}
+
+.error {
+  color: #b71c1c;
+}
+
+.result-breakdown {
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+  margin-top: 8px;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.95rem;
+}
+
+.line.total {
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-top: 1px solid #eee;
+  margin-top: 6px;
+  padding-top: 8px;
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: #999;
+  font-style: italic;
+  margin-top: 12px;
+}
