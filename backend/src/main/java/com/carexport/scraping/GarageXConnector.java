@@ -17,7 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Example connector for a fictional "GarageX" dealership.
+ * Example connector for a fictional "GarageX" dealership, using Jsoup
+ * (fetches the raw server-rendered HTML — no JavaScript execution).
+ *
+ * Use this technique when the target site renders its listing HTML
+ * directly in the initial page response. If the site instead loads
+ * listings via client-side JavaScript, use a Playwright-based connector
+ * instead (see DynamicMarketplaceConnector).
+ *
  * Should be adapted with the real CSS selectors of the actual target site.
  * Always check the site's terms of service / robots.txt before scraping in production.
  */

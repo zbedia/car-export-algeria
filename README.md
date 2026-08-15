@@ -23,6 +23,25 @@ car-export-algeria/
 
 User searches only query data already collected in the database — no real-time scraping. A scheduled job periodically refreshes the data in the background, which keeps API responses fast and reliable regardless of the external sites' availability.
 
+### Scraping: Jsoup vs Playwright
+
+Two scraping techniques are available side by side, picked per source depending on how that site renders its content:
+
+| | Jsoup | Playwright |
+|---|---|---|
+| **How it works** | Fetches raw HTML over HTTP, no JS execution | Drives a real headless browser |
+| **Use when** | The site renders listing HTML server-side | The site loads listings via client-side JavaScript (SPA, infinite scroll, "load more" buttons) |
+| **Cost** | Lightweight, fast | Heavier — launches an actual browser |
+| **Example connector** | `GarageXConnector` | `DynamicMarketplaceConnector` |
+
+Both implement the same `VehicleSourceConnector` interface, so `ScrapingOrchestrator` runs them identically — the technique is an implementation detail of each connector, not something the rest of the system needs to know about.
+
+The Playwright browser (`PlaywrightBrowserManager`) starts lazily on first use rather than at application startup, so a missing browser installation only affects that specific connector — not the whole app. If you add a Playwright-based connector, install the browser binaries once:
+
+```bash
+mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install"
+```
+
 ## Algerian import regulations
 
 The backend enforces the import rules for private individuals (Decret executif n. 23-74 and the finance law) directly at the search level — non-eligible vehicles never appear in the results:
