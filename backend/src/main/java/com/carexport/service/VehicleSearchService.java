@@ -70,6 +70,7 @@ public class VehicleSearchService {
         r.setFuelType(v.getFuelType().name());
         r.setEngineDisplacementCm3(v.getEngineDisplacementCm3());
         r.setCustomsDiscountPercentage(eligibilityService.getCustomsDiscountPercentage(v));
+        r.setCustomsDiscountReason(eligibilityService.getCustomsDiscountReason(v));
         return r;
     }
 }

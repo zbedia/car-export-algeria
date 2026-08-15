@@ -15,4 +15,5 @@ export interface VehicleSearchResult {
   fuelType: FuelType;
   engineDisplacementCm3: number | null;
   customsDiscountPercentage: number;
+  customsDiscountReason: string;
 }

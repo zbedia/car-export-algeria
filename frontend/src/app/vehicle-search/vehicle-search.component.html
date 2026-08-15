@@ -24,7 +24,10 @@
           <span *ngIf="v.engineDisplacementCm3 as displacement">— {{ displacement }} cm³</span>
         </p>
         <p class="price">{{ v.price | currency:v.currency }}</p>
-        <p class="customs">Customs discount: -{{ v.customsDiscountPercentage }}%</p>
+        <p class="customs" [title]="v.customsDiscountReason">
+          Customs discount: -{{ v.customsDiscountPercentage }}% <span class="info-icon">ⓘ</span>
+        </p>
+        <p class="customs-reason">{{ v.customsDiscountReason }}</p>
         <p class="source">Source: {{ v.source }}</p>
         <a [href]="v.externalUrl" target="_blank" rel="noopener">View listing</a>
       </div>

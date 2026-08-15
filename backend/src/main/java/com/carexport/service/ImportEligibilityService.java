@@ -77,4 +77,30 @@ public class ImportEligibilityService {
         }
         return LARGE_ENGINE_DISCOUNT;
     }
+
+    /**
+     * Human-readable explanation of why the vehicle got its specific
+     * customs discount tier, so the reasoning is transparent to the user
+     * instead of just showing a bare percentage.
+     */
+    public String getCustomsDiscountReason(VehicleListing vehicle) {
+        if (vehicle.getFuelType() == FuelType.ELECTRIQUE) {
+            return "Electric vehicles get an 80% customs duty reduction.";
+        }
+        if (vehicle.getFuelType() == FuelType.DIESEL) {
+            return "Diesel vehicles are not eligible for private import.";
+        }
+
+        String fuelLabel = vehicle.getFuelType() == FuelType.HYBRIDE ? "Hybrid" : "Essence";
+        Integer displacement = vehicle.getEngineDisplacementCm3();
+
+        if (displacement != null && displacement <= ENGINE_DISPLACEMENT_THRESHOLD_CM3) {
+            return fuelLabel + " engines up to " + ENGINE_DISPLACEMENT_THRESHOLD_CM3
+                + " cm³ (this one: " + displacement + " cm³) get a 50% customs duty reduction.";
+        }
+
+        String displacementText = displacement != null ? displacement + " cm³" : "unknown displacement";
+        return fuelLabel + " engines over " + ENGINE_DISPLACEMENT_THRESHOLD_CM3
+            + " cm³ (this one: " + displacementText + ") get a 20% customs duty reduction.";
+    }
 }

@@ -17,6 +17,7 @@ public class VehicleSearchResult {
     private String fuelType;
     private Integer engineDisplacementCm3;
     private BigDecimal customsDiscountPercentage;
+    private String customsDiscountReason;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -46,4 +47,6 @@ public class VehicleSearchResult {
     public void setEngineDisplacementCm3(Integer engineDisplacementCm3) { this.engineDisplacementCm3 = engineDisplacementCm3; }
     public BigDecimal getCustomsDiscountPercentage() { return customsDiscountPercentage; }
     public void setCustomsDiscountPercentage(BigDecimal customsDiscountPercentage) { this.customsDiscountPercentage = customsDiscountPercentage; }
+    public String getCustomsDiscountReason() { return customsDiscountReason; }
+    public void setCustomsDiscountReason(String customsDiscountReason) { this.customsDiscountReason = customsDiscountReason; }
 }

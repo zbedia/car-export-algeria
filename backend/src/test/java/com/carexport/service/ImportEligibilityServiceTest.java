@@ -50,6 +50,24 @@ class ImportEligibilityServiceTest {
         assertThat(service.getCustomsDiscountPercentage(v)).isEqualByComparingTo(new BigDecimal("20"));
     }
 
+    @Test
+    void electric_discountReason_mentionsElectric() {
+        VehicleListing v = buildVehicle(FuelType.ELECTRIQUE, null, LocalDate.now().minusMonths(5));
+        assertThat(service.getCustomsDiscountReason(v)).contains("Electric").contains("80%");
+    }
+
+    @Test
+    void essence_smallEngine_discountReason_mentionsDisplacement() {
+        VehicleListing v = buildVehicle(FuelType.ESSENCE, 1600, LocalDate.now().minusMonths(5));
+        assertThat(service.getCustomsDiscountReason(v)).contains("1600 cm³").contains("50%");
+    }
+
+    @Test
+    void hybrid_largeEngine_discountReason_mentionsDisplacement() {
+        VehicleListing v = buildVehicle(FuelType.HYBRIDE, 2000, LocalDate.now().minusMonths(5));
+        assertThat(service.getCustomsDiscountReason(v)).contains("2000 cm³").contains("20%");
+    }
+
     private VehicleListing buildVehicle(FuelType fuelType, Integer displacementCm3, LocalDate firstRegistrationDate) {
         VehicleListing v = new VehicleListing();
         v.setFuelType(fuelType);
