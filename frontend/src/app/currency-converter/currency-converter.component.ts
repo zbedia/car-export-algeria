@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CurrencyService } from '../services/currency.service';
+import { TranslationService } from '../services/translation.service';
+import { TranslatePipe } from '../pipes/translate.pipe';
 import { CurrencyCode, ExchangeRatesResponse, RateType } from '../models/currency.model';
 
 @Component({
   selector: 'app-currency-converter',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './currency-converter.component.html',
   styleUrls: ['./currency-converter.component.css']
 })
@@ -20,7 +22,10 @@ export class CurrencyConverterComponent implements OnInit {
   fromCurrency: CurrencyCode = 'EUR';
   rateType: RateType = 'OFFICIAL';
 
-  constructor(private currencyService: CurrencyService) {}
+  constructor(
+    private currencyService: CurrencyService,
+    private translationService: TranslationService
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -30,7 +35,7 @@ export class CurrencyConverterComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Could not load exchange rates.';
+        this.errorMessage = err.error?.message || this.translationService.t('errors.ratesLoad');
         this.loading = false;
       }
     });

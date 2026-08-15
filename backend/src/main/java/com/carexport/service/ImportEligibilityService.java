@@ -1,5 +1,6 @@
 package com.carexport.service;
 
+import com.carexport.model.CustomsDiscountReasonCode;
 import com.carexport.model.FuelType;
 import com.carexport.model.VehicleListing;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,10 @@ import java.time.LocalDate;
  *    - Electric: -80%
  *    - Essence/Hybrid <= 1800 cm3: -50%
  *    - Essence/Hybrid > 1800 cm3: -20%
+ *
+ * This service returns machine-readable reason codes (CustomsDiscountReasonCode)
+ * rather than pre-built sentences, so the frontend can render a fully
+ * translated explanation in any supported language.
  */
 @Service
 public class ImportEligibilityService {
@@ -57,6 +62,11 @@ public class ImportEligibilityService {
         return !firstRegistrationDate.isBefore(getOldestEligibleRegistrationDate());
     }
 
+    /** The displacement threshold (cm3) separating the two combustion/hybrid discount tiers. */
+    public int getEngineDisplacementThresholdCm3() {
+        return ENGINE_DISPLACEMENT_THRESHOLD_CM3;
+    }
+
     /**
      * Customs duty reduction percentage applicable to the vehicle,
      * based on fuel type and, for combustion/hybrid engines, displacement.
@@ -79,28 +89,22 @@ public class ImportEligibilityService {
     }
 
     /**
-     * Human-readable explanation of why the vehicle got its specific
-     * customs discount tier, so the reasoning is transparent to the user
-     * instead of just showing a bare percentage.
+     * Machine-readable reason code for why the vehicle got its specific
+     * customs discount tier. The frontend maps this to a translated
+     * explanation, filling in fuel type and displacement as parameters.
      */
-    public String getCustomsDiscountReason(VehicleListing vehicle) {
+    public CustomsDiscountReasonCode getCustomsDiscountReasonCode(VehicleListing vehicle) {
         if (vehicle.getFuelType() == FuelType.ELECTRIQUE) {
-            return "Electric vehicles get an 80% customs duty reduction.";
+            return CustomsDiscountReasonCode.ELECTRIC;
         }
         if (vehicle.getFuelType() == FuelType.DIESEL) {
-            return "Diesel vehicles are not eligible for private import.";
+            return CustomsDiscountReasonCode.DIESEL_NOT_ELIGIBLE;
         }
 
-        String fuelLabel = vehicle.getFuelType() == FuelType.HYBRIDE ? "Hybrid" : "Essence";
         Integer displacement = vehicle.getEngineDisplacementCm3();
-
         if (displacement != null && displacement <= ENGINE_DISPLACEMENT_THRESHOLD_CM3) {
-            return fuelLabel + " engines up to " + ENGINE_DISPLACEMENT_THRESHOLD_CM3
-                + " cm³ (this one: " + displacement + " cm³) get a 50% customs duty reduction.";
+            return CustomsDiscountReasonCode.SMALL_ENGINE;
         }
-
-        String displacementText = displacement != null ? displacement + " cm³" : "unknown displacement";
-        return fuelLabel + " engines over " + ENGINE_DISPLACEMENT_THRESHOLD_CM3
-            + " cm³ (this one: " + displacementText + ") get a 20% customs duty reduction.";
+        return CustomsDiscountReasonCode.LARGE_ENGINE;
     }
 }

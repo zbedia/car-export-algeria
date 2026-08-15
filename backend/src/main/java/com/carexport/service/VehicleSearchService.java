@@ -2,6 +2,7 @@ package com.carexport.service;
 
 import com.carexport.dto.SearchRequest;
 import com.carexport.dto.VehicleSearchResult;
+import com.carexport.model.FuelType;
 import com.carexport.model.VehicleListing;
 import com.carexport.repository.VehicleListingRepository;
 import org.springframework.stereotype.Service;
@@ -69,8 +70,11 @@ public class VehicleSearchService {
         r.setBestPrice(isBestPrice);
         r.setFuelType(v.getFuelType().name());
         r.setEngineDisplacementCm3(v.getEngineDisplacementCm3());
+        if (v.getFuelType() == FuelType.ESSENCE || v.getFuelType() == FuelType.HYBRIDE) {
+            r.setEngineDisplacementThresholdCm3(eligibilityService.getEngineDisplacementThresholdCm3());
+        }
         r.setCustomsDiscountPercentage(eligibilityService.getCustomsDiscountPercentage(v));
-        r.setCustomsDiscountReason(eligibilityService.getCustomsDiscountReason(v));
+        r.setCustomsDiscountReasonCode(eligibilityService.getCustomsDiscountReasonCode(v).name());
         return r;
     }
 }

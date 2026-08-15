@@ -1,7 +1,7 @@
 <div class="converter-card">
-  <h2>Currency converter</h2>
+  <h2>{{ 'currency.title' | translate }}</h2>
 
-  <div *ngIf="loading" class="loading">Loading exchange rates...</div>
+  <div *ngIf="loading" class="loading">{{ 'currency.loading' | translate }}</div>
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
   <ng-container *ngIf="rates && !loading">
@@ -10,13 +10,13 @@
         type="button"
         [class.active]="rateType === 'OFFICIAL'"
         (click)="rateType = 'OFFICIAL'">
-        Official (Banque d'Algerie)
+        {{ 'currency.official' | translate }}
       </button>
       <button
         type="button"
         [class.active]="rateType === 'PARALLEL'"
         (click)="rateType = 'PARALLEL'">
-        Parallel market
+        {{ 'currency.parallel' | translate }}
       </button>
     </div>
 
@@ -30,10 +30,10 @@
 
     <p class="rate-info">
       1 EUR = {{ activeRate | number:'1.2-2' }} DZD
-      ({{ rateType === 'OFFICIAL' ? 'official rate' : 'parallel market rate' }})
+      ({{ (rateType === 'OFFICIAL' ? 'currency.rateInfoOfficial' : 'currency.rateInfoParallel') | translate }})
     </p>
     <p class="disclaimer">
-      Indicative rates, manually configured — not a live feed. Verify against an official source before any transaction.
+      {{ 'currency.disclaimer' | translate }}
     </p>
   </ng-container>
 </div>

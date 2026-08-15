@@ -1,5 +1,6 @@
 package com.carexport.service;
 
+import com.carexport.model.CustomsDiscountReasonCode;
 import com.carexport.model.FuelType;
 import com.carexport.model.VehicleListing;
 import org.junit.jupiter.api.Test;
@@ -51,21 +52,27 @@ class ImportEligibilityServiceTest {
     }
 
     @Test
-    void electric_discountReason_mentionsElectric() {
+    void electric_discountReasonCode_isElectric() {
         VehicleListing v = buildVehicle(FuelType.ELECTRIQUE, null, LocalDate.now().minusMonths(5));
-        assertThat(service.getCustomsDiscountReason(v)).contains("Electric").contains("80%");
+        assertThat(service.getCustomsDiscountReasonCode(v)).isEqualTo(CustomsDiscountReasonCode.ELECTRIC);
     }
 
     @Test
-    void essence_smallEngine_discountReason_mentionsDisplacement() {
+    void diesel_discountReasonCode_isDieselNotEligible() {
+        VehicleListing v = buildVehicle(FuelType.DIESEL, 1500, LocalDate.now().minusMonths(5));
+        assertThat(service.getCustomsDiscountReasonCode(v)).isEqualTo(CustomsDiscountReasonCode.DIESEL_NOT_ELIGIBLE);
+    }
+
+    @Test
+    void essence_smallEngine_discountReasonCode_isSmallEngine() {
         VehicleListing v = buildVehicle(FuelType.ESSENCE, 1600, LocalDate.now().minusMonths(5));
-        assertThat(service.getCustomsDiscountReason(v)).contains("1600 cm³").contains("50%");
+        assertThat(service.getCustomsDiscountReasonCode(v)).isEqualTo(CustomsDiscountReasonCode.SMALL_ENGINE);
     }
 
     @Test
-    void hybrid_largeEngine_discountReason_mentionsDisplacement() {
+    void hybrid_largeEngine_discountReasonCode_isLargeEngine() {
         VehicleListing v = buildVehicle(FuelType.HYBRIDE, 2000, LocalDate.now().minusMonths(5));
-        assertThat(service.getCustomsDiscountReason(v)).contains("2000 cm³").contains("20%");
+        assertThat(service.getCustomsDiscountReasonCode(v)).isEqualTo(CustomsDiscountReasonCode.LARGE_ENGINE);
     }
 
     private VehicleListing buildVehicle(FuelType fuelType, Integer displacementCm3, LocalDate firstRegistrationDate) {

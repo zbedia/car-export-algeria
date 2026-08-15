@@ -53,6 +53,14 @@ Estimates Roll-on/Roll-off freight costs for the supported Europe → Algeria ro
 
 `GET /api/shipping/estimate?originPort=&destinationPort=` — freight cost breakdown (base rate + handling fee)
 
+## Internationalization
+
+The interface is available in English 🇬🇧, French 🇫🇷 and Arabic 🇩🇿, switchable instantly via the flag buttons in the header. Arabic also switches the document to right-to-left (`dir="rtl"`).
+
+Translations are handled by a lightweight runtime `TranslationService` and a `translate` pipe (`src/app/i18n/translations.ts`) rather than Angular's build-time i18n — this avoids needing a separate build per locale, at the cost of type-safe translation keys (a small tradeoff for a project this size).
+
+The backend exposes machine-readable reason codes for the customs discount tier (`ELECTRIC`, `DIESEL_NOT_ELIGIBLE`, `SMALL_ENGINE`, `LARGE_ENGINE`) rather than pre-built English sentences, so the frontend can render a fully translated, parameterized explanation in any of the three languages.
+
 ## Running locally
 
 ### Backend
@@ -84,6 +92,7 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 - Extensible scraping architecture (Strategy pattern) to easily add new sources
 - EUR / DZD currency converter with official and parallel market rates
 - RoRo shipping cost estimator for supported Europe → Algeria routes
+- Multilingual interface (English, French, Arabic) with RTL support
 
 ## Roadmap
 

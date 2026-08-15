@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VehicleService } from '../services/vehicle.service';
+import { TranslationService } from '../services/translation.service';
+import { TranslatePipe } from '../pipes/translate.pipe';
 import { FuelType, VehicleSearchResult } from '../models/vehicle-search-result.model';
 
 interface VehicleGroup {
@@ -20,7 +22,7 @@ const FUEL_TYPE_ICONS: Record<FuelType, string> = {
 @Component({
   selector: 'app-vehicle-search',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './vehicle-search.component.html',
   styleUrls: ['./vehicle-search.component.css']
 })
@@ -33,7 +35,10 @@ export class VehicleSearchComponent {
   errorMessage = '';
   hasSearched = false;
 
-  constructor(private vehicleService: VehicleService) {}
+  constructor(
+    private vehicleService: VehicleService,
+    private translationService: TranslationService
+  ) {}
 
   onSearch(): void {
     this.loading = true;
@@ -46,7 +51,7 @@ export class VehicleSearchComponent {
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'An error occurred.';
+        this.errorMessage = err.error?.message || this.translationService.t('errors.generic');
         this.loading = false;
       }
     });
@@ -69,5 +74,18 @@ export class VehicleSearchComponent {
 
   fuelIcon(fuelType: FuelType): string {
     return FUEL_TYPE_ICONS[fuelType] ?? '';
+  }
+
+  customsDiscountReasonText(vehicle: VehicleSearchResult): string {
+    if (vehicle.customsDiscountReasonCode === 'ELECTRIC' || vehicle.customsDiscountReasonCode === 'DIESEL_NOT_ELIGIBLE') {
+      return this.translationService.t(`discountReason.${vehicle.customsDiscountReasonCode}`);
+    }
+
+    const fuelLabel = this.translationService.t(`fuel.${vehicle.fuelType}`);
+    return this.translationService.t(`discountReason.${vehicle.customsDiscountReasonCode}`, {
+      fuel: fuelLabel,
+      threshold: vehicle.engineDisplacementThresholdCm3 ?? '',
+      displacement: vehicle.engineDisplacementCm3 ?? ''
+    });
   }
 }

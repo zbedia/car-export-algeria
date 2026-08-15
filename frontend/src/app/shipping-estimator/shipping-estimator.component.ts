@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ShippingService } from '../services/shipping.service';
+import { TranslationService } from '../services/translation.service';
+import { TranslatePipe } from '../pipes/translate.pipe';
 import { DestinationPort, OriginPort, ShippingEstimateResponse } from '../models/shipping.model';
 
 @Component({
   selector: 'app-shipping-estimator',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: './shipping-estimator.component.html',
   styleUrls: ['./shipping-estimator.component.css']
 })
@@ -22,7 +24,10 @@ export class ShippingEstimatorComponent {
   loading = false;
   errorMessage = '';
 
-  constructor(private shippingService: ShippingService) {}
+  constructor(
+    private shippingService: ShippingService,
+    private translationService: TranslationService
+  ) {}
 
   onEstimate(): void {
     this.loading = true;
@@ -35,7 +40,7 @@ export class ShippingEstimatorComponent {
         this.loading = false;
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Could not estimate shipping cost.';
+        this.errorMessage = err.error?.message || this.translationService.t('errors.shippingEstimate');
         this.loading = false;
       }
     });
