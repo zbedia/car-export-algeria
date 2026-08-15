@@ -16,7 +16,7 @@ car-export-algeria/
 
 | | |
 |---|---|
-| **Backend** | Java 17, Spring Boot 3.3, Spring Data JPA, H2, Jsoup |
+| **Backend** | Java 21, Spring Boot 3.3, Spring Data JPA, H2, Jsoup |
 | **Frontend** | Angular 18 (standalone components), TypeScript, RxJS |
 
 ## How it works
