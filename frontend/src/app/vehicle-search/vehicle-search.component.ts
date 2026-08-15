@@ -2,13 +2,20 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VehicleService } from '../services/vehicle.service';
-import { VehicleSearchResult } from '../models/vehicle-search-result.model';
+import { FuelType, VehicleSearchResult } from '../models/vehicle-search-result.model';
 
 interface VehicleGroup {
   brand: string;
   model: string;
   vehicles: VehicleSearchResult[];
 }
+
+const FUEL_TYPE_ICONS: Record<FuelType, string> = {
+  ESSENCE: '⛽',
+  HYBRIDE: '🔋',
+  ELECTRIQUE: '⚡',
+  DIESEL: '🚫'
+};
 
 @Component({
   selector: 'app-vehicle-search',
@@ -58,5 +65,9 @@ export class VehicleSearchComponent {
       group.vehicles.sort((a, b) => a.price - b.price);
     }
     return Array.from(groups.values());
+  }
+
+  fuelIcon(fuelType: FuelType): string {
+    return FUEL_TYPE_ICONS[fuelType] ?? '';
   }
 }

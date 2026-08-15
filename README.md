@@ -23,6 +23,19 @@ car-export-algeria/
 
 User searches only query data already collected in the database — no real-time scraping. A scheduled job periodically refreshes the data in the background, which keeps API responses fast and reliable regardless of the external sites' availability.
 
+## Algerian import regulations
+
+The backend enforces the import rules for private individuals (Decret executif n. 23-74 and the finance law) directly at the search level — non-eligible vehicles never appear in the results:
+
+- **3-year age rule**: computed to the day between first registration and today, with a 2-year-10-month safety margin applied instead of the full 3 years, to absorb delays before customs clearance.
+- **Allowed fuel types only**: Essence ⛽, Hybrid 🔋 and Electric ⚡. Diesel 🚫 is strictly banned for private import of vehicles under 3 years old.
+- **Customs duty reduction**, shown for each result:
+    - Electric: -80%
+    - Essence/Hybrid ≤ 1800 cm³: -50%
+    - Essence/Hybrid > 1800 cm³: -20%
+
+This logic lives in `ImportEligibilityService`, kept separate from the search logic so it can evolve independently if the regulation changes.
+
 ## Running locally
 
 ### Backend
@@ -60,3 +73,8 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 - Advanced filters (mileage, city, fuel type) and pagination
 - Support for customs rules specific to export to Algeria
 - User authentication and favorites
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
+

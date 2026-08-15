@@ -1,3 +1,5 @@
+export type FuelType = 'ESSENCE' | 'HYBRIDE' | 'ELECTRIQUE' | 'DIESEL';
+
 export interface VehicleSearchResult {
   id: number;
   source: string;
@@ -10,4 +12,7 @@ export interface VehicleSearchResult {
   currency: string;
   garageCity: string;
   bestPrice: boolean;
+  fuelType: FuelType;
+  engineDisplacementCm3: number | null;
+  customsDiscountPercentage: number;
 }

@@ -7,7 +7,6 @@ import com.carexport.repository.VehicleListingRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,9 +15,12 @@ import java.util.stream.Collectors;
 public class VehicleSearchService {
 
     private final VehicleListingRepository repository;
+    private final ImportEligibilityService eligibilityService;
 
-    public VehicleSearchService(VehicleListingRepository repository) {
+    public VehicleSearchService(VehicleListingRepository repository,
+                                 ImportEligibilityService eligibilityService) {
         this.repository = repository;
+        this.eligibilityService = eligibilityService;
     }
 
     public List<VehicleSearchResult> search(SearchRequest request) {
@@ -26,14 +28,16 @@ public class VehicleSearchService {
             ? request.getMaxPrice()
             : new BigDecimal("999999999");
 
+        // The repository query already excludes DIESEL vehicles and anything
+        // older than the eligibility cutoff (2 years 10 months), per Algerian
+        // import regulations.
         List<VehicleListing> listings = repository.search(
             request.getBrand(),
             request.getModel(),
-            LocalDate.now().getYear() - 3,
-            maxPrice
+            maxPrice,
+            eligibilityService.getOldestEligibleRegistrationDate()
         );
 
-        // Best price is computed per brand+model group, not globally
         return listings.stream()
             .map(v -> toResult(v, isBestPriceForModel(v, listings)))
             .collect(Collectors.toList());
@@ -63,6 +67,9 @@ public class VehicleSearchService {
         r.setCurrency(v.getCurrency());
         r.setGarageCity(v.getGarageCity());
         r.setBestPrice(isBestPrice);
+        r.setFuelType(v.getFuelType().name());
+        r.setEngineDisplacementCm3(v.getEngineDisplacementCm3());
+        r.setCustomsDiscountPercentage(eligibilityService.getCustomsDiscountPercentage(v));
         return r;
     }
 }

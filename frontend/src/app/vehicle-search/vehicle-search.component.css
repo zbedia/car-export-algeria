@@ -97,6 +97,17 @@
   font-size: 0.85rem;
 }
 
+.fuel {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.customs {
+  font-size: 0.85rem;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
 .vehicle-card a {
   display: inline-block;
   margin-top: 8px;

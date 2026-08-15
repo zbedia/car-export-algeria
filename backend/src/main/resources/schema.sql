@@ -9,5 +9,8 @@ CREATE TABLE IF NOT EXISTS vehicle_listing (
     price DECIMAL(10,2) NOT NULL,
     currency VARCHAR(3) NOT NULL,
     garage_city VARCHAR(255),
-    scraped_at TIMESTAMP NOT NULL
+    scraped_at TIMESTAMP NOT NULL,
+    fuel_type VARCHAR(20) NOT NULL,
+    engine_displacement_cm3 INT,
+    first_registration_date DATE NOT NULL
 );

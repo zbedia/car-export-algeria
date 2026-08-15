@@ -14,6 +14,9 @@ public class VehicleSearchResult {
     private String currency;
     private String garageCity;
     private boolean bestPrice;
+    private String fuelType;
+    private Integer engineDisplacementCm3;
+    private BigDecimal customsDiscountPercentage;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -37,4 +40,10 @@ public class VehicleSearchResult {
     public void setGarageCity(String garageCity) { this.garageCity = garageCity; }
     public boolean isBestPrice() { return bestPrice; }
     public void setBestPrice(boolean bestPrice) { this.bestPrice = bestPrice; }
+    public String getFuelType() { return fuelType; }
+    public void setFuelType(String fuelType) { this.fuelType = fuelType; }
+    public Integer getEngineDisplacementCm3() { return engineDisplacementCm3; }
+    public void setEngineDisplacementCm3(Integer engineDisplacementCm3) { this.engineDisplacementCm3 = engineDisplacementCm3; }
+    public BigDecimal getCustomsDiscountPercentage() { return customsDiscountPercentage; }
+    public void setCustomsDiscountPercentage(BigDecimal customsDiscountPercentage) { this.customsDiscountPercentage = customsDiscountPercentage; }
 }

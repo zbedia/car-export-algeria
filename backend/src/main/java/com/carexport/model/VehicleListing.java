@@ -2,6 +2,7 @@ package com.carexport.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -44,6 +45,30 @@ public class VehicleListing {
     @Column(nullable = false)
     private LocalDateTime scrapedAt;
 
+    /**
+     * Fuel type. Required for Algerian import eligibility rules:
+     * only ESSENCE, HYBRIDE and ELECTRIQUE are importable by private individuals
+     * for vehicles under 3 years old — DIESEL is strictly banned.
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private FuelType fuelType;
+
+    /**
+     * Engine displacement in cm3. Null for electric vehicles.
+     * Determines the customs duty reduction tier for combustion/hybrid vehicles.
+     */
+    @Column(name = "engine_displacement_cm3")
+    private Integer engineDisplacementCm3;
+
+    /**
+     * Date of first registration (1ere mise en circulation).
+     * This is the authoritative date used to compute import eligibility
+     * to the day, as required by Algerian import regulations.
+     */
+    @Column(name = "first_registration_date", nullable = false)
+    private LocalDate firstRegistrationDate;
+
     public VehicleListing() {}
 
     public Long getId() { return id; }
@@ -67,6 +92,12 @@ public class VehicleListing {
     public void setGarageCity(String garageCity) { this.garageCity = garageCity; }
     public LocalDateTime getScrapedAt() { return scrapedAt; }
     public void setScrapedAt(LocalDateTime scrapedAt) { this.scrapedAt = scrapedAt; }
+    public FuelType getFuelType() { return fuelType; }
+    public void setFuelType(FuelType fuelType) { this.fuelType = fuelType; }
+    public Integer getEngineDisplacementCm3() { return engineDisplacementCm3; }
+    public void setEngineDisplacementCm3(Integer engineDisplacementCm3) { this.engineDisplacementCm3 = engineDisplacementCm3; }
+    public LocalDate getFirstRegistrationDate() { return firstRegistrationDate; }
+    public void setFirstRegistrationDate(LocalDate firstRegistrationDate) { this.firstRegistrationDate = firstRegistrationDate; }
 
     @Override
     public boolean equals(Object o) {
