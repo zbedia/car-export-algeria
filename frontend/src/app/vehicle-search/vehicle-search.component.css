@@ -18,10 +18,15 @@
   padding: 10px 20px;
   border: none;
   border-radius: 6px;
-  background: #1a1a1a;
+  background: #0ea5e9;
   color: white;
   font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s;
+}
+
+.search-form button:hover:not(:disabled) {
+  background: #0284c7;
 }
 
 .search-form button:disabled {
