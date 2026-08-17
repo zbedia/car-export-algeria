@@ -70,6 +70,8 @@ Rates are configured in `application.properties` (`currency.rate.*`) rather than
 
 Estimates Roll-on/Roll-off freight costs for the supported Europe → Algeria routes (Marseille / Alicante / Sete → Alger / Oran / Bejaia). Base freight rates are indicative placeholders in `ShippingCostService` — replace them with real carrier rates before relying on this for actual budgeting.
 
+Rather than a single global widget, each vehicle card has its own "Estimate shipping cost" link. Clicking it fetches an estimate for a default route (`ShippingSelectionService`), and an "Edit" button lets the user pick a different origin/destination for that specific vehicle without affecting other cards. The port-selection dropdown itself (`PortSelectorComponent`) is shared between the inline estimate and the edit popup to avoid duplicating the same form twice.
+
 `GET /api/shipping/estimate?originPort=&destinationPort=` — freight cost breakdown (base rate + handling fee)
 
 ## Internationalization
@@ -110,7 +112,7 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 - Loading, error, and no-results states
 - Extensible scraping architecture (Strategy pattern) to easily add new sources
 - EUR / DZD currency converter with official and parallel market rates
-- RoRo shipping cost estimator for supported Europe → Algeria routes
+- RoRo shipping cost estimate on each vehicle card, with an editable route
 - Multilingual interface (English, French, Arabic) with RTL support
 
 ## Roadmap

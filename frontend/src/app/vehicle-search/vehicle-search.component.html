@@ -29,8 +29,42 @@
         </p>
         <p class="customs-reason">{{ customsDiscountReasonText(v) }}</p>
         <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
+        <button type="button" class="link-button" (click)="toggleShippingEstimate(v)">
+          {{ 'search.estimateShipping' | translate }}
+        </button>
+        <div *ngIf="isShippingExpanded(v.id)" class="shipping-inline">
+          <span *ngIf="isShippingLoading(v.id)" class="shipping-loading">{{ 'shipping.loading' | translate }}</span>
+          <span *ngIf="shippingErrorFor(v.id) as err" class="shipping-error">{{ err }}</span>
+          <div *ngIf="shippingResultFor(v.id) as result" class="shipping-detail">
+            <p class="shipping-route">
+              {{ result.originPort }} → {{ result.destinationPort }}
+              <button type="button" class="edit-link" (click)="openEditModal(v.id)">{{ 'modal.edit' | translate }}</button>
+            </p>
+            <div class="shipping-line">
+              <span>{{ 'shipping.baseFreight' | translate }}</span>
+              <span>{{ result.baseFreightCost | currency:result.currency }}</span>
+            </div>
+            <div class="shipping-line">
+              <span>{{ 'shipping.handlingFee' | translate }}</span>
+              <span>{{ result.handlingFee | currency:result.currency }}</span>
+            </div>
+            <div class="shipping-line shipping-total">
+              <span>{{ 'shipping.total' | translate }}</span>
+              <span>{{ result.totalCost | currency:result.currency }}</span>
+            </div>
+            <p class="shipping-disclaimer">{{ 'shipping.disclaimer' | translate }}</p>
+          </div>
+        </div>
         <a [href]="v.externalUrl" target="_blank" rel="noopener">{{ 'search.viewListing' | translate }}</a>
       </div>
     </div>
   </div>
+
+  <app-shipping-edit-modal
+    *ngIf="editingVehicleId !== null"
+    [originPort]="currentOriginForVehicle(editingVehicleId)"
+    [destinationPort]="currentDestinationForVehicle(editingVehicleId)"
+    (save)="onModalSave($event)"
+    (cancel)="onModalCancel()">
+  </app-shipping-edit-modal>
 </div>

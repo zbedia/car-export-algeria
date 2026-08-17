@@ -1,0 +1,20 @@
+<div class="modal-backdrop" (click)="onCancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>{{ 'shipping.title' | translate }}</h3>
+
+    <div class="form-row">
+      <select [(ngModel)]="originPort" name="editOriginPort">
+        <option *ngFor="let port of originPorts" [value]="port">{{ port }}</option>
+      </select>
+      <span class="arrow">→</span>
+      <select [(ngModel)]="destinationPort" name="editDestinationPort">
+        <option *ngFor="let port of destinationPorts" [value]="port">{{ port }}</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="cancel-button" (click)="onCancel()">{{ 'modal.cancel' | translate }}</button>
+      <button type="button" class="save-button" (click)="onSave()">{{ 'modal.update' | translate }}</button>
+    </div>
+  </div>
+</div>

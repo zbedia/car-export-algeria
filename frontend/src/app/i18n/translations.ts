@@ -16,6 +16,11 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.bestPrice': 'Best price',
     'search.source': 'Source:',
     'search.viewListing': 'View listing',
+    'search.estimateShipping': 'Estimate shipping cost',
+
+    'modal.edit': 'Edit',
+    'modal.cancel': 'Cancel',
+    'modal.update': 'Update',
     'search.customsDiscount': 'Customs discount:',
 
     'discountReason.ELECTRIC': 'Electric vehicles get an 80% customs duty reduction.',
@@ -62,6 +67,11 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.bestPrice': 'Meilleur prix',
     'search.source': 'Source :',
     'search.viewListing': "Voir l'annonce",
+    'search.estimateShipping': 'Estimer le coût de transport',
+
+    'modal.edit': 'Modifier',
+    'modal.cancel': 'Annuler',
+    'modal.update': 'Mettre à jour',
     'search.customsDiscount': 'Réduction douanière :',
 
     'discountReason.ELECTRIC': "Les véhicules électriques bénéficient d'une réduction de 80% des droits de douane.",
@@ -108,6 +118,11 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.bestPrice': 'أفضل سعر',
     'search.source': 'المصدر:',
     'search.viewListing': 'عرض الإعلان',
+    'search.estimateShipping': 'تقدير تكلفة الشحن',
+
+    'modal.edit': 'تعديل',
+    'modal.cancel': 'إلغاء',
+    'modal.update': 'تحديث',
     'search.customsDiscount': 'تخفيض الرسوم الجمركية:',
 
     'discountReason.ELECTRIC': 'تستفيد السيارات الكهربائية من تخفيض 80% على الرسوم الجمركية.',

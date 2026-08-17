@@ -127,6 +127,87 @@
   margin-bottom: 8px;
 }
 
+.link-button {
+  display: block;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 6px;
+  color: #0ea5e9;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+[dir='rtl'] .link-button {
+  text-align: right;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.shipping-inline {
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: #f0f9ff;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.shipping-loading {
+  color: #666;
+}
+
+.shipping-error {
+  color: #b71c1c;
+}
+
+.shipping-route {
+  margin: 0 0 6px;
+  font-weight: 600;
+  color: #0c4a6e;
+}
+
+.shipping-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  color: #0c4a6e;
+}
+
+.shipping-total {
+  font-weight: bold;
+  border-top: 1px solid #bae6fd;
+  margin-top: 4px;
+  padding-top: 6px;
+}
+
+.shipping-disclaimer {
+  margin: 6px 0 0;
+  font-size: 0.7rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+.edit-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-left: 6px;
+  color: #0ea5e9;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+[dir='rtl'] .edit-link {
+  margin-left: 0;
+  margin-right: 6px;
+}
+
 .vehicle-card a {
   display: inline-block;
   margin-top: 8px;
