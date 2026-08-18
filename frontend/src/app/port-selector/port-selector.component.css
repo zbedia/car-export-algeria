@@ -1,0 +1,15 @@
+:host {
+  display: contents;
+}
+
+select {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.arrow {
+  color: #888;
+}

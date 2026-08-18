@@ -1,0 +1,13 @@
+<select
+  [ngModel]="originPort"
+  (ngModelChange)="originPortChange.emit($event)"
+  name="originPort">
+  <option *ngFor="let port of originPorts" [value]="port">{{ port }}</option>
+</select>
+<span class="arrow">→</span>
+<select
+  [ngModel]="destinationPort"
+  (ngModelChange)="destinationPortChange.emit($event)"
+  name="destinationPort">
+  <option *ngFor="let port of destinationPorts" [value]="port">{{ port }}</option>
+</select>

@@ -3,13 +3,7 @@
     <h3>{{ 'shipping.title' | translate }}</h3>
 
     <div class="form-row">
-      <select [(ngModel)]="originPort" name="editOriginPort">
-        <option *ngFor="let port of originPorts" [value]="port">{{ port }}</option>
-      </select>
-      <span class="arrow">→</span>
-      <select [(ngModel)]="destinationPort" name="editDestinationPort">
-        <option *ngFor="let port of destinationPorts" [value]="port">{{ port }}</option>
-      </select>
+      <app-port-selector [(originPort)]="originPort" [(destinationPort)]="destinationPort"></app-port-selector>
     </div>
 
     <div class="modal-actions">

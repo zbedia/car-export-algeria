@@ -55,17 +55,6 @@ The backend enforces the import rules for private individuals (Decret executif n
 
 This logic lives in `ImportEligibilityService`, kept separate from the search logic so it can evolve independently if the regulation changes.
 
-## Currency converter (EUR / DZD)
-
-Instant conversion between Euros and Algerian Dinars, with a toggle between two rates:
-- **Official** — Banque d'Algerie published rate
-- **Parallel market** — informal market rate (Square Port Said)
-
-Rates are configured in `application.properties` (`currency.rate.*`) rather than fetched live — there is no single authoritative, machine-readable source for the parallel rate. Update them manually to keep conversions accurate, or replace `ExchangeRateService` with a live data source later.
-
-`GET /api/currency/rates` — current official and parallel rates
-`GET /api/currency/convert?amount=&from=&to=&rateType=` — convert an amount
-
 ## RoRo shipping cost estimator
 
 Estimates Roll-on/Roll-off freight costs for the supported Europe → Algeria routes (Marseille / Alicante / Sete → Alger / Oran / Bejaia). Base freight rates are indicative placeholders in `ShippingCostService` — replace them with real carrier rates before relying on this for actual budgeting.
@@ -111,7 +100,6 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 - Results grouped by model, with a "Best price" badge on the cheapest vehicle in each group
 - Loading, error, and no-results states
 - Extensible scraping architecture (Strategy pattern) to easily add new sources
-- EUR / DZD currency converter with official and parallel market rates
 - RoRo shipping cost estimate on each vehicle card, with an editable route
 - Multilingual interface (English, French, Arabic) with RTL support
 

@@ -33,13 +33,6 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'fuel.ELECTRIQUE': 'Electric',
     'fuel.DIESEL': 'Diesel',
 
-    'currency.title': 'Currency converter',
-    'currency.loading': 'Loading exchange rates...',
-    'currency.official': "Official (Banque d'Algerie)",
-    'currency.parallel': 'Parallel market',
-    'currency.rateInfoOfficial': 'official rate',
-    'currency.rateInfoParallel': 'parallel market rate',
-    'currency.disclaimer': 'Indicative rates, manually configured — not a live feed. Verify against an official source before any transaction.',
 
     'shipping.title': 'RoRo shipping cost estimator',
     'shipping.button': 'Estimate',
@@ -84,13 +77,6 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'fuel.ELECTRIQUE': 'Électrique',
     'fuel.DIESEL': 'Diesel',
 
-    'currency.title': 'Convertisseur de devises',
-    'currency.loading': 'Chargement des taux de change...',
-    'currency.official': "Officiel (Banque d'Algérie)",
-    'currency.parallel': 'Marché parallèle',
-    'currency.rateInfoOfficial': 'taux officiel',
-    'currency.rateInfoParallel': 'taux du marché parallèle',
-    'currency.disclaimer': "Taux indicatifs, configurés manuellement — pas de flux en temps réel. Vérifiez auprès d'une source officielle avant toute transaction.",
 
     'shipping.title': 'Estimateur de coût de transport RoRo',
     'shipping.button': 'Estimer',
@@ -135,13 +121,6 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'fuel.ELECTRIQUE': 'كهربائية',
     'fuel.DIESEL': 'ديزل',
 
-    'currency.title': 'محول العملات',
-    'currency.loading': 'جارٍ تحميل أسعار الصرف...',
-    'currency.official': 'رسمي (بنك الجزائر)',
-    'currency.parallel': 'السوق الموازي',
-    'currency.rateInfoOfficial': 'السعر الرسمي',
-    'currency.rateInfoParallel': 'سعر السوق الموازي',
-    'currency.disclaimer': 'أسعار إرشادية، يتم تحديثها يدويًا — وليست بثًا مباشرًا. يرجى التحقق من مصدر رسمي قبل أي معاملة.',
 
     'shipping.title': 'أداة تقدير تكلفة الشحن RoRo',
     'shipping.button': 'تقدير',

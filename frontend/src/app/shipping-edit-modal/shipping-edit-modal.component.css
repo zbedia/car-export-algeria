@@ -29,18 +29,6 @@
   margin-bottom: 20px;
 }
 
-.form-row select {
-  flex: 1;
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 0.9rem;
-}
-
-.arrow {
-  color: #888;
-}
-
 .modal-actions {
   display: flex;
   justify-content: flex-end;

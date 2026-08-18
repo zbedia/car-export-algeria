@@ -38,7 +38,7 @@
           <div *ngIf="shippingResultFor(v.id) as result" class="shipping-detail">
             <p class="shipping-route">
               {{ result.originPort }} → {{ result.destinationPort }}
-              <button type="button" class="edit-link" (click)="openEditModal(v.id)">{{ 'modal.edit' | translate }}</button>
+              <button type="button" class="edit-link" (click)="openEditModal()">{{ 'modal.edit' | translate }}</button>
             </p>
             <div class="shipping-line">
               <span>{{ 'shipping.baseFreight' | translate }}</span>
@@ -61,9 +61,9 @@
   </div>
 
   <app-shipping-edit-modal
-    *ngIf="editingVehicleId !== null"
-    [originPort]="currentOriginForVehicle(editingVehicleId)"
-    [destinationPort]="currentDestinationForVehicle(editingVehicleId)"
+    *ngIf="editingShipping"
+    [originPort]="shippingSelection.originPort()"
+    [destinationPort]="shippingSelection.destinationPort()"
     (save)="onModalSave($event)"
     (cancel)="onModalCancel()">
   </app-shipping-edit-modal>

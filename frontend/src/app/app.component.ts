@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { VehicleSearchComponent } from './vehicle-search/vehicle-search.component';
-import { CurrencyConverterComponent } from './currency-converter/currency-converter.component';
 import { LanguageSwitcherComponent } from './language-switcher/language-switcher.component';
 import { TranslatePipe } from './pipes/translate.pipe';
 
@@ -9,7 +8,6 @@ import { TranslatePipe } from './pipes/translate.pipe';
   standalone: true,
   imports: [
     VehicleSearchComponent,
-    CurrencyConverterComponent,
     LanguageSwitcherComponent,
     TranslatePipe
   ],
@@ -24,7 +22,6 @@ import { TranslatePipe } from './pipes/translate.pipe';
       </div>
     </header>
     <main>
-      <app-currency-converter></app-currency-converter>
       <app-vehicle-search></app-vehicle-search>
     </main>
   `

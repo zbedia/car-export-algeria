@@ -36,7 +36,7 @@ class VehicleSearchServiceTest {
     @Test
     void search_returnsEmptyList_whenNoResults() {
         when(repository.search(any(), any(), any(), any()))
-                .thenReturn(List.of());
+            .thenReturn(List.of());
 
         SearchRequest request = new SearchRequest();
         request.setBrand("Bugatti");
@@ -53,14 +53,14 @@ class VehicleSearchServiceTest {
         VehicleListing otherModel = buildListing("Renault", "Clio", new BigDecimal("14000"));
 
         when(repository.search(any(), any(), any(), any()))
-                .thenReturn(List.of(cheap, expensive, otherModel));
+            .thenReturn(List.of(cheap, expensive, otherModel));
 
         List<VehicleSearchResult> results = service.search(new SearchRequest());
 
         assertThat(results).filteredOn(VehicleSearchResult::isBestPrice)
-                .hasSize(2) // cheapest vehicle of each model group
-                .extracting(VehicleSearchResult::getPrice)
-                .containsExactlyInAnyOrder(new BigDecimal("15000"), new BigDecimal("14000"));
+            .hasSize(2) // cheapest vehicle of each model group
+            .extracting(VehicleSearchResult::getPrice)
+            .containsExactlyInAnyOrder(new BigDecimal("15000"), new BigDecimal("14000"));
     }
 
     @Test
@@ -70,7 +70,7 @@ class VehicleSearchServiceTest {
         electric.setEngineDisplacementCm3(null);
 
         when(repository.search(any(), any(), any(), any()))
-                .thenReturn(List.of(electric));
+            .thenReturn(List.of(electric));
 
         List<VehicleSearchResult> results = service.search(new SearchRequest());
 

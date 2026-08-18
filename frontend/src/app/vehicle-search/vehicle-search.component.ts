@@ -39,18 +39,22 @@ export class VehicleSearchComponent {
   errorMessage = '';
   hasSearched = false;
 
-  // Per-vehicle shipping estimate state, keyed by vehicle id.
+  // Shipping estimate state, keyed by vehicle id. The route itself
+  // (origin/destination) is shared across every vehicle via
+  // ShippingSelectionService — editing it from any card refreshes all
+  // cards that already have a result, instead of each card tracking
+  // its own independent route.
   private shippingExpandedIds = new Set<number>();
   private shippingLoadingIds = new Set<number>();
   private shippingResults = new Map<number, ShippingEstimateResponse>();
   private shippingErrors = new Map<number, string>();
 
-  editingVehicleId: number | null = null;
+  editingShipping = false;
 
   constructor(
     private vehicleService: VehicleService,
     private shippingService: ShippingService,
-    private shippingSelection: ShippingSelectionService,
+    public shippingSelection: ShippingSelectionService,
     private translationService: TranslationService
   ) {}
 
@@ -116,20 +120,25 @@ export class VehicleSearchComponent {
       return;
     }
 
-    this.shippingLoadingIds.add(vehicle.id);
-    this.shippingErrors.delete(vehicle.id);
+    this.fetchShippingEstimate(
+      vehicle.id,
+      this.shippingSelection.originPort(),
+      this.shippingSelection.destinationPort()
+    );
+  }
 
-    const origin = this.shippingSelection.originPort();
-    const destination = this.shippingSelection.destinationPort();
+  private fetchShippingEstimate(vehicleId: number, origin: OriginPort, destination: DestinationPort): void {
+    this.shippingLoadingIds.add(vehicleId);
+    this.shippingErrors.delete(vehicleId);
 
     this.shippingService.estimate(origin, destination).subscribe({
       next: (result) => {
-        this.shippingResults.set(vehicle.id, result);
-        this.shippingLoadingIds.delete(vehicle.id);
+        this.shippingResults.set(vehicleId, result);
+        this.shippingLoadingIds.delete(vehicleId);
       },
       error: (err) => {
-        this.shippingErrors.set(vehicle.id, err.error?.message || this.translationService.t('errors.shippingEstimate'));
-        this.shippingLoadingIds.delete(vehicle.id);
+        this.shippingErrors.set(vehicleId, err.error?.message || this.translationService.t('errors.shippingEstimate'));
+        this.shippingLoadingIds.delete(vehicleId);
       }
     });
   }
@@ -150,42 +159,25 @@ export class VehicleSearchComponent {
     return this.shippingErrors.get(vehicleId);
   }
 
-  openEditModal(vehicleId: number): void {
-    this.editingVehicleId = vehicleId;
+  openEditModal(): void {
+    this.editingShipping = true;
   }
 
   onModalCancel(): void {
-    this.editingVehicleId = null;
+    this.editingShipping = false;
   }
 
   onModalSave(result: ShippingEditResult): void {
-    const vehicleId = this.editingVehicleId;
-    if (vehicleId === null) {
-      return;
+    this.shippingSelection.originPort.set(result.originPort);
+    this.shippingSelection.destinationPort.set(result.destinationPort);
+
+    // Refresh every card that already has a visible estimate so they
+    // all reflect the new route immediately, without the user needing
+    // to re-open each one individually.
+    for (const vehicleId of this.shippingResults.keys()) {
+      this.fetchShippingEstimate(vehicleId, result.originPort, result.destinationPort);
     }
 
-    this.shippingLoadingIds.add(vehicleId);
-    this.shippingErrors.delete(vehicleId);
-
-    this.shippingService.estimate(result.originPort, result.destinationPort).subscribe({
-      next: (data) => {
-        this.shippingResults.set(vehicleId, data);
-        this.shippingLoadingIds.delete(vehicleId);
-        this.editingVehicleId = null;
-      },
-      error: (err) => {
-        this.shippingErrors.set(vehicleId, err.error?.message || this.translationService.t('errors.shippingEstimate'));
-        this.shippingLoadingIds.delete(vehicleId);
-        this.editingVehicleId = null;
-      }
-    });
-  }
-
-  currentOriginForVehicle(vehicleId: number): OriginPort {
-    return this.shippingResults.get(vehicleId)?.originPort ?? this.shippingSelection.originPort();
-  }
-
-  currentDestinationForVehicle(vehicleId: number): DestinationPort {
-    return this.shippingResults.get(vehicleId)?.destinationPort ?? this.shippingSelection.destinationPort();
+    this.editingShipping = false;
   }
 }
