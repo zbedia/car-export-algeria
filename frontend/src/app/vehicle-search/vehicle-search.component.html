@@ -1,6 +1,6 @@
 <div class="search-container">
   <form (ngSubmit)="onSearch()" class="search-form">
-    <input [(ngModel)]="brand" name="brand" list="brand-options" [attr.placeholder]="'search.brandPlaceholder' | translate" />
+    <input [ngModel]="brand" (ngModelChange)="onBrandChange($event)" name="brand" list="brand-options" [attr.placeholder]="'search.brandPlaceholder' | translate" />
     <datalist id="brand-options">
       <option *ngFor="let b of carBrands" [value]="b"></option>
     </datalist>

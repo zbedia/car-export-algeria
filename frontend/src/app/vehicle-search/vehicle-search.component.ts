@@ -102,6 +102,20 @@ export class VehicleSearchComponent {
     return CAR_MODELS_BY_BRAND[this.brand] ?? ALL_MODELS;
   }
 
+  onBrandChange(value: string): void {
+    this.brand = value;
+
+    // If the currently typed model doesn't belong to the newly selected
+    // brand's known models, clear it — otherwise a leftover model like
+    // "308" would silently stay selected after switching to Renault.
+    // Left untouched when the brand isn't recognized (free text), since
+    // we have no model list to validate against in that case.
+    const knownModels = CAR_MODELS_BY_BRAND[this.brand];
+    if (knownModels && !knownModels.includes(this.model)) {
+      this.model = '';
+    }
+  }
+
   customsDiscountReasonText(vehicle: VehicleSearchResult): string {
     if (vehicle.customsDiscountReasonCode === 'ELECTRIC' || vehicle.customsDiscountReasonCode === 'DIESEL_NOT_ELIGIBLE') {
       return this.translationService.t(`discountReason.${vehicle.customsDiscountReasonCode}`);
