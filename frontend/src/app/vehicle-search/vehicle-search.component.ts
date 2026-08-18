@@ -9,6 +9,8 @@ import { TranslatePipe } from '../pipes/translate.pipe';
 import { ShippingEditModalComponent, ShippingEditResult } from '../shipping-edit-modal/shipping-edit-modal.component';
 import { FuelType, VehicleSearchResult } from '../models/vehicle-search-result.model';
 import { DestinationPort, OriginPort, ShippingEstimateResponse } from '../models/shipping.model';
+import { CAR_BRANDS } from '../data/car-brands';
+import { ALL_MODELS, CAR_MODELS_BY_BRAND } from '../data/car-models';
 
 interface VehicleGroup {
   brand: string;
@@ -38,6 +40,8 @@ export class VehicleSearchComponent {
   loading = false;
   errorMessage = '';
   hasSearched = false;
+
+  carBrands = CAR_BRANDS;
 
   // Shipping estimate state, keyed by vehicle id. The route itself
   // (origin/destination) is shared across every vehicle via
@@ -92,6 +96,10 @@ export class VehicleSearchComponent {
 
   fuelIcon(fuelType: FuelType): string {
     return FUEL_TYPE_ICONS[fuelType] ?? '';
+  }
+
+  get modelSuggestions(): string[] {
+    return CAR_MODELS_BY_BRAND[this.brand] ?? ALL_MODELS;
   }
 
   customsDiscountReasonText(vehicle: VehicleSearchResult): string {

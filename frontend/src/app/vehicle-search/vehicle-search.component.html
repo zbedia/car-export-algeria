@@ -1,7 +1,13 @@
 <div class="search-container">
   <form (ngSubmit)="onSearch()" class="search-form">
-    <input [(ngModel)]="brand" name="brand" [attr.placeholder]="'search.brandPlaceholder' | translate" />
-    <input [(ngModel)]="model" name="model" [attr.placeholder]="'search.modelPlaceholder' | translate" />
+    <input [(ngModel)]="brand" name="brand" list="brand-options" [attr.placeholder]="'search.brandPlaceholder' | translate" />
+    <datalist id="brand-options">
+      <option *ngFor="let b of carBrands" [value]="b"></option>
+    </datalist>
+    <input [(ngModel)]="model" name="model" list="model-options" [attr.placeholder]="'search.modelPlaceholder' | translate" />
+    <datalist id="model-options">
+      <option *ngFor="let m of modelSuggestions" [value]="m"></option>
+    </datalist>
     <input [(ngModel)]="maxPrice" name="maxPrice" type="number" [attr.placeholder]="'search.maxPricePlaceholder' | translate" />
     <button type="submit" [disabled]="loading">{{ 'search.button' | translate }}</button>
   </form>
