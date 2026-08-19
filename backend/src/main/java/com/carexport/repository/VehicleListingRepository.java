@@ -24,6 +24,8 @@ public interface VehicleListingRepository extends JpaRepository<VehicleListing, 
      * mileage, city, fuel type) AND the Algerian import eligibility rules:
      * fuel type must not be DIESEL, and the vehicle must not be older than
      * the eligibility cutoff date (2 years 10 months, computed to the day).
+     * garageCity uses a partial, case-insensitive match (e.g. "lyo" matches
+     * "Lyon") — brand and model remain exact matches.
      */
     @Query("""
         SELECT v FROM VehicleListing v
@@ -31,7 +33,7 @@ public interface VehicleListingRepository extends JpaRepository<VehicleListing, 
         AND (:model IS NULL OR LOWER(v.model) = LOWER(:model))
         AND v.price <= :maxPrice
         AND (:maxMileageKm IS NULL OR v.mileageKm <= :maxMileageKm)
-        AND (:garageCity IS NULL OR LOWER(v.garageCity) = LOWER(:garageCity))
+        AND (:garageCity IS NULL OR LOWER(v.garageCity) LIKE LOWER(CONCAT('%', :garageCity, '%')))
         AND (:fuelType IS NULL OR v.fuelType = :fuelType)
         AND v.fuelType <> com.carexport.model.FuelType.DIESEL
         AND v.firstRegistrationDate >= :oldestEligibleRegistrationDate
