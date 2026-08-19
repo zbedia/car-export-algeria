@@ -9,6 +9,12 @@
       <option *ngFor="let m of modelSuggestions" [value]="m"></option>
     </datalist>
     <input [(ngModel)]="maxPrice" name="maxPrice" type="number" [attr.placeholder]="'search.maxPricePlaceholder' | translate" />
+    <input [(ngModel)]="maxMileageKm" name="maxMileageKm" type="number" [attr.placeholder]="'search.maxMileagePlaceholder' | translate" />
+    <input [(ngModel)]="garageCity" name="garageCity" [attr.placeholder]="'search.cityPlaceholder' | translate" />
+    <select [(ngModel)]="fuelType" name="fuelType">
+      <option value="">{{ 'search.fuelTypeAll' | translate }}</option>
+      <option *ngFor="let f of selectableFuelTypes" [value]="f">{{ ('fuel.' + f) | translate }}</option>
+    </select>
     <button type="submit" [disabled]="loading">{{ 'search.button' | translate }}</button>
   </form>
 

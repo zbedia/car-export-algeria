@@ -36,6 +36,9 @@ public class VehicleSearchService {
             request.getBrand(),
             request.getModel(),
             maxPrice,
+            request.getMaxMileageKm(),
+            request.getGarageCity(),
+            request.getFuelType(),
             eligibilityService.getOldestEligibleRegistrationDate()
         );
 

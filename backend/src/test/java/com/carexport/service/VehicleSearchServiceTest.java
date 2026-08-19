@@ -18,6 +18,9 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +38,7 @@ class VehicleSearchServiceTest {
 
     @Test
     void search_returnsEmptyList_whenNoResults() {
-        when(repository.search(any(), any(), any(), any()))
+        when(repository.search(any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(List.of());
 
         SearchRequest request = new SearchRequest();
@@ -52,7 +55,7 @@ class VehicleSearchServiceTest {
         VehicleListing expensive = buildListing("Peugeot", "308", new BigDecimal("18000"));
         VehicleListing otherModel = buildListing("Renault", "Clio", new BigDecimal("14000"));
 
-        when(repository.search(any(), any(), any(), any()))
+        when(repository.search(any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(List.of(cheap, expensive, otherModel));
 
         List<VehicleSearchResult> results = service.search(new SearchRequest());
@@ -69,13 +72,32 @@ class VehicleSearchServiceTest {
         electric.setFuelType(FuelType.ELECTRIQUE);
         electric.setEngineDisplacementCm3(null);
 
-        when(repository.search(any(), any(), any(), any()))
+        when(repository.search(any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(List.of(electric));
 
         List<VehicleSearchResult> results = service.search(new SearchRequest());
 
         assertThat(results).hasSize(1);
         assertThat(results.get(0).getCustomsDiscountPercentage()).isEqualByComparingTo(new BigDecimal("80"));
+    }
+
+    @Test
+    void search_passesFiltersThroughToRepository() {
+        when(repository.search(any(), any(), any(), any(), any(), any(), any()))
+            .thenReturn(List.of());
+
+        SearchRequest request = new SearchRequest();
+        request.setBrand("Peugeot");
+        request.setMaxMileageKm(50000);
+        request.setGarageCity("Lyon");
+        request.setFuelType(FuelType.ESSENCE);
+
+        service.search(request);
+
+        verify(repository).search(
+            eq("Peugeot"), isNull(), any(BigDecimal.class),
+            eq(50000), eq("Lyon"), eq(FuelType.ESSENCE), any(LocalDate.class)
+        );
     }
 
     private VehicleListing buildListing(String brand, String model, BigDecimal price) {

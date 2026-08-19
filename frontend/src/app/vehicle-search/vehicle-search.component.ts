@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VehicleService } from '../services/vehicle.service';
+import { VehicleService, VehicleSearchFilters } from '../services/vehicle.service';
 import { ShippingService } from '../services/shipping.service';
 import { ShippingSelectionService } from '../services/shipping-selection.service';
 import { TranslationService } from '../services/translation.service';
@@ -36,12 +36,20 @@ export class VehicleSearchComponent {
   brand = '';
   model = '';
   maxPrice?: number;
+  maxMileageKm?: number;
+  garageCity = '';
+  fuelType: FuelType | '' = '';
   groupedResults: VehicleGroup[] = [];
   loading = false;
   errorMessage = '';
   hasSearched = false;
 
   carBrands = CAR_BRANDS;
+
+  // Diesel is intentionally excluded — it's always filtered out server-side
+  // (banned for private import), so offering it as a filter option would
+  // just lead to a confusing "no results" every time.
+  selectableFuelTypes: FuelType[] = ['ESSENCE', 'HYBRIDE', 'ELECTRIQUE'];
 
   // Shipping estimate state, keyed by vehicle id. The route itself
   // (origin/destination) is shared across every vehicle via
@@ -67,7 +75,16 @@ export class VehicleSearchComponent {
     this.errorMessage = '';
     this.hasSearched = true;
 
-    this.vehicleService.search(this.brand, this.model, this.maxPrice).subscribe({
+    const filters: VehicleSearchFilters = {
+      brand: this.brand,
+      model: this.model,
+      maxPrice: this.maxPrice,
+      maxMileageKm: this.maxMileageKm,
+      garageCity: this.garageCity,
+      fuelType: this.fuelType
+    };
+
+    this.vehicleService.search(filters).subscribe({
       next: (data) => {
         this.groupedResults = this.groupByModel(data);
         this.loading = false;

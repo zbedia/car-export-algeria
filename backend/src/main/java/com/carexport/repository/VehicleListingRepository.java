@@ -1,5 +1,6 @@
 package com.carexport.repository;
 
+import com.carexport.model.FuelType;
 import com.carexport.model.VehicleListing;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,16 +20,19 @@ public interface VehicleListingRepository extends JpaRepository<VehicleListing, 
     List<VehicleListing> findByBrandIgnoreCaseAndModelIgnoreCase(String brand, String model);
 
     /**
-     * Searches vehicles matching the user criteria AND the Algerian import
-     * eligibility rules: fuel type must not be DIESEL, and the vehicle must
-     * not be older than the eligibility cutoff date (2 years 10 months,
-     * computed to the day).
+     * Searches vehicles matching the user criteria (brand, model, price,
+     * mileage, city, fuel type) AND the Algerian import eligibility rules:
+     * fuel type must not be DIESEL, and the vehicle must not be older than
+     * the eligibility cutoff date (2 years 10 months, computed to the day).
      */
     @Query("""
         SELECT v FROM VehicleListing v
         WHERE (:brand IS NULL OR LOWER(v.brand) = LOWER(:brand))
         AND (:model IS NULL OR LOWER(v.model) = LOWER(:model))
         AND v.price <= :maxPrice
+        AND (:maxMileageKm IS NULL OR v.mileageKm <= :maxMileageKm)
+        AND (:garageCity IS NULL OR LOWER(v.garageCity) = LOWER(:garageCity))
+        AND (:fuelType IS NULL OR v.fuelType = :fuelType)
         AND v.fuelType <> com.carexport.model.FuelType.DIESEL
         AND v.firstRegistrationDate >= :oldestEligibleRegistrationDate
         ORDER BY v.price ASC
@@ -37,6 +41,9 @@ public interface VehicleListingRepository extends JpaRepository<VehicleListing, 
         @Param("brand") String brand,
         @Param("model") String model,
         @Param("maxPrice") BigDecimal maxPrice,
+        @Param("maxMileageKm") Integer maxMileageKm,
+        @Param("garageCity") String garageCity,
+        @Param("fuelType") FuelType fuelType,
         @Param("oldestEligibleRegistrationDate") LocalDate oldestEligibleRegistrationDate
     );
 
