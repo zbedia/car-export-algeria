@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,11 +20,16 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * Unit tests with a mocked repository — these check VehicleSearchService's
+ * own logic (best-price scoring, discount exposure), not the actual
+ * filtering behavior of the Specifications themselves. Since a
+ * Specification is a lambda, its content can't be meaningfully asserted
+ * on via Mockito matchers; the real filtering behavior is covered by
+ * VehicleSpecificationsTest instead, against a real (H2) database.
+ */
 @ExtendWith(MockitoExtension.class)
 class VehicleSearchServiceTest {
 
@@ -38,7 +45,7 @@ class VehicleSearchServiceTest {
 
     @Test
     void search_returnsEmptyList_whenNoResults() {
-        when(repository.search(any(), any(), any(), any(), any(), any(), any()))
+        when(repository.findAll(any(Specification.class), any(Sort.class)))
             .thenReturn(List.of());
 
         SearchRequest request = new SearchRequest();
@@ -55,7 +62,7 @@ class VehicleSearchServiceTest {
         VehicleListing expensive = buildListing("Peugeot", "308", new BigDecimal("18000"));
         VehicleListing otherModel = buildListing("Renault", "Clio", new BigDecimal("14000"));
 
-        when(repository.search(any(), any(), any(), any(), any(), any(), any()))
+        when(repository.findAll(any(Specification.class), any(Sort.class)))
             .thenReturn(List.of(cheap, expensive, otherModel));
 
         List<VehicleSearchResult> results = service.search(new SearchRequest());
@@ -72,32 +79,13 @@ class VehicleSearchServiceTest {
         electric.setFuelType(FuelType.ELECTRIQUE);
         electric.setEngineDisplacementCm3(null);
 
-        when(repository.search(any(), any(), any(), any(), any(), any(), any()))
+        when(repository.findAll(any(Specification.class), any(Sort.class)))
             .thenReturn(List.of(electric));
 
         List<VehicleSearchResult> results = service.search(new SearchRequest());
 
         assertThat(results).hasSize(1);
         assertThat(results.get(0).getCustomsDiscountPercentage()).isEqualByComparingTo(new BigDecimal("80"));
-    }
-
-    @Test
-    void search_passesFiltersThroughToRepository() {
-        when(repository.search(any(), any(), any(), any(), any(), any(), any()))
-            .thenReturn(List.of());
-
-        SearchRequest request = new SearchRequest();
-        request.setBrand("Peugeot");
-        request.setMaxMileageKm(50000);
-        request.setGarageCity("Lyon");
-        request.setFuelType(FuelType.ESSENCE);
-
-        service.search(request);
-
-        verify(repository).search(
-            eq("Peugeot"), isNull(), any(BigDecimal.class),
-            eq(50000), eq("Lyon"), eq(FuelType.ESSENCE), any(LocalDate.class)
-        );
     }
 
     private VehicleListing buildListing(String brand, String model, BigDecimal price) {

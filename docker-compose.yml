@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: car-export-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: car_export_algeria
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - car-export-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  car-export-postgres-data:

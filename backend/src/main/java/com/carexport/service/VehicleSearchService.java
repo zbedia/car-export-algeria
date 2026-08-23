@@ -5,6 +5,9 @@ import com.carexport.dto.VehicleSearchResult;
 import com.carexport.model.FuelType;
 import com.carexport.model.VehicleListing;
 import com.carexport.repository.VehicleListingRepository;
+import com.carexport.repository.VehicleSpecifications;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,18 +32,23 @@ public class VehicleSearchService {
             ? request.getMaxPrice()
             : new BigDecimal("999999999");
 
-        // The repository query already excludes DIESEL vehicles and anything
-        // older than the eligibility cutoff (2 years 10 months), per Algerian
-        // import regulations.
-        List<VehicleListing> listings = repository.search(
-            request.getBrand(),
-            request.getModel(),
-            maxPrice,
-            request.getMaxMileageKm(),
-            request.getGarageCity(),
-            request.getFuelType(),
-            eligibilityService.getOldestEligibleRegistrationDate()
-        );
+        // Only the filters the user actually provided are added to the
+        // query — see VehicleSpecifications for why this is preferable to
+        // a single static query with "(:param IS NULL OR ...)" branches.
+        // The last two specifications enforce the Algerian import
+        // eligibility rules: fuel type must not be DIESEL, and the vehicle
+        // must not be older than the eligibility cutoff (2 years 10 months).
+        Specification<VehicleListing> spec = Specification
+            .where(VehicleSpecifications.brandEquals(request.getBrand()))
+            .and(VehicleSpecifications.modelEquals(request.getModel()))
+            .and(VehicleSpecifications.priceAtMost(maxPrice))
+            .and(VehicleSpecifications.mileageAtMost(request.getMaxMileageKm()))
+            .and(VehicleSpecifications.cityContains(request.getGarageCity()))
+            .and(VehicleSpecifications.fuelTypeEquals(request.getFuelType()))
+            .and(VehicleSpecifications.fuelTypeNot(FuelType.DIESEL))
+            .and(VehicleSpecifications.registeredOnOrAfter(eligibilityService.getOldestEligibleRegistrationDate()));
+
+        List<VehicleListing> listings = repository.findAll(spec, Sort.by(Sort.Direction.ASC, "price"));
 
         return listings.stream()
             .map(v -> toResult(v, isBestPriceForModel(v, listings)))

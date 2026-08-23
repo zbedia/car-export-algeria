@@ -16,7 +16,7 @@ car-export-algeria/
 
 | | |
 |---|---|
-| **Backend** | Java 21, Spring Boot 3.3, Spring Data JPA, H2, Jsoup |
+| **Backend** | Java 21, Spring Boot 3.3, Spring Data JPA, H2 (default) / PostgreSQL (persistent, via Docker Compose), Jsoup, Playwright |
 | **Frontend** | Angular 18 (standalone components), TypeScript, RxJS |
 
 ## How it works
@@ -80,9 +80,26 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-Starts on `http://localhost:8080`. In-memory H2 database, pre-seeded with sample data on startup.
+Starts on `http://localhost:8080`. In-memory H2 database by default, pre-seeded with sample data on startup — nothing persists between restarts.
 
 Quick test: `http://localhost:8080/api/vehicles/search?brand=Peugeot&model=308`
+
+#### Persistent storage with PostgreSQL
+
+For data that survives restarts, run against PostgreSQL instead:
+
+```bash
+# 1. Start PostgreSQL (via Docker Compose, from the project root)
+docker compose up -d
+
+# 2. Run the backend with the postgres profile
+cd backend
+./mvnw spring-boot:run -Dspring-boot.run.profiles=postgres
+```
+
+Hibernate creates the schema automatically (`ddl-auto=update`) and `data-postgresql.sql` seeds it with the same sample data as the H2 setup, using `ON CONFLICT DO NOTHING` so it's safe to restart the app repeatedly without duplicate rows.
+
+To stop and wipe the database entirely: `docker compose down -v`
 
 ### Frontend
 
@@ -106,9 +123,8 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 ## Roadmap
 
 - Real scraping connectors (currently a demonstration example)
-- Migration to PostgreSQL for production persistence
-- Advanced filters (mileage, city, fuel type) and pagination
-- Support for customs rules specific to export to Algeria
+- Migration to a proper schema migration tool (Flyway/Liquibase) instead of Hibernate's `ddl-auto=update` for PostgreSQL
+- Pagination
 - User authentication and favorites
 
 ## License
