@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { VehicleSearchComponent } from './vehicle-search/vehicle-search.component';
 import { LanguageSwitcherComponent } from './language-switcher/language-switcher.component';
+import { AppFooterComponent } from './app-footer/app-footer.component';
 import { TranslatePipe } from './pipes/translate.pipe';
 
 @Component({
@@ -9,6 +10,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
   imports: [
     VehicleSearchComponent,
     LanguageSwitcherComponent,
+    AppFooterComponent,
     TranslatePipe
   ],
   template: `
@@ -24,6 +26,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
     <main>
       <app-vehicle-search></app-vehicle-search>
     </main>
+    <app-footer></app-footer>
   `
 })
 export class AppComponent {}

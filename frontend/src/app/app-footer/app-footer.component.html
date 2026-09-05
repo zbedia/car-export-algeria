@@ -1,0 +1,30 @@
+<footer class="app-footer">
+  <div class="footer-grid">
+    <div class="footer-col footer-about">
+      <h3 class="footer-title">{{ 'app.title' | translate }}</h3>
+      <p class="footer-tagline">{{ 'footer.tagline' | translate }}</p>
+      <p class="footer-disclaimer">{{ 'footer.disclaimer' | translate }}</p>
+    </div>
+
+    <div class="footer-col">
+      <h3 class="footer-title">{{ 'footer.contact' | translate }}</h3>
+      <ul class="footer-links">
+        <li><a [href]="'mailto:' + contactEmail">{{ 'footer.email' | translate }}</a></li>
+        <li><a [href]="whatsappUrl" target="_blank" rel="noopener">{{ 'footer.whatsapp' | translate }}</a></li>
+        <li><a [href]="'mailto:' + contactEmail + '?subject=' + ('footer.feedback' | translate)">{{ 'footer.feedback' | translate }}</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3 class="footer-title">{{ 'footer.sources' | translate }}</h3>
+      <ul class="footer-links">
+        <li><a [href]="carXportUrl" target="_blank" rel="noopener">{{ 'footer.sourceCarXport' | translate }}</a></li>
+        <li><a [href]="exportCar213Url" target="_blank" rel="noopener">{{ 'footer.sourceExportCar213' | translate }}</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>{{ rightsText }}</p>
+  </div>
+</footer>

@@ -51,7 +51,18 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
 
     'errors.generic': 'An error occurred.',
     'errors.ratesLoad': 'Could not load exchange rates.',
-    'errors.shippingEstimate': 'Could not estimate shipping cost.'
+    'errors.shippingEstimate': 'Could not estimate shipping cost.',
+
+    'footer.tagline': 'Compare used cars under 3 years old ready to export to Algeria: price, customs discount and sea freight estimate.',
+    'footer.disclaimer': 'Prices and eligibility are indicative. Customs regulations may change.',
+    'footer.contact': 'Contact',
+    'footer.email': 'Send an email',
+    'footer.whatsapp': 'WhatsApp',
+    'footer.feedback': 'Leave feedback',
+    'footer.sources': 'Listing sources',
+    'footer.sourceCarXport': 'CarXport – Sweden',
+    'footer.sourceExportCar213': 'ExportCar213',
+    'footer.rights': '© {year} {app}. All rights reserved.'
   },
 
   fr: {
@@ -102,7 +113,18 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
 
     'errors.generic': 'Une erreur est survenue.',
     'errors.ratesLoad': 'Impossible de charger les taux de change.',
-    'errors.shippingEstimate': "Impossible d'estimer le coût de transport."
+    'errors.shippingEstimate': "Impossible d'estimer le coût de transport.",
+
+    'footer.tagline': "Comparez des véhicules de moins de 3 ans, éligibles à l'importation vers l'Algérie : prix, réduction douanière et estimation du transport maritime.",
+    'footer.disclaimer': "Les prix et l'éligibilité sont indicatifs. La réglementation douanière peut évoluer.",
+    'footer.contact': 'Contact',
+    'footer.email': 'Envoyer un e-mail',
+    'footer.whatsapp': 'WhatsApp',
+    'footer.feedback': 'Laisser un avis',
+    'footer.sources': 'Sources des annonces',
+    'footer.sourceCarXport': 'CarXport – Suède',
+    'footer.sourceExportCar213': 'ExportCar213',
+    'footer.rights': '© {year} {app}. Tous droits réservés.'
   },
 
   ar: {
@@ -153,6 +175,17 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
 
     'errors.generic': 'حدث خطأ.',
     'errors.ratesLoad': 'تعذر تحميل أسعار الصرف.',
-    'errors.shippingEstimate': 'تعذر تقدير تكلفة الشحن.'
+    'errors.shippingEstimate': 'تعذر تقدير تكلفة الشحن.',
+
+    'footer.tagline': 'قارن السيارات المستعملة التي يقل عمرها عن 3 سنوات والجاهزة للتصدير إلى الجزائر: السعر، التخفيض الجمركي، وتقدير تكلفة النقل البحري.',
+    'footer.disclaimer': 'الأسعار والجدارة بالاستيراد إرشادية. قد تتغير اللوائح الجمركية.',
+    'footer.contact': 'اتصل بنا',
+    'footer.email': 'إرسال بريد إلكتروني',
+    'footer.whatsapp': 'واتساب',
+    'footer.feedback': 'أرسل تقييمك',
+    'footer.sources': 'مصادر الإعلانات',
+    'footer.sourceCarXport': 'CarXport – السويد',
+    'footer.sourceExportCar213': 'ExportCar213',
+    'footer.rights': 'جميع الحقوق محفوظة © {year} {app}.'
   }
 };
