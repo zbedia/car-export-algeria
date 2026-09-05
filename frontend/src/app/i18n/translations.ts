@@ -21,6 +21,10 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.viewListing': 'View listing',
     'search.estimateShipping': 'Estimate shipping cost',
 
+    'pagination.previous': 'Previous',
+    'pagination.next': 'Next',
+    'pagination.page': 'Page {page} / {total}',
+
     'modal.edit': 'Edit',
     'modal.cancel': 'Cancel',
     'modal.update': 'Update',
@@ -68,6 +72,10 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.viewListing': "Voir l'annonce",
     'search.estimateShipping': 'Estimer le coût de transport',
 
+    'pagination.previous': 'Précédent',
+    'pagination.next': 'Suivant',
+    'pagination.page': 'Page {page} / {total}',
+
     'modal.edit': 'Modifier',
     'modal.cancel': 'Annuler',
     'modal.update': 'Mettre à jour',
@@ -114,6 +122,10 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.source': 'المصدر:',
     'search.viewListing': 'عرض الإعلان',
     'search.estimateShipping': 'تقدير تكلفة الشحن',
+
+    'pagination.previous': 'السابق',
+    'pagination.next': 'التالي',
+    'pagination.page': 'الصفحة {page} / {total}',
 
     'modal.edit': 'تعديل',
     'modal.cancel': 'إلغاء',

@@ -25,7 +25,7 @@
     {{ 'search.noResults' | translate }}
   </div>
 
-  <div class="group-section" *ngFor="let group of groupedResults">
+  <div class="group-section" *ngFor="let group of pagedGroups">
     <h2>{{ group.brand }} {{ group.model }}</h2>
     <div class="results-grid">
       <div class="vehicle-card" *ngFor="let v of group.vehicles" [class.best-price]="v.bestPrice">
@@ -70,6 +70,13 @@
         <a [href]="v.externalUrl" target="_blank" rel="noopener">{{ 'search.viewListing' | translate }}</a>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="totalPages > 1" class="pagination">
+    <button type="button" class="pag-btn" [disabled]="currentPage <= 1" (click)="prevPage()">{{ 'pagination.previous' | translate }}</button>
+    <button *ngFor="let n of pageNumbers" type="button" class="pag-btn" [class.active]="n === currentPage" (click)="goToPage(n)">{{ n }}</button>
+    <button type="button" class="pag-btn" [disabled]="currentPage >= totalPages" (click)="nextPage()">{{ 'pagination.next' | translate }}</button>
+    <span class="page-info">{{ pageInfoText }}</span>
   </div>
 
   <app-shipping-edit-modal

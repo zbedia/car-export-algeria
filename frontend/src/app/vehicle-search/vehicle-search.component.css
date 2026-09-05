@@ -229,3 +229,50 @@
 .vehicle-card a:hover {
   text-decoration: underline;
 }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.pag-btn {
+  min-width: 36px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  color: #1a1a1a;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+}
+
+.pag-btn:hover:not(:disabled):not(.active) {
+  background: #e8f4fd;
+}
+
+.pag-btn.active {
+  background: #0ea5e9;
+  border-color: #0ea5e9;
+  color: white;
+  font-weight: 600;
+}
+
+.pag-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-info {
+  margin-left: auto;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+[dir='rtl'] .page-info {
+  margin-left: 0;
+  margin-right: auto;
+}

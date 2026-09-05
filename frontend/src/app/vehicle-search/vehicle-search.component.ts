@@ -44,6 +44,9 @@ export class VehicleSearchComponent {
   errorMessage = '';
   hasSearched = false;
 
+  pageSize = 10;
+  currentPage = 1;
+
   carBrands = CAR_BRANDS;
 
   // Diesel is intentionally excluded — it's always filtered out server-side
@@ -87,6 +90,7 @@ export class VehicleSearchComponent {
     this.vehicleService.search(filters).subscribe({
       next: (data) => {
         this.groupedResults = this.groupByModel(data);
+        this.currentPage = 1;
         this.loading = false;
       },
       error: (err) => {
@@ -94,6 +98,44 @@ export class VehicleSearchComponent {
         this.loading = false;
       }
     });
+  }
+
+  // --- Pagination (client-side over the model groups) ---
+  get pagedGroups(): VehicleGroup[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.groupedResults.slice(start, start + this.pageSize);
+  }
+
+  get totalPages(): number {
+    return Math.max(1, Math.ceil(this.groupedResults.length / this.pageSize));
+  }
+
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
+  get pageInfoText(): string {
+    return this.translationService.t('pagination.page', {
+      page: this.currentPage,
+      total: this.totalPages
+    });
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.goToPage(this.currentPage - 1);
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.goToPage(this.currentPage + 1);
+    }
+  }
+
+  goToPage(page: number): void {
+    this.currentPage = Math.min(Math.max(1, page), this.totalPages);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   private groupByModel(results: VehicleSearchResult[]): VehicleGroup[] {
