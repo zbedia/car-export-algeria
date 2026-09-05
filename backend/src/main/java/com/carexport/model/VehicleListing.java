@@ -17,6 +17,16 @@ public class VehicleListing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Optimistic locking version column. Incremented by Hibernate on every
+     * UPDATE; JPA checks it during the write so two concurrent transactions
+     * modifying the same listing cannot silently overwrite each other
+     * (a conflict raises OptimisticLockingFailureException).
+     */
+    @Version
+    @Column(name = "version", nullable = false)
+    private long version;
+
     @Column(nullable = false)
     private String source;
 
@@ -72,6 +82,7 @@ public class VehicleListing {
     public VehicleListing() {}
 
     public Long getId() { return id; }
+    public long getVersion() { return version; }
     public String getSource() { return source; }
     public void setSource(String source) { this.source = source; }
     public String getExternalUrl() { return externalUrl; }

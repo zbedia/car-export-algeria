@@ -6,9 +6,11 @@ import com.carexport.model.FuelType;
 import com.carexport.model.VehicleListing;
 import com.carexport.repository.VehicleListingRepository;
 import com.carexport.repository.VehicleSpecifications;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -27,6 +29,16 @@ public class VehicleSearchService {
         this.eligibilityService = eligibilityService;
     }
 
+    /**
+     * Runs inside a read-only transaction so every request sees one consistent
+     * snapshot of the listings (no torn reads while a refresh is writing), and
+     * is cached in the "vehicleSearch" Caffeine cache keyed by the query
+     * filters — concurrent users asking the same question hit the cache
+     * instead of piling identical queries onto the database. The cache is
+     * evicted by ListingUpdateService whenever scraped data changes.
+     */
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "vehicleSearch", key = "{#request.brand, #request.model, #request.maxPrice, #request.maxMileageKm, #request.garageCity, #request.fuelType}")
     public List<VehicleSearchResult> search(SearchRequest request) {
         BigDecimal maxPrice = request.getMaxPrice() != null
             ? request.getMaxPrice()

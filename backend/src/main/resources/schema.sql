@@ -12,5 +12,6 @@ CREATE TABLE IF NOT EXISTS vehicle_listing (
     scraped_at TIMESTAMP NOT NULL,
     fuel_type VARCHAR(20) NOT NULL,
     engine_displacement_cm3 INT,
-    first_registration_date DATE NOT NULL
+    first_registration_date DATE NOT NULL,
+    version BIGINT NOT NULL DEFAULT 0
 );

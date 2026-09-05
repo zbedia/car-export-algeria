@@ -18,15 +18,15 @@
   <div *ngIf="result" class="result-breakdown">
     <div class="line">
       <span>{{ 'shipping.baseFreight' | translate }}</span>
-      <span>{{ result.baseFreightCost | currency:result.currency }}</span>
+      <span>{{ result.baseFreightCost | currency:result.currency:'symbol':'1.0-0' }}</span>
     </div>
     <div class="line">
       <span>{{ 'shipping.handlingFee' | translate }}</span>
-      <span>{{ result.handlingFee | currency:result.currency }}</span>
+      <span>{{ result.handlingFee | currency:result.currency:'symbol':'1.0-0' }}</span>
     </div>
     <div class="line total">
       <span>{{ 'shipping.total' | translate }}</span>
-      <span>{{ result.totalCost | currency:result.currency }}</span>
+      <span>{{ result.totalCost | currency:result.currency:'symbol':'1.0-0' }}</span>
     </div>
   </div>
 

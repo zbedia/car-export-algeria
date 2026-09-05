@@ -35,7 +35,7 @@
           {{ fuelIcon(v.fuelType) }} {{ ('fuel.' + v.fuelType) | translate }}
           <span *ngIf="v.engineDisplacementCm3 as displacement">— {{ displacement }} cm³</span>
         </p>
-        <p class="price">{{ v.price | currency:v.currency }}</p>
+        <p class="price">{{ v.price | currency:v.currency:'symbol':'1.0-0' }}</p>
         <p class="customs" [title]="customsDiscountReasonText(v)">
           {{ 'search.customsDiscount' | translate }} -{{ v.customsDiscountPercentage }}% <span class="info-icon">ⓘ</span>
         </p>
@@ -54,15 +54,15 @@
             </p>
             <div class="shipping-line">
               <span>{{ 'shipping.baseFreight' | translate }}</span>
-              <span>{{ result.baseFreightCost | currency:result.currency }}</span>
+              <span>{{ result.baseFreightCost | currency:result.currency:'symbol':'1.0-0' }}</span>
             </div>
             <div class="shipping-line">
               <span>{{ 'shipping.handlingFee' | translate }}</span>
-              <span>{{ result.handlingFee | currency:result.currency }}</span>
+              <span>{{ result.handlingFee | currency:result.currency:'symbol':'1.0-0' }}</span>
             </div>
             <div class="shipping-line shipping-total">
               <span>{{ 'shipping.total' | translate }}</span>
-              <span>{{ result.totalCost | currency:result.currency }}</span>
+              <span>{{ result.totalCost | currency:result.currency:'symbol':'1.0-0' }}</span>
             </div>
             <p class="shipping-disclaimer">{{ 'shipping.disclaimer' | translate }}</p>
           </div>
