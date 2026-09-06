@@ -49,7 +49,7 @@ final class CarXExportVehicleParser {
         v.setSource(sourceName);
         v.setExternalUrl(detailUrl);
 
-        // --- Marque & Modèle ---
+        // --- Brand & Model ---
         String brand = extractFirstValid(
                 vehicleNode != null ? vehicleNode.path("brand").path("name").asText(null) : null,
                 specs.get(CarXExportSelectors.LABEL_BRAND_FR),
@@ -67,7 +67,7 @@ final class CarXExportVehicleParser {
         v.setBrand(brand);
         v.setModel(model);
 
-        // --- Année & Date ---
+        // --- Year & Date ---
         int year = 0;
         if (vehicleNode != null) {
             year = vehicleNode.path("vehicleModelDate").asInt(0);
@@ -86,7 +86,7 @@ final class CarXExportVehicleParser {
                         specs.get(CarXExportSelectors.LABEL_REGISTRATION_FR_3)));
         v.setFirstRegistrationDate(parseFrenchDate(regDateStr, year));
 
-        // --- Kilométrage ---
+        // --- Mileage ---
         int mileage = 0;
         if (vehicleNode != null) {
             mileage = vehicleNode.path("mileageFromOdometer").path("value").asInt(0);
@@ -100,7 +100,7 @@ final class CarXExportVehicleParser {
         }
         v.setMileageKm(mileage);
 
-        // --- Carburant ---
+        // --- Fuel ---
         String rawFuel = extractFirstValid(
                 vehicleNode != null ? vehicleNode.path("fuelType").asText(null) : null,
                 specs.get(CarXExportSelectors.LABEL_FUEL_FR),
@@ -110,12 +110,12 @@ final class CarXExportVehicleParser {
         );
         v.setFuelType(parseFuelType(rawFuel));
 
-        // --- Prix : EUR prioritaire (conversion CarXport pour l'export), sinon devise native ---
+        // --- Price: EUR preferred (CarXport export conversion), otherwise native currency ---
         CarXExportPriceParser.ParsedPrice price = priceParser.extract(detailDoc, vehicleNode, specs);
         v.setPrice(price.amount());
         v.setCurrency(price.currency());
 
-        // --- Cylindrée & Ville ---
+        // --- Displacement & City ---
         v.setEngineDisplacementCm3(parseDisplacementCm3(
                 specs.getOrDefault(CarXExportSelectors.LABEL_DISPLACEMENT_FR,
                         specs.getOrDefault(CarXExportSelectors.LABEL_DISPLACEMENT_FR_2,
