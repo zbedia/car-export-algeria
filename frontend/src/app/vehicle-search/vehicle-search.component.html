@@ -32,7 +32,7 @@
         <span *ngIf="v.bestPrice" class="badge">{{ 'search.bestPrice' | translate }}</span>
         <img *ngIf="v.imageUrl" [src]="v.imageUrl" [alt]="v.brand + ' ' + v.model"
              class="vehicle-image" loading="lazy" (error)="onImageError($event)" />
-        <p>{{ v.mileageKm | number }} km — {{ v.garageCity }}</p>
+        <p>{{ v.mileageKm | number }} km<span *ngIf="v.garageCity"> — {{ v.garageCity }}</span></p>
         <p class="fuel">
           {{ fuelIcon(v.fuelType) }} {{ ('fuel.' + v.fuelType) | translate }}
           <span *ngIf="v.engineDisplacementCm3 as displacement">— {{ displacement }} cm³</span>

@@ -325,9 +325,12 @@ public class CarXExportConnector implements VehicleSourceConnector {
             }
         }
 
-        // Marques Tailwind du site : <p class="text-xs text-fog">label</p>
-        // immédiatement suivi de <p class="mt-1 ...">valeur</p>
-        for (Element label : doc.select("p.text-xs.text-fog")) {
+        // Marques Tailwind du site : <p class="... text-fog">label</p>
+        // immédiatement suivi de <p class="... text-snow ...">valeur</p>.
+        // La classe "text-fog" est stable mais la taille de police du label
+        // varie (text-xs sur certaines pages, text-[10px] arbitraire sur
+        // d'autres) — on ne cible donc que "text-fog".
+        for (Element label : doc.select("p.text-fog")) {
             Element value = label.nextElementSibling();
             if (value != null && value.hasText()) {
                 specs.putIfAbsent(label.text().trim(), value.text().trim());
