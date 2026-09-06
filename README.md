@@ -63,6 +63,53 @@ Rather than a single global widget, each vehicle card has its own "Estimate ship
 
 `GET /api/shipping/estimate?originPort=&destinationPort=` — freight cost breakdown (base rate + handling fee)
 
+## Scraping source health monitoring
+
+Each scheduled scrape round records, per source, whether the last run succeeded and how many vehicles it produced. This makes a silently-broken marketplace visible immediately (e.g. a site that stays online but serves a "deployment paused" banner instead of the listing grid) instead of looking healthy by accident.
+
+Per-source status is one of:
+
+| Status | Meaning |
+|---|---|
+| `UP` | Last round succeeded and produced vehicles |
+| `EMPTY` | Last round succeeded but produced zero vehicles — the site is probably down or changed its markup |
+| `DOWN` | Last round threw (network error, HTTP failure, parse error) |
+
+The overall status folds the per-source statuses together (`DOWN` wins over `EMPTY` wins over `UP`), and is `UNKNOWN` before the first round.
+
+### Endpoints
+
+| Endpoint | Description |
+|---|---|
+| `GET /api/health` | Health snapshot from the last scrape round (scheduled or manual) |
+| `POST /api/health/refresh` | Runs a full refresh round **now** (same code path as the 6-hourly scheduler: fetch, persist, evict the search cache) and returns the fresh snapshot |
+
+```bash
+# Inspect the last round
+curl http://localhost:8080/api/health
+
+# Force a round now (can take a couple of minutes when a marketplace is back online)
+curl -X POST http://localhost:8080/api/health/refresh
+```
+
+Example response:
+
+```json
+{
+  "status": "EMPTY",
+  "sources": [
+    { "source": "CarXport",     "status": "UP",    "successCount": 12, "failureCount": 0, "consecutiveFailures": 0, "lastVehicleCount": 24 },
+    { "source": "ExportCar213", "status": "EMPTY", "successCount": 11, "failureCount": 1, "consecutiveFailures": 0, "lastVehicleCount": 0 }
+  ]
+}
+```
+
+Notes:
+
+- A source in failure mode never deletes its existing rows — `ListingUpdateService` only inserts/updates, so search results keep serving the last-known data.
+- The per-source counters (`successCount`, `failureCount`, `consecutiveFailures`) are in-memory and reset on backend restart.
+- Sniffing this endpoint from Kubernetes-style probes is fine for liveness; it does not hit the network.
+
 ## Internationalization
 
 The interface is available in English 🇬🇧, French 🇫🇷 and Arabic 🇩🇿, switchable instantly via the flag buttons in the header. Arabic also switches the document to right-to-left (`dir="rtl"`).
@@ -117,6 +164,7 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 - Results grouped by model, with a "Best price" badge on the cheapest vehicle in each group
 - Loading, error, and no-results states
 - Extensible scraping architecture (Strategy pattern) to easily add new sources
+- Scraping source health monitoring with an on-demand refresh endpoint
 - RoRo shipping cost estimate on each vehicle card, with an editable route
 - Multilingual interface (English, French, Arabic) with RTL support
 
@@ -124,7 +172,6 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 
 - Real scraping connectors (currently a demonstration example)
 - Migration to a proper schema migration tool (Flyway/Liquibase) instead of Hibernate's `ddl-auto=update` for PostgreSQL
-- Pagination
 - User authentication and favorites
 
 ## License
