@@ -79,6 +79,14 @@ public class VehicleListing {
     @Column(name = "first_registration_date", nullable = false)
     private LocalDate firstRegistrationDate;
 
+    /**
+     * Main photo of the listing, scraped from the marketplace
+     * (JSON-LD "image" / Open Graph og:image). Null when the site
+     * exposes no image.
+     */
+    @Column(name = "image_url", length = 2000)
+    private String imageUrl;
+
     public VehicleListing() {}
 
     public Long getId() { return id; }
@@ -109,6 +117,8 @@ public class VehicleListing {
     public void setEngineDisplacementCm3(Integer engineDisplacementCm3) { this.engineDisplacementCm3 = engineDisplacementCm3; }
     public LocalDate getFirstRegistrationDate() { return firstRegistrationDate; }
     public void setFirstRegistrationDate(LocalDate firstRegistrationDate) { this.firstRegistrationDate = firstRegistrationDate; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
     @Override
     public boolean equals(Object o) {

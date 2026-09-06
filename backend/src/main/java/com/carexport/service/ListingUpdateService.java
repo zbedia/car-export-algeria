@@ -79,6 +79,7 @@ public class ListingUpdateService {
             existing.setFuelType(fresh.getFuelType());
             existing.setEngineDisplacementCm3(fresh.getEngineDisplacementCm3());
             existing.setFirstRegistrationDate(fresh.getFirstRegistrationDate());
+            existing.setImageUrl(fresh.getImageUrl());
             existing.setScrapedAt(fresh.getScrapedAt());
             repository.saveAndFlush(existing);
         }
@@ -94,6 +95,7 @@ public class ListingUpdateService {
                 || !Objects.equals(existing.getGarageCity(), fresh.getGarageCity())
                 || existing.getFuelType() != fresh.getFuelType()
                 || !Objects.equals(existing.getEngineDisplacementCm3(), fresh.getEngineDisplacementCm3())
-                || !Objects.equals(existing.getFirstRegistrationDate(), fresh.getFirstRegistrationDate());
+                || !Objects.equals(existing.getFirstRegistrationDate(), fresh.getFirstRegistrationDate())
+                || !Objects.equals(existing.getImageUrl(), fresh.getImageUrl());
     }
 }

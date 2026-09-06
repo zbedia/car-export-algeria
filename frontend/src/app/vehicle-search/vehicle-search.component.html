@@ -30,6 +30,8 @@
     <div class="results-grid">
       <div class="vehicle-card" *ngFor="let v of group.vehicles" [class.best-price]="v.bestPrice">
         <span *ngIf="v.bestPrice" class="badge">{{ 'search.bestPrice' | translate }}</span>
+        <img *ngIf="v.imageUrl" [src]="v.imageUrl" [alt]="v.brand + ' ' + v.model"
+             class="vehicle-image" loading="lazy" (error)="onImageError($event)" />
         <p>{{ v.mileageKm | number }} km — {{ v.garageCity }}</p>
         <p class="fuel">
           {{ fuelIcon(v.fuelType) }} {{ ('fuel.' + v.fuelType) | translate }}

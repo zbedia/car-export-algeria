@@ -49,6 +49,11 @@ export class VehicleSearchComponent {
 
   carBrands = CAR_BRANDS;
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+  }
+
   // Diesel is intentionally excluded — it's always filtered out server-side
   // (banned for private import), so offering it as a filter option would
   // just lead to a confusing "no results" every time.

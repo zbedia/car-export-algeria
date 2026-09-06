@@ -19,6 +19,7 @@ public class VehicleSearchResult {
     private Integer engineDisplacementThresholdCm3;
     private BigDecimal customsDiscountPercentage;
     private String customsDiscountReasonCode;
+    private String imageUrl;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -52,4 +53,6 @@ public class VehicleSearchResult {
     public void setCustomsDiscountPercentage(BigDecimal customsDiscountPercentage) { this.customsDiscountPercentage = customsDiscountPercentage; }
     public String getCustomsDiscountReasonCode() { return customsDiscountReasonCode; }
     public void setCustomsDiscountReasonCode(String customsDiscountReasonCode) { this.customsDiscountReasonCode = customsDiscountReasonCode; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

@@ -203,6 +203,8 @@ public class CarXExportConnector implements VehicleSourceConnector {
         );
         v.setGarageCity(city);
 
+        v.setImageUrl(ListingImageExtractor.extract(vehicleNode, detailDoc));
+
         v.setScrapedAt(LocalDateTime.now());
 
         return v;

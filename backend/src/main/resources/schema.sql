@@ -13,5 +13,6 @@ CREATE TABLE IF NOT EXISTS vehicle_listing (
     fuel_type VARCHAR(20) NOT NULL,
     engine_displacement_cm3 INT,
     first_registration_date DATE NOT NULL,
+    image_url VARCHAR(2000),
     version BIGINT NOT NULL DEFAULT 0
 );

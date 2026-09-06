@@ -144,6 +144,8 @@ public class ExportCar213Connector implements VehicleSourceConnector {
         v.setEngineDisplacementCm3(null);
         v.setGarageCity(null);
 
+        v.setImageUrl(ListingImageExtractor.extract(vehicleNode, detailDoc));
+
         v.setScrapedAt(LocalDateTime.now());
         return v;
     }

@@ -98,6 +98,7 @@ public class VehicleSearchService {
         }
         r.setCustomsDiscountPercentage(eligibilityService.getCustomsDiscountPercentage(v));
         r.setCustomsDiscountReasonCode(eligibilityService.getCustomsDiscountReasonCode(v).name());
+        r.setImageUrl(v.getImageUrl());
         return r;
     }
 }

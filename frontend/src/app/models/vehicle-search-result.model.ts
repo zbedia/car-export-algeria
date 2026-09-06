@@ -18,4 +18,5 @@ export interface VehicleSearchResult {
   engineDisplacementThresholdCm3: number | null;
   customsDiscountPercentage: number;
   customsDiscountReasonCode: CustomsDiscountReasonCode;
+  imageUrl: string | null;
 }
