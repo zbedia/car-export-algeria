@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidCriteria(
             InvalidSearchCriteriaException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.BAD_REQUEST.value(), "Bad Request", ex.getMessage(), request.getRequestURI());
+            HttpStatus.BAD_REQUEST.value(), ErrorMessages.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
         return ResponseEntity.badRequest().body(error);
     }
 
@@ -29,16 +29,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleRouteNotSupported(
             RouteNotSupportedException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.BAD_REQUEST.value(), "Bad Request", ex.getMessage(), request.getRequestURI());
+            HttpStatus.BAD_REQUEST.value(), ErrorMessages.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
         return ResponseEntity.badRequest().body(error);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleTypeMismatch(
             MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-        String message = String.format("Parameter '%s' is invalid.", ex.getName());
+        String message = String.format(ErrorMessages.INVALID_PARAMETER, ex.getName());
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.BAD_REQUEST.value(), "Bad Request", message, request.getRequestURI());
+            HttpStatus.BAD_REQUEST.value(), ErrorMessages.BAD_REQUEST, message, request.getRequestURI());
         return ResponseEntity.badRequest().body(error);
     }
 
@@ -51,9 +51,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleOptimisticLockingConflict(
             OptimisticLockingFailureException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.CONFLICT.value(), "Conflict",
-            "The listing was modified by another request. Please reload and try again.",
-            request.getRequestURI());
+            HttpStatus.CONFLICT.value(), ErrorMessages.CONFLICT,
+            ErrorMessages.OPTIMISTIC_LOCKING_CONFLICT, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
@@ -65,19 +64,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
             DataIntegrityViolationException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.CONFLICT.value(), "Conflict",
-            "The operation conflicts with a concurrent change. Please retry.",
-            request.getRequestURI());
+            HttpStatus.CONFLICT.value(), ErrorMessages.CONFLICT,
+            ErrorMessages.DATA_INTEGRITY_VIOLATION, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(
             Exception ex, HttpServletRequest request) {
-        log.error("Unhandled exception on {} {}", request.getMethod(), request.getRequestURI(), ex);
+        log.error(ErrorMessages.UNHANDLED_EXCEPTION, request.getMethod(), request.getRequestURI(), ex);
         ErrorResponse error = new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",
-            "An unexpected error occurred.", request.getRequestURI());
+            HttpStatus.INTERNAL_SERVER_ERROR.value(), ErrorMessages.INTERNAL_SERVER_ERROR,
+            ErrorMessages.UNEXPECTED_ERROR, request.getRequestURI());
         return ResponseEntity.internalServerError().body(error);
     }
 }
