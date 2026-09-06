@@ -1,16 +1,35 @@
 package com.carexport.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "vehicle_listing", indexes = {
-    @Index(name = "idx_external_url", columnList = "externalUrl", unique = true),
-    @Index(name = "idx_brand_model", columnList = "brand, model")
+        @Index(name = "idx_external_url", columnList = "externalUrl", unique = true),
+        @Index(name = "idx_brand_model", columnList = "brand, model")
 })
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class VehicleListing {
 
     @Id
@@ -31,6 +50,7 @@ public class VehicleListing {
     private String source;
 
     @Column(nullable = false, unique = true, length = 1000)
+    @EqualsAndHashCode.Include
     private String externalUrl;
 
     @Column(nullable = false)
@@ -86,50 +106,4 @@ public class VehicleListing {
      */
     @Column(name = "image_url", length = 2000)
     private String imageUrl;
-
-    public VehicleListing() {}
-
-    public Long getId() { return id; }
-    public long getVersion() { return version; }
-    public String getSource() { return source; }
-    public void setSource(String source) { this.source = source; }
-    public String getExternalUrl() { return externalUrl; }
-    public void setExternalUrl(String externalUrl) { this.externalUrl = externalUrl; }
-    public String getBrand() { return brand; }
-    public void setBrand(String brand) { this.brand = brand; }
-    public String getModel() { return model; }
-    public void setModel(String model) { this.model = model; }
-    public int getYear() { return year; }
-    public void setYear(int year) { this.year = year; }
-    public int getMileageKm() { return mileageKm; }
-    public void setMileageKm(int mileageKm) { this.mileageKm = mileageKm; }
-    public BigDecimal getPrice() { return price; }
-    public void setPrice(BigDecimal price) { this.price = price; }
-    public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency; }
-    public String getGarageCity() { return garageCity; }
-    public void setGarageCity(String garageCity) { this.garageCity = garageCity; }
-    public LocalDateTime getScrapedAt() { return scrapedAt; }
-    public void setScrapedAt(LocalDateTime scrapedAt) { this.scrapedAt = scrapedAt; }
-    public FuelType getFuelType() { return fuelType; }
-    public void setFuelType(FuelType fuelType) { this.fuelType = fuelType; }
-    public Integer getEngineDisplacementCm3() { return engineDisplacementCm3; }
-    public void setEngineDisplacementCm3(Integer engineDisplacementCm3) { this.engineDisplacementCm3 = engineDisplacementCm3; }
-    public LocalDate getFirstRegistrationDate() { return firstRegistrationDate; }
-    public void setFirstRegistrationDate(LocalDate firstRegistrationDate) { this.firstRegistrationDate = firstRegistrationDate; }
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof VehicleListing)) return false;
-        VehicleListing that = (VehicleListing) o;
-        return Objects.equals(externalUrl, that.externalUrl);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(externalUrl);
-    }
 }
