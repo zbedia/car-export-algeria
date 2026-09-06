@@ -8,11 +8,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Turns a fetched CarXport detail page into a {@link VehicleListing}.
@@ -112,9 +116,10 @@ final class CarXExportVehicleParser {
         v.setCurrency(price.currency());
 
         // --- Cylindrée & Ville ---
-        v.setEngineDisplacementCm3(parseIntegerSafely(
+        v.setEngineDisplacementCm3(parseDisplacementCm3(
                 specs.getOrDefault(CarXExportSelectors.LABEL_DISPLACEMENT_FR,
-                        specs.get(CarXExportSelectors.LABEL_DISPLACEMENT_EN))));
+                        specs.getOrDefault(CarXExportSelectors.LABEL_DISPLACEMENT_FR_2,
+                                specs.get(CarXExportSelectors.LABEL_DISPLACEMENT_EN)))));
 
         String city = extractFirstValid(
                 specs.get(CarXExportSelectors.LABEL_CITY_FR),
@@ -181,6 +186,52 @@ final class CarXExportVehicleParser {
         } catch (NumberFormatException e) {
             return 0;
         }
+    }
+
+    private static final Pattern DISPLACEMENT_LITRES =
+            Pattern.compile("(?<num>[0-9]+(?:[.,][0-9]+)?)\\s*[Ll]");
+    private static final Pattern DISPLACEMENT_CC =
+            Pattern.compile("(?<num>[0-9]+)\\s*(?:cm3|cc|cm³)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern BARE_COMMA_DECIMAL = Pattern.compile("(?<int>[0-9]+),(?<frac>[0-9]+)");
+
+    /**
+     * Parses an engine displacement in cm³.
+     *
+     * Accepts litre notation (« 1,2 L », « 2.0L » -> 1200/2000), cc/cm³
+     * notation (« 1981 cm3 ») and plain integers. Decimal litre values are
+     * converted x1000, never blindly digit-stripped (1,2 -> 1200, not 12).
+     * Returns 0 when the information is absent.
+     */
+    private int parseDisplacementCm3(String rawValue) {
+        if (rawValue == null || rawValue.isBlank()) {
+            return 0;
+        }
+        String trimmed = rawValue.trim();
+
+        Matcher litres = DISPLACEMENT_LITRES.matcher(trimmed);
+        if (litres.find()) {
+            return litresToCm3(litres.group("num"));
+        }
+
+        Matcher cc = DISPLACEMENT_CC.matcher(trimmed);
+        if (cc.find()) {
+            return parseIntegerSafely(cc.group("num"));
+        }
+
+        // Bare decimal « 2,0 » without a unit -> litres. Comma is the only
+        // trusted decimal separator here (French/Dutch notation); a dotted
+        // value like « 12.500 » is far too ambiguous to guess.
+        Matcher bareDecimal = BARE_COMMA_DECIMAL.matcher(trimmed);
+        if (bareDecimal.matches() && Integer.parseInt(bareDecimal.group("int")) <= 20) {
+            return litresToCm3(trimmed);
+        }
+
+        return parseIntegerSafely(trimmed);
+    }
+
+    private int litresToCm3(String decimalValue) {
+        BigDecimal litres = new BigDecimal(decimalValue.replace(",", "."));
+        return litres.multiply(BigDecimal.valueOf(1000)).setScale(0, RoundingMode.HALF_UP).intValue();
     }
 
     private LocalDate parseFrenchDate(String rawDate, int fallbackYear) {

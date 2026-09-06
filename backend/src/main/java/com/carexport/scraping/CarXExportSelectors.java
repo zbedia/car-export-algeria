@@ -61,6 +61,7 @@ final class CarXExportSelectors {
     static final String LABEL_FUEL_FR_2 = "Énergie";
     static final String LABEL_FUEL_EN = "Fuel";
     static final String LABEL_DISPLACEMENT_FR = "Cylindrée";
+    static final String LABEL_DISPLACEMENT_FR_2 = "Moteur";
     static final String LABEL_DISPLACEMENT_EN = "Engine Size";
     static final String LABEL_CITY_FR = "Ville";
     static final String LABEL_CITY_FR_2 = "Localisation";
