@@ -6,7 +6,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class ScrapingScheduler {
@@ -19,7 +18,7 @@ public class ScrapingScheduler {
         this.listingUpdateService = listingUpdateService;
     }
 
-    @Scheduled(fixedRate = 6, timeUnit = TimeUnit.HOURS)
+    @Scheduled(fixedRateString = "${scraping.refresh-interval-ms}")
     public void refreshListings() {
         SearchCriteria criteria = SearchCriteria.defaultExportCriteria();
         List<VehicleListing> listings = orchestrator.collectAll(criteria);

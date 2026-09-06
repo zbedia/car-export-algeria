@@ -69,6 +69,7 @@ public class ExportCar213Connector implements VehicleSourceConnector {
     private static final int REQUEST_TIMEOUT_MS = 10_000;
     private static final long DETAIL_REQUEST_DELAY_MS = 300;
     private static final DateTimeFormatter FRENCH_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final String SPEC_KEY_REGISTRATION = "Mise en circulation";
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -132,7 +133,7 @@ public class ExportCar213Connector implements VehicleSourceConnector {
 
         int year = vehicleNode.path("vehicleModelDate").asInt(0);
         v.setYear(year);
-        v.setFirstRegistrationDate(parseFrenchDate(specs.get("Mise en circulation"), year));
+        v.setFirstRegistrationDate(parseFrenchDate(specs.get(SPEC_KEY_REGISTRATION), year));
 
         v.setMileageKm(vehicleNode.path("mileageFromOdometer").path("value").asInt(0));
         v.setFuelType(parseFuelType(vehicleNode.path("fuelType").asText("")));

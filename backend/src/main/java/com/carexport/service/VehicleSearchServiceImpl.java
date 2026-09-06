@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
 @Service
 public class VehicleSearchServiceImpl implements VehicleSearchService {
 
+    private static final BigDecimal NO_PRICE_LIMIT = new BigDecimal("999999999");
+
     private final VehicleListingRepository repository;
     private final ImportEligibilityService eligibilityService;
 
@@ -43,7 +45,7 @@ public class VehicleSearchServiceImpl implements VehicleSearchService {
     public List<VehicleSearchResult> search(SearchRequest request) {
         BigDecimal maxPrice = request.getMaxPrice() != null
             ? request.getMaxPrice()
-            : new BigDecimal("999999999");
+            : NO_PRICE_LIMIT;
 
         // Only the filters the user actually provided are added to the
         // query — see VehicleSpecifications for why this is preferable to

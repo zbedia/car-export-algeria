@@ -37,10 +37,13 @@ import java.util.List;
 public class GarageXConnector implements VehicleSourceConnector {
 
     private static final String BASE_URL = "https://garagex.example.com/search";
+    private static final String SOURCE_NAME = "GarageX";
+    private static final String USER_AGENT = "Mozilla/5.0 (compatible; VehicleExportBot/1.0)";
+    private static final int REQUEST_TIMEOUT_MS = 10_000;
 
     @Override
     public String getSourceName() {
-        return "GarageX";
+        return SOURCE_NAME;
     }
 
     @Override
@@ -48,8 +51,8 @@ public class GarageXConnector implements VehicleSourceConnector {
         List<VehicleListing> results = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(BASE_URL)
-                .userAgent("Mozilla/5.0 (compatible; VehicleExportBot/1.0)")
-                .timeout(10_000)
+                .userAgent(USER_AGENT)
+                .timeout(REQUEST_TIMEOUT_MS)
                 .data("brand", criteria.getBrand() != null ? criteria.getBrand() : "")
                 .data("min_year", String.valueOf(criteria.getMinYear()))
                 .get();

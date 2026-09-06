@@ -39,6 +39,7 @@ import java.util.List;
 public class DynamicMarketplaceConnector implements VehicleSourceConnector {
 
     private static final String BASE_URL = "https://dynamic-marketplace.example.com/search";
+    private static final String SOURCE_NAME = "DynamicMarketplace";
     private static final int SELECTOR_TIMEOUT_MS = 10_000;
 
     private final PlaywrightBrowserManager browserManager;
@@ -49,7 +50,7 @@ public class DynamicMarketplaceConnector implements VehicleSourceConnector {
 
     @Override
     public String getSourceName() {
-        return "DynamicMarketplace";
+        return SOURCE_NAME;
     }
 
     @Override

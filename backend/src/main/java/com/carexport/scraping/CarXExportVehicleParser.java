@@ -193,6 +193,8 @@ final class CarXExportVehicleParser {
     private static final Pattern DISPLACEMENT_CC =
             Pattern.compile("(?<num>[0-9]+)\\s*(?:cm3|cc|cm³)", Pattern.CASE_INSENSITIVE);
     private static final Pattern BARE_COMMA_DECIMAL = Pattern.compile("(?<int>[0-9]+),(?<frac>[0-9]+)");
+    private static final int CM3_PER_LITRE = 1000;
+    private static final int MAX_BARE_DECIMAL_LITRES = 20;
 
     /**
      * Parses an engine displacement in cm³.
@@ -222,7 +224,7 @@ final class CarXExportVehicleParser {
         // trusted decimal separator here (French/Dutch notation); a dotted
         // value like « 12.500 » is far too ambiguous to guess.
         Matcher bareDecimal = BARE_COMMA_DECIMAL.matcher(trimmed);
-        if (bareDecimal.matches() && Integer.parseInt(bareDecimal.group("int")) <= 20) {
+        if (bareDecimal.matches() && Integer.parseInt(bareDecimal.group("int")) <= MAX_BARE_DECIMAL_LITRES) {
             return litresToCm3(trimmed);
         }
 
@@ -231,7 +233,7 @@ final class CarXExportVehicleParser {
 
     private int litresToCm3(String decimalValue) {
         BigDecimal litres = new BigDecimal(decimalValue.replace(",", "."));
-        return litres.multiply(BigDecimal.valueOf(1000)).setScale(0, RoundingMode.HALF_UP).intValue();
+        return litres.multiply(BigDecimal.valueOf(CM3_PER_LITRE)).setScale(0, RoundingMode.HALF_UP).intValue();
     }
 
     private LocalDate parseFrenchDate(String rawDate, int fallbackYear) {
