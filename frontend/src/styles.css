@@ -9,6 +9,29 @@ body {
   color: #1a1a1a;
 }
 
+/* Sticky-footer layout: the app root is a full-height flex column.
+   The header stays on top, the footer is pushed to the bottom of the
+   viewport, and <main> flex:1 grows to fill whatever is in between —
+   so the search area is never squeezed between header and footer on
+   short screens or before results load. */
+html,
+body {
+  height: 100%;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+main {
+  flex: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
 .app-header {
   background: #fed7aa;
   color: #9a3412;
@@ -39,12 +62,6 @@ body {
   margin: 0;
   color: #c2410c;
   font-size: 0.9rem;
-}
-
-main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px 16px;
 }
 
 /* Basic RTL support for Arabic. Flexbox row direction and text-align
