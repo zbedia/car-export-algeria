@@ -40,7 +40,7 @@ class VehicleSearchServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new VehicleSearchService(repository, new ImportEligibilityService());
+        service = new VehicleSearchServiceImpl(repository, new ImportEligibilityServiceImpl());
     }
 
     @Test

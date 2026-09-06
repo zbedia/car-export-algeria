@@ -14,7 +14,7 @@ class ShippingCostServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new ShippingCostService(new BigDecimal("150.00"));
+        service = new ShippingCostServiceImpl(new BigDecimal("150.00"));
     }
 
     @Test

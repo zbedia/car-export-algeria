@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ScrapingHealthServiceTest {
 
-    private final ScrapingHealthService healthService = new ScrapingHealthService();
+    private final ScrapingHealthService healthService = new ScrapingHealthServiceImpl();
 
     @Test
     void recordsSuccess_andFailure_alongsideCountsAndTimeStamps() {

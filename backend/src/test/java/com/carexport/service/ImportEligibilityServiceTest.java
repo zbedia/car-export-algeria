@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ImportEligibilityServiceTest {
 
-    private final ImportEligibilityService service = new ImportEligibilityService();
+    private final ImportEligibilityService service = new ImportEligibilityServiceImpl();
 
     @Test
     void diesel_isNeverEligible_evenIfRecent() {
