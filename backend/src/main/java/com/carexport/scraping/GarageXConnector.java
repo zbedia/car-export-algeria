@@ -7,6 +7,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -27,8 +28,12 @@ import java.util.List;
  *
  * Should be adapted with the real CSS selectors of the actual target site.
  * Always check the site's terms of service / robots.txt before scraping in production.
+ *
+ * Disabled unless {@code scraping.example-connectors.enabled=true} is set:
+ * it targets a fictional domain and is only kept as a reference.
  */
 @Component
+@ConditionalOnProperty(name = "scraping.example-connectors.enabled", havingValue = "true")
 public class GarageXConnector implements VehicleSourceConnector {
 
     private static final String BASE_URL = "https://garagex.example.com/search";

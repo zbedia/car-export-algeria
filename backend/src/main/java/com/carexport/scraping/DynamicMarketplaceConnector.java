@@ -7,6 +7,7 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Page;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -29,8 +30,12 @@ import java.util.List;
  * Should be adapted with the real CSS selectors of the actual target site.
  * Always check the site's terms of service / robots.txt before scraping
  * in production.
+ *
+ * Disabled unless {@code scraping.example-connectors.enabled=true} is set:
+ * it targets a fictional domain and is only kept as a reference.
  */
 @Component
+@ConditionalOnProperty(name = "scraping.example-connectors.enabled", havingValue = "true")
 public class DynamicMarketplaceConnector implements VehicleSourceConnector {
 
     private static final String BASE_URL = "https://dynamic-marketplace.example.com/search";
