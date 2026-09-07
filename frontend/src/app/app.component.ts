@@ -7,12 +7,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    VehicleSearchComponent,
-    LanguageSwitcherComponent,
-    AppFooterComponent,
-    TranslatePipe
-  ],
+  imports: [VehicleSearchComponent, LanguageSwitcherComponent, AppFooterComponent, TranslatePipe],
   template: `
     <header class="app-header">
       <div class="header-content">

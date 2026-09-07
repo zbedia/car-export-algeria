@@ -6,7 +6,8 @@
     [class.active]="translationService.lang() === language.code"
     (click)="select(language.code)"
     [attr.aria-label]="language.label"
-    [title]="language.label">
+    [title]="language.label"
+  >
     <span class="flag">{{ language.flag }}</span>
   </button>
 </div>

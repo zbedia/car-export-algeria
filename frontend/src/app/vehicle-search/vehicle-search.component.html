@@ -1,19 +1,40 @@
 <div class="search-container">
   <form (ngSubmit)="onSearch()" class="search-form">
-    <input [ngModel]="brand" (ngModelChange)="onBrandChange($event)" name="brand" list="brand-options" [attr.placeholder]="'search.brandPlaceholder' | translate" />
+    <input
+      [ngModel]="brand"
+      (ngModelChange)="onBrandChange($event)"
+      name="brand"
+      list="brand-options"
+      [attr.placeholder]="'search.brandPlaceholder' | translate"
+    />
     <datalist id="brand-options">
       <option *ngFor="let b of carBrands" [value]="b"></option>
     </datalist>
-    <input [(ngModel)]="model" name="model" list="model-options" [attr.placeholder]="'search.modelPlaceholder' | translate" />
+    <input
+      [(ngModel)]="model"
+      name="model"
+      list="model-options"
+      [attr.placeholder]="'search.modelPlaceholder' | translate"
+    />
     <datalist id="model-options">
       <option *ngFor="let m of modelSuggestions" [value]="m"></option>
     </datalist>
-    <input [(ngModel)]="maxPrice" name="maxPrice" type="number" [attr.placeholder]="'search.maxPricePlaceholder' | translate" />
-    <input [(ngModel)]="maxMileageKm" name="maxMileageKm" type="number" [attr.placeholder]="'search.maxMileagePlaceholder' | translate" />
+    <input
+      [(ngModel)]="maxPrice"
+      name="maxPrice"
+      type="number"
+      [attr.placeholder]="'search.maxPricePlaceholder' | translate"
+    />
+    <input
+      [(ngModel)]="maxMileageKm"
+      name="maxMileageKm"
+      type="number"
+      [attr.placeholder]="'search.maxMileagePlaceholder' | translate"
+    />
     <input [(ngModel)]="garageCity" name="garageCity" [attr.placeholder]="'search.cityPlaceholder' | translate" />
     <select [(ngModel)]="fuelType" name="fuelType">
       <option value="">{{ 'search.fuelTypeAll' | translate }}</option>
-      <option *ngFor="let f of selectableFuelTypes" [value]="f">{{ ('fuel.' + f) | translate }}</option>
+      <option *ngFor="let f of selectableFuelTypes" [value]="f">{{ 'fuel.' + f | translate }}</option>
     </select>
     <button type="submit" [disabled]="loading">{{ 'search.button' | translate }}</button>
   </form>
@@ -28,30 +49,43 @@
   <div class="group-section" *ngFor="let group of pagedGroups">
     <h2>{{ group.brand }} {{ group.model }}</h2>
     <p *ngIf="group.cheapestSource" class="group-cheapest">
-      {{ 'search.bestPriceAt' | translate : { source: group.cheapestSource } }}
+      {{ 'search.bestPriceAt' | translate: { source: group.cheapestSource } }}
     </p>
     <div class="results-grid">
       <div class="vehicle-card" *ngFor="let v of group.vehicles" [class.best-price]="v.bestPrice">
         <span *ngIf="v.bestPrice" class="badge">{{ 'search.bestPrice' | translate }}</span>
         <ng-container *ngIf="v.imageUrl">
-          <img *ngIf="!isImageBroken(v.id)" [src]="v.imageUrl" [alt]="v.brand + ' ' + v.model"
-               [attr.data-vehicle-id]="v.id" class="vehicle-image"
-               loading="lazy" (error)="onImageError($event)" />
+          <img
+            *ngIf="!isImageBroken(v.id)"
+            [src]="v.imageUrl"
+            [alt]="v.brand + ' ' + v.model"
+            [attr.data-vehicle-id]="v.id"
+            class="vehicle-image"
+            loading="lazy"
+            (error)="onImageError($event)"
+          />
           <div *ngIf="isImageBroken(v.id)" class="vehicle-image placeholder" aria-hidden="true">🚗</div>
         </ng-container>
-        <p>{{ formatMileage(v.mileageKm) }} km<span *ngIf="v.garageCity"> — {{ v.garageCity }}</span></p>
+        <p>
+          {{ formatMileage(v.mileageKm) }} km<span *ngIf="v.garageCity"> — {{ v.garageCity }}</span>
+        </p>
         <p class="fuel">
-          {{ fuelIcon(v.fuelType) }} {{ ('fuel.' + v.fuelType) | translate }}
+          {{ fuelIcon(v.fuelType) }} {{ 'fuel.' + v.fuelType | translate }}
           <span *ngIf="v.engineDisplacementCm3 as displacement">— {{ displacement }} cm³</span>
         </p>
         <p class="price">{{ formatPrice(v.price, v.currency) }}</p>
         <p class="customs" [title]="customsDiscountReasonText(v)">
-          {{ 'search.customsDiscount' | translate }} -{{ v.customsDiscountPercentage }}% <span class="info-icon">ⓘ</span>
+          {{ 'search.customsDiscount' | translate }} -{{ v.customsDiscountPercentage }}%
+          <span class="info-icon">ⓘ</span>
         </p>
         <p class="customs-reason">{{ customsDiscountReasonText(v) }}</p>
         <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
-        <button type="button" class="link-button" (click)="toggleShippingEstimate(v)"
-          [attr.aria-expanded]="isShippingExpanded(v.id)">
+        <button
+          type="button"
+          class="link-button"
+          (click)="toggleShippingEstimate(v)"
+          [attr.aria-expanded]="isShippingExpanded(v.id)"
+        >
           {{ 'search.estimateShipping' | translate }}
         </button>
         <div *ngIf="isShippingExpanded(v.id)" class="shipping-inline">
@@ -83,10 +117,22 @@
   </div>
 
   <div *ngIf="totalPages > 1" class="pagination">
-    <button type="button" class="pag-btn" [disabled]="currentPage <= 1" (click)="prevPage()">{{ 'pagination.previous' | translate }}</button>
-    <button *ngFor="let n of pageNumbers" type="button" class="pag-btn" [class.active]="n === currentPage" (click)="goToPage(n)">{{ n }}</button>
-    <button type="button" class="pag-btn" [disabled]="currentPage >= totalPages" (click)="nextPage()">{{ 'pagination.next' | translate }}</button>
-    <span class="page-info">{{ 'pagination.page' | translate : { page: currentPage, total: totalPages } }}</span>
+    <button type="button" class="pag-btn" [disabled]="currentPage <= 1" (click)="prevPage()">
+      {{ 'pagination.previous' | translate }}
+    </button>
+    <button
+      *ngFor="let n of pageNumbers"
+      type="button"
+      class="pag-btn"
+      [class.active]="n === currentPage"
+      (click)="goToPage(n)"
+    >
+      {{ n }}
+    </button>
+    <button type="button" class="pag-btn" [disabled]="currentPage >= totalPages" (click)="nextPage()">
+      {{ 'pagination.next' | translate }}
+    </button>
+    <span class="page-info">{{ 'pagination.page' | translate: { page: currentPage, total: totalPages } }}</span>
   </div>
 
   <app-shipping-edit-modal
@@ -94,6 +140,7 @@
     [originPort]="shippingSelection.originPort()"
     [destinationPort]="shippingSelection.destinationPort()"
     (save)="onModalSave($event)"
-    (cancel)="onModalCancel()">
+    (cancelRequest)="onModalCancel()"
+  >
   </app-shipping-edit-modal>
 </div>

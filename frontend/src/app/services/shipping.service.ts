@@ -11,9 +11,7 @@ export class ShippingService {
   constructor(private http: HttpClient) {}
 
   estimate(originPort: OriginPort, destinationPort: DestinationPort): Observable<ShippingEstimateResponse> {
-    const params = new HttpParams()
-      .set('originPort', originPort)
-      .set('destinationPort', destinationPort);
+    const params = new HttpParams().set('originPort', originPort).set('destinationPort', destinationPort);
 
     return this.http.get<ShippingEstimateResponse>(`${this.apiUrl}/estimate`, { params });
   }

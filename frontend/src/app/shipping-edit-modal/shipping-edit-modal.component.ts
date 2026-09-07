@@ -1,4 +1,13 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '../pipes/translate.pipe';
@@ -21,7 +30,7 @@ export class ShippingEditModalComponent implements AfterViewInit {
   @Input() originPort: OriginPort = 'MARSEILLE';
   @Input() destinationPort: DestinationPort = 'ALGER';
   @Output() save = new EventEmitter<ShippingEditResult>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelRequest = new EventEmitter<void>();
 
   @ViewChild('cancelButton') private cancelButton?: ElementRef<HTMLButtonElement>;
 
@@ -32,7 +41,7 @@ export class ShippingEditModalComponent implements AfterViewInit {
   // Escape closes the dialog the same way the backdrop click and Cancel do.
   @HostListener('document:keydown.escape')
   onEscape(): void {
-    this.onCancel();
+    this.cancelRequest.emit();
   }
 
   onSave(): void {
@@ -40,6 +49,6 @@ export class ShippingEditModalComponent implements AfterViewInit {
   }
 
   onCancel(): void {
-    this.cancel.emit();
+    this.cancelRequest.emit();
   }
 }

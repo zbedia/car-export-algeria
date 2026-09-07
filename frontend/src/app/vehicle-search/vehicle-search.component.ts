@@ -223,7 +223,10 @@ export class VehicleSearchComponent {
   }
 
   customsDiscountReasonText(vehicle: VehicleSearchResult): string {
-    if (vehicle.customsDiscountReasonCode === 'ELECTRIC' || vehicle.customsDiscountReasonCode === 'DIESEL_NOT_ELIGIBLE') {
+    if (
+      vehicle.customsDiscountReasonCode === 'ELECTRIC' ||
+      vehicle.customsDiscountReasonCode === 'DIESEL_NOT_ELIGIBLE'
+    ) {
       return this.translationService.t(`discountReason.${vehicle.customsDiscountReasonCode}`);
     }
 

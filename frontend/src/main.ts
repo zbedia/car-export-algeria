@@ -4,7 +4,5 @@ import { AppComponent } from './app/app.component';
 import { errorInterceptor } from './app/interceptors/error.interceptor';
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideHttpClient(withInterceptors([errorInterceptor]))
-  ]
+  providers: [provideHttpClient(withInterceptors([errorInterceptor]))]
 }).catch((err) => console.error(err));

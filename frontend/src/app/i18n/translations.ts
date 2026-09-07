@@ -33,14 +33,15 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
 
     'discountReason.ELECTRIC': 'Electric vehicles get an 80% customs duty reduction.',
     'discountReason.DIESEL_NOT_ELIGIBLE': 'Diesel vehicles are not eligible for private import.',
-    'discountReason.SMALL_ENGINE': '{fuel} engines up to {threshold} cm³ (this one: {displacement} cm³) qualify for this discount.',
-    'discountReason.LARGE_ENGINE': '{fuel} engines over {threshold} cm³ (this one: {displacement} cm³) qualify for this discount.',
+    'discountReason.SMALL_ENGINE':
+      '{fuel} engines up to {threshold} cm³ (this one: {displacement} cm³) qualify for this discount.',
+    'discountReason.LARGE_ENGINE':
+      '{fuel} engines over {threshold} cm³ (this one: {displacement} cm³) qualify for this discount.',
 
     'fuel.ESSENCE': 'Essence',
     'fuel.HYBRIDE': 'Hybrid',
     'fuel.ELECTRIQUE': 'Electric',
     'fuel.DIESEL': 'Diesel',
-
 
     'shipping.title': 'RoRo shipping cost estimator',
     'shipping.button': 'Estimate',
@@ -53,7 +54,8 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'errors.generic': 'An error occurred.',
     'errors.shippingEstimate': 'Could not estimate shipping cost.',
 
-    'footer.tagline': 'Compare used cars under 3 years old ready to export to Algeria: price, customs discount and sea freight estimate.',
+    'footer.tagline':
+      'Compare used cars under 3 years old ready to export to Algeria: price, customs discount and sea freight estimate.',
     'footer.disclaimer': 'Prices and eligibility are indicative. Customs regulations may change.',
     'footer.contact': 'Contact',
     'footer.email': 'Send an email',
@@ -94,15 +96,17 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.customsDiscount': 'Réduction douanière :',
 
     'discountReason.ELECTRIC': "Les véhicules électriques bénéficient d'une réduction de 80% des droits de douane.",
-    'discountReason.DIESEL_NOT_ELIGIBLE': "Les véhicules diesel ne sont pas éligibles à l'importation par les particuliers.",
-    'discountReason.SMALL_ENGINE': 'Les moteurs {fuel} jusqu\'à {threshold} cm³ (ici : {displacement} cm³) bénéficient de cette réduction.',
-    'discountReason.LARGE_ENGINE': 'Les moteurs {fuel} au-delà de {threshold} cm³ (ici : {displacement} cm³) bénéficient de cette réduction.',
+    'discountReason.DIESEL_NOT_ELIGIBLE':
+      "Les véhicules diesel ne sont pas éligibles à l'importation par les particuliers.",
+    'discountReason.SMALL_ENGINE':
+      "Les moteurs {fuel} jusqu'à {threshold} cm³ (ici : {displacement} cm³) bénéficient de cette réduction.",
+    'discountReason.LARGE_ENGINE':
+      'Les moteurs {fuel} au-delà de {threshold} cm³ (ici : {displacement} cm³) bénéficient de cette réduction.',
 
     'fuel.ESSENCE': 'Essence',
     'fuel.HYBRIDE': 'Hybride',
     'fuel.ELECTRIQUE': 'Électrique',
     'fuel.DIESEL': 'Diesel',
-
 
     'shipping.title': 'Estimateur de coût de transport RoRo',
     'shipping.button': 'Estimer',
@@ -110,12 +114,14 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'shipping.baseFreight': 'Fret de base',
     'shipping.handlingFee': 'Frais de manutention',
     'shipping.total': 'Total',
-    'shipping.disclaimer': 'Tarifs indicatifs à titre de planification — les devis réels du transporteur peuvent varier.',
+    'shipping.disclaimer':
+      'Tarifs indicatifs à titre de planification — les devis réels du transporteur peuvent varier.',
 
     'errors.generic': 'Une erreur est survenue.',
     'errors.shippingEstimate': "Impossible d'estimer le coût de transport.",
 
-    'footer.tagline': "Comparez des véhicules de moins de 3 ans, éligibles à l'importation vers l'Algérie : prix, réduction douanière et estimation du transport maritime.",
+    'footer.tagline':
+      "Comparez des véhicules de moins de 3 ans, éligibles à l'importation vers l'Algérie : prix, réduction douanière et estimation du transport maritime.",
     'footer.disclaimer': "Les prix et l'éligibilité sont indicatifs. La réglementation douanière peut évoluer.",
     'footer.contact': 'Contact',
     'footer.email': 'Envoyer un e-mail',
@@ -157,14 +163,15 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
 
     'discountReason.ELECTRIC': 'تستفيد السيارات الكهربائية من تخفيض 80% على الرسوم الجمركية.',
     'discountReason.DIESEL_NOT_ELIGIBLE': 'سيارات الديزل غير مؤهلة للاستيراد من قبل الأفراد.',
-    'discountReason.SMALL_ENGINE': 'محركات {fuel} حتى {threshold} سم³ (هذه السيارة: {displacement} سم³) تستفيد من هذا التخفيض.',
-    'discountReason.LARGE_ENGINE': 'محركات {fuel} فوق {threshold} سم³ (هذه السيارة: {displacement} سم³) تستفيد من هذا التخفيض.',
+    'discountReason.SMALL_ENGINE':
+      'محركات {fuel} حتى {threshold} سم³ (هذه السيارة: {displacement} سم³) تستفيد من هذا التخفيض.',
+    'discountReason.LARGE_ENGINE':
+      'محركات {fuel} فوق {threshold} سم³ (هذه السيارة: {displacement} سم³) تستفيد من هذا التخفيض.',
 
     'fuel.ESSENCE': 'بنزين',
     'fuel.HYBRIDE': 'هجين',
     'fuel.ELECTRIQUE': 'كهربائية',
     'fuel.DIESEL': 'ديزل',
-
 
     'shipping.title': 'أداة تقدير تكلفة الشحن RoRo',
     'shipping.button': 'تقدير',
@@ -177,7 +184,8 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'errors.generic': 'حدث خطأ.',
     'errors.shippingEstimate': 'تعذر تقدير تكلفة الشحن.',
 
-    'footer.tagline': 'قارن السيارات المستعملة التي يقل عمرها عن 3 سنوات والجاهزة للتصدير إلى الجزائر: السعر، التخفيض الجمركي، وتقدير تكلفة النقل البحري.',
+    'footer.tagline':
+      'قارن السيارات المستعملة التي يقل عمرها عن 3 سنوات والجاهزة للتصدير إلى الجزائر: السعر، التخفيض الجمركي، وتقدير تكلفة النقل البحري.',
     'footer.disclaimer': 'الأسعار والجدارة بالاستيراد إرشادية. قد تتغير اللوائح الجمركية.',
     'footer.contact': 'اتصل بنا',
     'footer.email': 'إرسال بريد إلكتروني',
