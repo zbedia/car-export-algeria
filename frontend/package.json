@@ -28,6 +28,7 @@
     "@angular-eslint/template-parser": "^18.4.3",
     "@angular/cli": "^18.2.0",
     "@angular/compiler-cli": "^18.2.0",
+    "@angular/platform-browser-dynamic": "^18.2.0",
     "@types/jasmine": "~5.1.0",
     "eslint": "^9.39.5",
     "eslint-config-prettier": "^9.1.2",
