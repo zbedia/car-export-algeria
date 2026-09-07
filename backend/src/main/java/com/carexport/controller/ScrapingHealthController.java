@@ -5,6 +5,7 @@ import com.carexport.dto.SourceHealthDto;
 import com.carexport.scraping.ScrapingScheduler;
 import com.carexport.service.ScrapingHealthService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,7 @@ public class ScrapingHealthController {
      * minutes when a marketplace is back online.
      */
     @PostMapping("/refresh")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HealthResponse> refresh() {
         scrapingScheduler.refreshListings();
         return ResponseEntity.ok(buildResponse());

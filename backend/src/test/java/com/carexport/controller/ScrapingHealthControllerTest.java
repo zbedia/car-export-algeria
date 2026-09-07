@@ -1,5 +1,6 @@
 package com.carexport.controller;
 
+import com.carexport.config.SecurityConfig;
 import com.carexport.dto.SourceHealthDto;
 import com.carexport.scraping.ScrapingScheduler;
 import com.carexport.service.ScrapingHealthService;
@@ -7,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -20,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ScrapingHealthController.class)
+@Import(SecurityConfig.class)
 class ScrapingHealthControllerTest {
 
     @Autowired
@@ -55,6 +59,7 @@ class ScrapingHealthControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void refresh_runsSchedulerRound_andReturnsFreshSnapshot() throws Exception {
         when(healthService.snapshot()).thenReturn(List.of(
             new SourceHealthDto("CarXport", SourceHealthDto.Status.UP, 1, 0, 0, null, null, 24, null)
@@ -66,5 +71,18 @@ class ScrapingHealthControllerTest {
             .andExpect(jsonPath("$.sources", hasSize(1)));
 
         verify(scrapingScheduler).refreshListings();
+    }
+
+    @Test
+    void refresh_returnsUnauthorized_whenNotAuthenticated() throws Exception {
+        mockMvc.perform(post("/api/health/refresh"))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void refresh_returnsForbidden_whenAuthenticatedWithoutAdminRole() throws Exception {
+        mockMvc.perform(post("/api/health/refresh"))
+            .andExpect(status().isForbidden());
     }
 }

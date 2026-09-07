@@ -1,5 +1,6 @@
 package com.carexport.controller;
 
+import com.carexport.config.SecurityConfig;
 import com.carexport.dto.SearchRequest;
 import com.carexport.dto.VehicleSearchResult;
 import com.carexport.exception.GlobalExceptionHandler;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(VehicleController.class)
-@Import(GlobalExceptionHandler.class)
+@Import({GlobalExceptionHandler.class, SecurityConfig.class})
 class VehicleControllerTest {
 
     @Autowired

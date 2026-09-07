@@ -110,6 +110,104 @@ Notes:
 - The per-source counters (`successCount`, `failureCount`, `consecutiveFailures`) are in-memory and reset on backend restart.
 - Sniffing this endpoint from Kubernetes-style probes is fine for liveness; it does not hit the network.
 
+## Security
+
+The API is stateless and guarded by HTTP Basic authentication, configured in `SecurityConfig.java`. Authorization is enforced at **two levels**:
+1. **URL-based rules** declared in the `SecurityFilterChain` (path → role rules below) — the primary gate in `SecurityConfig.java`;
+2. **Method-level** `@PreAuthorize("hasRole('ADMIN')")` on `ScrapingHealthController.refresh()` as a defense-in-depth layer (backed by `@EnableMethodSecurity`), so the endpoint stays protected even if URL rules are ever loosened.
+
+### Access rules
+
+| Path | Access |
+|---|---|
+| `GET /api/**` | Public (`permitAll`) — read-only search & health data |
+| `POST /api/health/refresh` | Admin only (`hasRole("ADMIN")`) — triggers an on-demand scrape round |
+| Any other request | Denied (`denyAll`) |
+
+- Only a single in-memory admin account exists, configured via `app.security.admin.username` / `app.security.admin.password`.
+- The password is hashed with BCrypt (`BCryptPasswordEncoder`) — never stored or transmitted in plain text.
+- CSRF protection is disabled: the API is stateless and the credentials are sent in the `Authorization` header (HTTP Basic), which browsers never attach automatically, so there is no session to forge. If you ever move to cookie-based or session auth, re-enable CSRF.
+- CORS is enabled through the standard Spring configuration.
+
+### Environment variables
+
+Credentials are externalized, never hard-coded. In `application.properties` they are bound with defaults:
+
+```properties
+app.security.admin.username=${APP_SECURITY_ADMIN_USERNAME:admin}
+app.security.admin.password=${APP_SECURITY_ADMIN_PASSWORD:change-me-now}
+```
+
+Spring Boot reads `APP_SECURITY_ADMIN_USERNAME` / `APP_SECURITY_ADMIN_PASSWORD` from the environment and falls back to the defaults (`admin` / `change-me-now`) when they are not set. Set them however your environment handles env vars:
+
+**Windows (PowerShell):**
+```powershell
+$env:APP_SECURITY_ADMIN_USERNAME="admin"
+$env:APP_SECURITY_ADMIN_PASSWORD="s3cret!Str0ng"
+cd backend
+./mvnw spring-boot:run
+```
+
+**Linux/macOS (bash):**
+```bash
+export APP_SECURITY_ADMIN_USERNAME=admin
+export APP_SECURITY_ADMIN_PASSWORD='s3cret!Str0ng'
+cd backend
+./mvnw spring-boot:run
+```
+
+Or inline, without persisting them in the shell session:
+```bash
+APP_SECURITY_ADMIN_USERNAME=admin APP_SECURITY_ADMIN_PASSWORD='s3cret!Str0ng' ./mvnw spring-boot:run
+```
+
+**Docker (optional example):**
+```bash
+docker run -e APP_SECURITY_ADMIN_USERNAME=admin \
+           -e APP_SECURITY_ADMIN_PASSWORD='s3cret!Str0ng' \
+           -p 8080:8080 carexport/backend
+```
+
+### Connection examples
+
+**Public read-only endpoints** (no credentials needed):
+
+```bash
+# Health snapshot (last scrape round)
+curl http://localhost:8080/api/health
+
+# Search
+curl "http://localhost:8080/api/vehicles/search?brand=Peugeot&model=308"
+```
+
+**Admin-only endpoint** (requires HTTP Basic):
+
+```bash
+curl -u admin:s3cret!Str0ng -X POST http://localhost:8080/api/health/refresh
+```
+
+The `-u user:pass` flag adds an `Authorization: Basic base64(user:pass)` header. You can pass the header explicitly if you prefer:
+
+```bash
+curl -H "Authorization: Basic $(echo -n 'admin:s3cret!Str0ng' | base64)" \
+     -X POST http://localhost:8080/api/health/refresh
+```
+
+> **Warning:** HTTP Basic only base64-encodes the credentials — it is trivially decodable and provides **no confidentiality**. Always serve the API over TLS in production (HTTPS, or a reverse proxy like nginx/Caddy); never expose it over plain HTTP, or the admin password travels readable on the wire.
+
+### Security tests
+
+The access rules are covered in `ScrapingHealthControllerTest` (a `@WebMvcTest` importing `SecurityConfig`):
+
+| Test | Verifies |
+|---|---|
+| `health_returnsUnknown_whenNothingRecordedYet` | `GET /api/health` works **without** credentials (unchallenged public endpoint, `permitAll`) |
+| `refresh_runsSchedulerRound_andReturnsFreshSnapshot` (`@WithMockUser(roles = "ADMIN")`) | Admin can `POST /api/health/refresh` and gets `200` |
+| `refresh_returnsUnauthorized_whenNotAuthenticated` | A refresh without credentials is rejected with `401` |
+| `refresh_returnsForbidden_whenAuthenticatedWithoutAdminRole` (`@WithMockUser(roles = "USER")`) | A non-admin session is rejected with `403` |
+
+`@WithMockUser` swaps the real HTTP Basic authentication for a fake in-memory principal, so the tests never need real credentials — only roles matter. Run them with `mvn test` (as usual with the rest of the suite).
+
 ## Internationalization
 
 The interface is available in English 🇬🇧, French 🇫🇷 and Arabic 🇩🇿, switchable instantly via the flag buttons in the header. Arabic also switches the document to right-to-left (`dir="rtl"`).
