@@ -74,6 +74,29 @@ class VehicleSearchServiceTest {
     }
 
     @Test
+    void search_picksSingleWinner_onCrossSourcePriceTie() {
+        VehicleListing carXport = buildListing("Peugeot", "308", new BigDecimal("15000"));
+        carXport.setId(1L);
+        carXport.setSource("CarXExport");
+        VehicleListing exportCar213 = buildListing("Peugeot", "308", new BigDecimal("15000"));
+        exportCar213.setId(2L);
+        exportCar213.setSource("ExportCar213");
+
+        when(repository.findAll(any(Specification.class), any(Sort.class)))
+            .thenReturn(List.of(carXport, exportCar213));
+
+        List<VehicleSearchResult> results = service.search(new SearchRequest());
+
+        assertThat(results).filteredOn(VehicleSearchResult::isBestPrice)
+            .singleElement() // tie broken by lowest id: only one winner survives
+            .extracting(VehicleSearchResult::getSource)
+            .isEqualTo("CarXExport");
+
+        assertThat(results)
+            .allMatch(r -> "CarXExport".equals(r.getCheapestSource()));
+    }
+
+    @Test
     void search_exposesCustomsDiscountPercentage() {
         VehicleListing electric = buildListing("Renault", "Zoe", new BigDecimal("20000"));
         electric.setFuelType(FuelType.ELECTRIQUE);

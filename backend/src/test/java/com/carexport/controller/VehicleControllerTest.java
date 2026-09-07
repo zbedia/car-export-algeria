@@ -43,6 +43,7 @@ class VehicleControllerTest {
         result.setPrice(new BigDecimal("18500.00"));
         result.setCurrency("EUR");
         result.setBestPrice(true);
+        result.setCheapestSource("GarageX");
 
         when(searchService.search(any(SearchRequest.class)))
             .thenReturn(List.of(result));
@@ -54,7 +55,8 @@ class VehicleControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].brand").value("Peugeot"))
-            .andExpect(jsonPath("$[0].bestPrice").value(true));
+            .andExpect(jsonPath("$[0].bestPrice").value(true))
+            .andExpect(jsonPath("$[0].cheapestSource").value("GarageX"));
     }
 
     @Test

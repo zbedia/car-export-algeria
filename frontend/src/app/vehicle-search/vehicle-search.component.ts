@@ -16,6 +16,7 @@ interface VehicleGroup {
   brand: string;
   model: string;
   vehicles: VehicleSearchResult[];
+  cheapestSource: string | null;
 }
 
 const FUEL_TYPE_ICONS: Record<FuelType, string> = {
@@ -148,14 +149,22 @@ export class VehicleSearchComponent {
     for (const v of results) {
       const key = `${v.brand}|${v.model}`;
       if (!groups.has(key)) {
-        groups.set(key, { brand: v.brand, model: v.model, vehicles: [] });
+        groups.set(key, { brand: v.brand, model: v.model, vehicles: [], cheapestSource: null });
       }
       groups.get(key)!.vehicles.push(v);
     }
     for (const group of groups.values()) {
       group.vehicles.sort((a, b) => a.price - b.price);
+      group.cheapestSource = group.vehicles.find((v) => v.bestPrice)?.cheapestSource ?? null;
     }
     return Array.from(groups.values());
+  }
+
+  bestPriceSourceText(group: VehicleGroup): string {
+    if (!group.cheapestSource) {
+      return '';
+    }
+    return this.translationService.t('search.bestPriceAt', { source: group.cheapestSource });
   }
 
   fuelIcon(fuelType: FuelType): string {

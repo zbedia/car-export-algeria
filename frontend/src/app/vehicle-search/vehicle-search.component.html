@@ -27,6 +27,7 @@
 
   <div class="group-section" *ngFor="let group of pagedGroups">
     <h2>{{ group.brand }} {{ group.model }}</h2>
+    <p *ngIf="group.cheapestSource" class="group-cheapest">{{ bestPriceSourceText(group) }}</p>
     <div class="results-grid">
       <div class="vehicle-card" *ngFor="let v of group.vehicles" [class.best-price]="v.bestPrice">
         <span *ngIf="v.bestPrice" class="badge">{{ 'search.bestPrice' | translate }}</span>

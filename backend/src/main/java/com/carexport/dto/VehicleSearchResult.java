@@ -17,6 +17,7 @@ public class VehicleSearchResult {
     private String currency;
     private String garageCity;
     private boolean bestPrice;
+    private String cheapestSource;
     private String fuelType;
     private Integer engineDisplacementCm3;
     private Integer engineDisplacementThresholdCm3;

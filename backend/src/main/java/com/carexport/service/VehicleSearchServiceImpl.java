@@ -13,8 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,23 +66,49 @@ public class VehicleSearchServiceImpl implements VehicleSearchService {
 
         List<VehicleListing> listings = repository.findAll(spec, Sort.by(Sort.Direction.ASC, "price"));
 
+        Map<String, VehicleListing> cheapestByModel = cheapestListingPerModel(listings);
+
         return listings.stream()
-            .map(v -> toResult(v, isBestPriceForModel(v, listings)))
+            .map(v -> {
+                VehicleListing cheapest = cheapestByModel.get(groupKey(v));
+                return toResult(v, v == cheapest, cheapest.getSource());
+            })
             .collect(Collectors.toList());
     }
 
-    private boolean isBestPriceForModel(VehicleListing v, List<VehicleListing> allListings) {
-        BigDecimal minForModel = allListings.stream()
-            .filter(l -> l.getBrand().equalsIgnoreCase(v.getBrand())
-                && l.getModel().equalsIgnoreCase(v.getModel()))
-            .map(VehicleListing::getPrice)
-            .min(Comparator.naturalOrder())
-            .orElse(null);
-
-        return v.getPrice().equals(minForModel);
+    /**
+     * The comparison is cross-source: a single "best price" winner is picked
+     * per model across ALL sources in the result set. Ties are broken by the
+     * lowest listing id so the badge never lands on two vehicles at once, and
+     * the winner's source is exposed to the client via {@code cheapestSource}.
+     */
+    private static Map<String, VehicleListing> cheapestListingPerModel(List<VehicleListing> listings) {
+        Map<String, VehicleListing> cheapest = new HashMap<>();
+        for (VehicleListing v : listings) {
+            String key = groupKey(v);
+            VehicleListing current = cheapest.get(key);
+            if (current == null || isCheaperThan(v, current)) {
+                cheapest.put(key, v);
+            }
+        }
+        return cheapest;
     }
 
-    private VehicleSearchResult toResult(VehicleListing v, boolean isBestPrice) {
+    private static String groupKey(VehicleListing v) {
+        return v.getBrand().toLowerCase() + "|" + v.getModel().toLowerCase();
+    }
+
+    private static boolean isCheaperThan(VehicleListing candidate, VehicleListing current) {
+        int byPrice = candidate.getPrice().compareTo(current.getPrice());
+        if (byPrice != 0) {
+            return byPrice < 0;
+        }
+        Long cid = candidate.getId();
+        Long curId = current.getId();
+        return cid != null && curId != null && cid < curId;
+    }
+
+    private VehicleSearchResult toResult(VehicleListing v, boolean isBestPrice, String cheapestSource) {
         VehicleSearchResult r = new VehicleSearchResult();
         r.setId(v.getId());
         r.setSource(v.getSource());
@@ -94,6 +121,7 @@ public class VehicleSearchServiceImpl implements VehicleSearchService {
         r.setCurrency(v.getCurrency());
         r.setGarageCity(v.getGarageCity());
         r.setBestPrice(isBestPrice);
+        r.setCheapestSource(cheapestSource);
         r.setFuelType(v.getFuelType().name());
         r.setEngineDisplacementCm3(v.getEngineDisplacementCm3());
         if (v.getFuelType() == FuelType.ESSENCE || v.getFuelType() == FuelType.HYBRIDE) {

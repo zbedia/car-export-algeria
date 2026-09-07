@@ -260,7 +260,7 @@ Starts on `http://localhost:4200`. Requires the backend to be running in paralle
 ## Features
 
 - Search by brand, model, and maximum price
-- Results grouped by model, with a "Best price" badge on the cheapest vehicle in each group
+- Results grouped by model, with a single "Best price" badge per model computed across all sources (ties broken by listing id), and a "Best price at <source>" hint under each group title
 - Loading, error, and no-results states
 - Extensible scraping architecture (Strategy pattern) to easily add new sources
 - Scraping source health monitoring with an on-demand refresh endpoint

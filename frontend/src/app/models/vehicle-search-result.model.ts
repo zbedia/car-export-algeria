@@ -13,6 +13,7 @@ export interface VehicleSearchResult {
   currency: string;
   garageCity: string;
   bestPrice: boolean;
+  cheapestSource: string | null;
   fuelType: FuelType;
   engineDisplacementCm3: number | null;
   engineDisplacementThresholdCm3: number | null;
