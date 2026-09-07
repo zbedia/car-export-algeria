@@ -27,18 +27,24 @@
 
   <div class="group-section" *ngFor="let group of pagedGroups">
     <h2>{{ group.brand }} {{ group.model }}</h2>
-    <p *ngIf="group.cheapestSource" class="group-cheapest">{{ bestPriceSourceText(group) }}</p>
+    <p *ngIf="group.cheapestSource" class="group-cheapest">
+      {{ 'search.bestPriceAt' | translate : { source: group.cheapestSource } }}
+    </p>
     <div class="results-grid">
       <div class="vehicle-card" *ngFor="let v of group.vehicles" [class.best-price]="v.bestPrice">
         <span *ngIf="v.bestPrice" class="badge">{{ 'search.bestPrice' | translate }}</span>
-        <img *ngIf="v.imageUrl" [src]="v.imageUrl" [alt]="v.brand + ' ' + v.model"
-             class="vehicle-image" loading="lazy" (error)="onImageError($event)" />
-        <p>{{ v.mileageKm | number }} km<span *ngIf="v.garageCity"> — {{ v.garageCity }}</span></p>
+        <ng-container *ngIf="v.imageUrl">
+          <img *ngIf="!isImageBroken(v.id)" [src]="v.imageUrl" [alt]="v.brand + ' ' + v.model"
+               [attr.data-vehicle-id]="v.id" class="vehicle-image"
+               loading="lazy" (error)="onImageError($event)" />
+          <div *ngIf="isImageBroken(v.id)" class="vehicle-image placeholder" aria-hidden="true">🚗</div>
+        </ng-container>
+        <p>{{ formatMileage(v.mileageKm) }} km<span *ngIf="v.garageCity"> — {{ v.garageCity }}</span></p>
         <p class="fuel">
           {{ fuelIcon(v.fuelType) }} {{ ('fuel.' + v.fuelType) | translate }}
           <span *ngIf="v.engineDisplacementCm3 as displacement">— {{ displacement }} cm³</span>
         </p>
-        <p class="price">{{ v.price | currency:v.currency:'symbol':'1.0-0' }}</p>
+        <p class="price">{{ formatPrice(v.price, v.currency) }}</p>
         <p class="customs" [title]="customsDiscountReasonText(v)">
           {{ 'search.customsDiscount' | translate }} -{{ v.customsDiscountPercentage }}% <span class="info-icon">ⓘ</span>
         </p>
@@ -58,15 +64,15 @@
             </p>
             <div class="shipping-line">
               <span>{{ 'shipping.baseFreight' | translate }}</span>
-              <span>{{ result.baseFreightCost | currency:result.currency:'symbol':'1.0-0' }}</span>
+              <span>{{ formatPrice(result.baseFreightCost, result.currency) }}</span>
             </div>
             <div class="shipping-line">
               <span>{{ 'shipping.handlingFee' | translate }}</span>
-              <span>{{ result.handlingFee | currency:result.currency:'symbol':'1.0-0' }}</span>
+              <span>{{ formatPrice(result.handlingFee, result.currency) }}</span>
             </div>
             <div class="shipping-line shipping-total">
               <span>{{ 'shipping.total' | translate }}</span>
-              <span>{{ result.totalCost | currency:result.currency:'symbol':'1.0-0' }}</span>
+              <span>{{ formatPrice(result.totalCost, result.currency) }}</span>
             </div>
             <p class="shipping-disclaimer">{{ 'shipping.disclaimer' | translate }}</p>
           </div>
@@ -80,7 +86,7 @@
     <button type="button" class="pag-btn" [disabled]="currentPage <= 1" (click)="prevPage()">{{ 'pagination.previous' | translate }}</button>
     <button *ngFor="let n of pageNumbers" type="button" class="pag-btn" [class.active]="n === currentPage" (click)="goToPage(n)">{{ n }}</button>
     <button type="button" class="pag-btn" [disabled]="currentPage >= totalPages" (click)="nextPage()">{{ 'pagination.next' | translate }}</button>
-    <span class="page-info">{{ pageInfoText }}</span>
+    <span class="page-info">{{ 'pagination.page' | translate : { page: currentPage, total: totalPages } }}</span>
   </div>
 
   <app-shipping-edit-modal

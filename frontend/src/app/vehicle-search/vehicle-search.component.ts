@@ -59,9 +59,34 @@ export class VehicleSearchComponent {
 
   carBrands = CAR_BRANDS;
 
+  private brokenImageIds = new Set<number>();
+
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
-    img.style.display = 'none';
+    const vehicleId = Number(img.dataset['vehicleId']);
+    if (Number.isFinite(vehicleId)) {
+      this.brokenImageIds.add(vehicleId);
+    }
+  }
+
+  isImageBroken(vehicleId: number): boolean {
+    return this.brokenImageIds.has(vehicleId);
+  }
+
+  formatPrice(price: number, currency: string): string {
+    return this.formatNumber(price, {
+      style: 'currency',
+      currency,
+      maximumFractionDigits: 0
+    });
+  }
+
+  formatMileage(mileageKm: number): string {
+    return this.formatNumber(mileageKm, { maximumFractionDigits: 0 });
+  }
+
+  private formatNumber(value: number, options: Intl.NumberFormatOptions): string {
+    return new Intl.NumberFormat(this.translationService.locale, options).format(value);
   }
 
   // Diesel is intentionally excluded — it's always filtered out server-side
@@ -100,6 +125,7 @@ export class VehicleSearchComponent {
     this.shippingLoadingIds.clear();
     this.shippingResults.clear();
     this.shippingErrors.clear();
+    this.brokenImageIds.clear();
 
     this.loading = true;
     this.errorMessage = '';
@@ -141,13 +167,6 @@ export class VehicleSearchComponent {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  get pageInfoText(): string {
-    return this.translationService.t('pagination.page', {
-      page: this.currentPage,
-      total: this.totalPages
-    });
-  }
-
   prevPage(): void {
     if (this.currentPage > 1) {
       this.goToPage(this.currentPage - 1);
@@ -179,13 +198,6 @@ export class VehicleSearchComponent {
       group.cheapestSource = group.vehicles.find((v) => v.bestPrice)?.cheapestSource ?? null;
     }
     return Array.from(groups.values());
-  }
-
-  bestPriceSourceText(group: VehicleGroup): string {
-    if (!group.cheapestSource) {
-      return '';
-    }
-    return this.translationService.t('search.bestPriceAt', { source: group.cheapestSource });
   }
 
   fuelIcon(fuelType: FuelType): string {
