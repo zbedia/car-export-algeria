@@ -80,6 +80,18 @@ export class VehicleSearchComponent {
   ) {}
 
   onSearch(): void {
+    // Enter in a form field triggers ngSubmit even when the submit button
+    // is disabled — guard against out-of-order parallel searches.
+    if (this.loading) return;
+
+    // Drop shipping state from any previous search: stale expanded cards,
+    // cached estimates and in-flight requests would otherwise accumulate
+    // forever and leak across unrelated result sets.
+    this.shippingExpandedIds.clear();
+    this.shippingLoadingIds.clear();
+    this.shippingResults.clear();
+    this.shippingErrors.clear();
+
     this.loading = true;
     this.errorMessage = '';
     this.hasSearched = true;
