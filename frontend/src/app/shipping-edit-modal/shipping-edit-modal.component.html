@@ -1,13 +1,13 @@
 <div class="modal-backdrop" (click)="onCancel()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <h3>{{ 'shipping.title' | translate }}</h3>
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="shipping-edit-title" (click)="$event.stopPropagation()">
+    <h3 id="shipping-edit-title">{{ 'shipping.title' | translate }}</h3>
 
     <div class="form-row">
       <app-port-selector [(originPort)]="originPort" [(destinationPort)]="destinationPort"></app-port-selector>
     </div>
 
     <div class="modal-actions">
-      <button type="button" class="cancel-button" (click)="onCancel()">{{ 'modal.cancel' | translate }}</button>
+      <button type="button" #cancelButton class="cancel-button" (click)="onCancel()">{{ 'modal.cancel' | translate }}</button>
       <button type="button" class="save-button" (click)="onSave()">{{ 'modal.update' | translate }}</button>
     </div>
   </div>
