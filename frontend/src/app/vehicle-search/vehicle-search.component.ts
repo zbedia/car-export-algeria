@@ -19,12 +19,19 @@ interface VehicleGroup {
   cheapestSource: string | null;
 }
 
-const FUEL_TYPE_ICONS: Record<FuelType, string> = {
+// Diesel is always filtered out server-side, so it can never be rendered:
+// a "no results" hint would be the only outcome of offering it as a filter.
+const SELECTABLE_FUEL_TYPES = ['ESSENCE', 'HYBRIDE', 'ELECTRIQUE'] as const;
+
+const FUEL_TYPE_ICONS: Record<(typeof SELECTABLE_FUEL_TYPES)[number], string> = {
   ESSENCE: '⛽',
   HYBRIDE: '🔋',
-  ELECTRIQUE: '⚡',
-  DIESEL: '🚫'
+  ELECTRIQUE: '⚡'
 };
+
+function isSelectableFuelType(fuelType: FuelType): fuelType is (typeof SELECTABLE_FUEL_TYPES)[number] {
+  return (SELECTABLE_FUEL_TYPES as readonly FuelType[]).includes(fuelType);
+}
 
 @Component({
   selector: 'app-vehicle-search',
@@ -36,8 +43,10 @@ const FUEL_TYPE_ICONS: Record<FuelType, string> = {
 export class VehicleSearchComponent {
   brand = '';
   model = '';
-  maxPrice?: number;
-  maxMileageKm?: number;
+  // Bound to <input type="number"> via [(ngModel)], which sets null when the
+  // field is cleared — so the property type mirrors the runtime reality.
+  maxPrice: number | null = null;
+  maxMileageKm: number | null = null;
   garageCity = '';
   fuelType: FuelType | '' = '';
   groupedResults: VehicleGroup[] = [];
@@ -58,7 +67,7 @@ export class VehicleSearchComponent {
   // Diesel is intentionally excluded — it's always filtered out server-side
   // (banned for private import), so offering it as a filter option would
   // just lead to a confusing "no results" every time.
-  selectableFuelTypes: FuelType[] = ['ESSENCE', 'HYBRIDE', 'ELECTRIQUE'];
+  selectableFuelTypes: readonly FuelType[] = [...SELECTABLE_FUEL_TYPES];
 
   // Shipping estimate state, keyed by vehicle id. The route itself
   // (origin/destination) is shared across every vehicle via
@@ -180,7 +189,7 @@ export class VehicleSearchComponent {
   }
 
   fuelIcon(fuelType: FuelType): string {
-    return FUEL_TYPE_ICONS[fuelType] ?? '';
+    return isSelectableFuelType(fuelType) ? FUEL_TYPE_ICONS[fuelType] : '';
   }
 
   get modelSuggestions(): string[] {

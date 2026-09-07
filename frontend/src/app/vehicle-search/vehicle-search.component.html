@@ -44,7 +44,8 @@
         </p>
         <p class="customs-reason">{{ customsDiscountReasonText(v) }}</p>
         <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
-        <button type="button" class="link-button" (click)="toggleShippingEstimate(v)">
+        <button type="button" class="link-button" (click)="toggleShippingEstimate(v)"
+          [attr.aria-expanded]="isShippingExpanded(v.id)">
           {{ 'search.estimateShipping' | translate }}
         </button>
         <div *ngIf="isShippingExpanded(v.id)" class="shipping-inline">

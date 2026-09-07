@@ -7,8 +7,8 @@ import { FuelType, VehicleSearchResult } from '../models/vehicle-search-result.m
 export interface VehicleSearchFilters {
   brand?: string;
   model?: string;
-  maxPrice?: number;
-  maxMileageKm?: number;
+  maxPrice?: number | null;
+  maxMileageKm?: number | null;
   garageCity?: string;
   fuelType?: FuelType | '';
 }
