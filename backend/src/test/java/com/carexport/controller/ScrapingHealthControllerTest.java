@@ -2,6 +2,7 @@ package com.carexport.controller;
 
 import com.carexport.config.SecurityConfig;
 import com.carexport.dto.SourceHealthDto;
+import com.carexport.exception.GlobalExceptionHandler;
 import com.carexport.scraping.ScrapingScheduler;
 import com.carexport.service.ScrapingHealthService;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ScrapingHealthController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, GlobalExceptionHandler.class})
 class ScrapingHealthControllerTest {
 
     @Autowired
@@ -84,5 +85,11 @@ class ScrapingHealthControllerTest {
     void refresh_returnsForbidden_whenAuthenticatedWithoutAdminRole() throws Exception {
         mockMvc.perform(post("/api/health/refresh"))
             .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void refresh_returnsMethodNotAllowed_whenCalledWithGet() throws Exception {
+        mockMvc.perform(get("/api/health/refresh"))
+            .andExpect(status().isMethodNotAllowed());
     }
 }

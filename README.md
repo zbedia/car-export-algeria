@@ -197,7 +197,7 @@ curl -H "Authorization: Basic $(echo -n 'admin:s3cret!Str0ng' | base64)" \
 
 ### Security tests
 
-The access rules are covered in `ScrapingHealthControllerTest` (a `@WebMvcTest` importing `SecurityConfig`):
+The access rules are covered in `ScrapingHealthControllerTest` (a `@WebMvcTest` importing `SecurityConfig` and `GlobalExceptionHandler`):
 
 | Test | Verifies |
 |---|---|
@@ -205,6 +205,7 @@ The access rules are covered in `ScrapingHealthControllerTest` (a `@WebMvcTest` 
 | `refresh_runsSchedulerRound_andReturnsFreshSnapshot` (`@WithMockUser(roles = "ADMIN")`) | Admin can `POST /api/health/refresh` and gets `200` |
 | `refresh_returnsUnauthorized_whenNotAuthenticated` | A refresh without credentials is rejected with `401` |
 | `refresh_returnsForbidden_whenAuthenticatedWithoutAdminRole` (`@WithMockUser(roles = "USER")`) | A non-admin session is rejected with `403` |
+| `refresh_returnsMethodNotAllowed_whenCalledWithGet` | Browser navigation (GET) on the POST-only endpoint gets `405`, not a misleading `500` |
 
 `@WithMockUser` swaps the real HTTP Basic authentication for a fake in-memory principal, so the tests never need real credentials — only roles matter. Run them with `mvn test` (as usual with the rest of the suite).
 
