@@ -1,4 +1,4 @@
-import { Inject, Injectable, computed, signal } from '@angular/core';
+import { Inject, Injectable, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Lang, TRANSLATIONS } from '../i18n/translations';
 
@@ -7,9 +7,6 @@ export class TranslationService {
   private readonly currentLang = signal<Lang>('fr');
 
   readonly lang = this.currentLang.asReadonly();
-  readonly direction = computed<'ltr' | 'rtl'>(() =>
-    this.currentLang() === 'ar' ? 'rtl' : 'ltr'
-  );
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     this.applyDocumentAttributes(this.currentLang());

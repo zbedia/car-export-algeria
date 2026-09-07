@@ -51,7 +51,6 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'shipping.disclaimer': 'Indicative rates for planning purposes — actual carrier quotes may vary.',
 
     'errors.generic': 'An error occurred.',
-    'errors.ratesLoad': 'Could not load exchange rates.',
     'errors.shippingEstimate': 'Could not estimate shipping cost.',
 
     'footer.tagline': 'Compare used cars under 3 years old ready to export to Algeria: price, customs discount and sea freight estimate.',
@@ -114,7 +113,6 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'shipping.disclaimer': 'Tarifs indicatifs à titre de planification — les devis réels du transporteur peuvent varier.',
 
     'errors.generic': 'Une erreur est survenue.',
-    'errors.ratesLoad': 'Impossible de charger les taux de change.',
     'errors.shippingEstimate': "Impossible d'estimer le coût de transport.",
 
     'footer.tagline': "Comparez des véhicules de moins de 3 ans, éligibles à l'importation vers l'Algérie : prix, réduction douanière et estimation du transport maritime.",
@@ -177,7 +175,6 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'shipping.disclaimer': 'أسعار إرشادية لأغراض التخطيط — قد تختلف عروض أسعار الناقل الفعلية.',
 
     'errors.generic': 'حدث خطأ.',
-    'errors.ratesLoad': 'تعذر تحميل أسعار الصرف.',
     'errors.shippingEstimate': 'تعذر تقدير تكلفة الشحن.',
 
     'footer.tagline': 'قارن السيارات المستعملة التي يقل عمرها عن 3 سنوات والجاهزة للتصدير إلى الجزائر: السعر، التخفيض الجمركي، وتقدير تكلفة النقل البحري.',
