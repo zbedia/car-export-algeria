@@ -65,6 +65,7 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'footer.sources': 'Listing sources',
     'footer.sourceCarXport': 'CarXport – Sweden',
     'footer.sourceExportCar213': 'ExportCar213',
+    'footer.sourceAutoExportMarseille': 'AutoExportMarseille – France',
     'footer.rights': '© {year} {app}. All rights reserved.'
   },
 
@@ -132,6 +133,7 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'footer.sources': 'Sources des annonces',
     'footer.sourceCarXport': 'CarXport – Suède',
     'footer.sourceExportCar213': 'ExportCar213',
+    'footer.sourceAutoExportMarseille': 'AutoExportMarseille – France',
     'footer.rights': '© {year} {app}. Tous droits réservés.'
   },
 
@@ -197,6 +199,7 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'footer.sources': 'مصادر الإعلانات',
     'footer.sourceCarXport': 'CarXport – السويد',
     'footer.sourceExportCar213': 'ExportCar213',
+    'footer.sourceAutoExportMarseille': 'AutoExportMarseille – فرنسا',
     'footer.rights': 'جميع الحقوق محفوظة © {year} {app}.'
   }
 };

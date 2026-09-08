@@ -12,6 +12,7 @@ import { TranslationService } from '../services/translation.service';
 export class AppFooterComponent {
   readonly carXportUrl = 'https://carxexport.com/fr/offers';
   readonly exportCar213Url = 'https://exportcar213.com/inventaire';
+  readonly autoExportMarseilleUrl = 'https://autoexportmarseille.com/';
   readonly contactEmail = 'contact@dzautoimport.com';
   readonly whatsappUrl = 'https://wa.me/21355000000';
   readonly currentYear = new Date().getFullYear();
