@@ -1,0 +1,54 @@
+# Config-driven scraping catalog.
+#
+# One entry per "simple" source (sitemap + label/value spec grid — the
+# WordPress Vehicle-theme family, static marketplaces, ...). The generic
+# ConfigDrivenConnector turns each entry into a full VehicleSourceConnector
+# bean at startup; no per-source Java classes are required. Sources that need
+# bespoke code (JS-rendered catalogs, anti-bot, non-grid layouts) stay as
+# dedicated connectors like CarXExportConnector.
+sources:
+  - name: AutoExportMarseille
+    sitemapUrl: "https://autoexportmarseille.com/vehica_car-sitemap.xml"
+    offerUrlMarker: /annonce/
+    currency: EUR
+    garageCity: Marseille
+    # The sitemap also lists accessories/parts pages (« pièces auto ») with no
+    # vehicle data (no year, no price). Drop those instead of storing junk rows.
+    skipWhenNotVehicle: true
+    # Spec keys are matched in ASCII-normalized form: the site declares UTF-8
+    # but serves windows-1252 so accented labels arrive as U+FFFD. « Modèle »
+    # and « Mod�le » both collapse to "modle", « Année »/« Ann�e » to "anne".
+    priceSelector: ".vehica-car-price"
+    titleSelector: "h1"
+    titleMileagePattern: '(?i)(\d{3,})\s*kms?'
+    dateFormat: "dd/MM/yyyy"
+    politenessMs: 300
+    requestTimeoutMs: 30000
+    fetchAttempts: 3
+    retryDelayMs: 2000
+    userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+    specGrid:
+      nameSelector: ".vehica-car-attributes .vehica-car-attributes__name"
+      valueSelector: ".vehica-car-attributes .vehica-car-attributes__values"
+      labels:
+        brand: marque
+        model: modle
+        year: anne
+        fuel: carburant
+        mileage: kilometrage
+        displacement: cylindree
+        registration: mise en circulation
+      displacementFallbackKeys:
+        - moteur
+    fuelMapping:
+      electric:
+        - lectrique
+        - electric
+        - ev
+      hybrid:
+        - hybride
+        - hybrid
+      diesel:
+        - diesel
+        - gazole
+      essence: []

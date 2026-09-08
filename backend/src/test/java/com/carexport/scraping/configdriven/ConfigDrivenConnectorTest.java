@@ -1,4 +1,4 @@
-package com.carexport.scraping;
+package com.carexport.scraping.configdriven;
 
 import com.carexport.model.FuelType;
 import com.carexport.model.VehicleListing;
@@ -8,18 +8,31 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class AutoExportMarseilleVehicleParserTest {
+class ConfigDrivenConnectorTest {
 
     private static final char REPLACEMENT = '\uFFFD';
 
-    private final AutoExportMarseilleVehicleParser parser = new AutoExportMarseilleVehicleParser("AutoExportMarseille");
+    private final SourceConfig config = new ScrapingSourcesLoader().load().get(0);
+    private final ConfigDrivenConnector connector = new ConfigDrivenConnector(config.name(), config);
 
     private VehicleListing parse(String html) {
         Document doc = Jsoup.parse(html);
-        return parser.parse(doc, "https://autoexportmarseille.com/annonce/some-car/");
+        return connector.parse(doc, "https://autoexportmarseille.com/annonce/some-car/");
+    }
+
+    @Test
+    void yamlCatalogLoadsIntoConfig() {
+        assertThat(config.name()).isEqualTo("AutoExportMarseille");
+        assertThat(config.sitemapUrl()).isEqualTo("https://autoexportmarseille.com/vehica_car-sitemap.xml");
+        assertThat(config.currency()).isEqualTo("EUR");
+        assertThat(config.specGrid().labels()).containsEntry("model", "modle");
+        assertThat(List.of("lectrique", "electric", "ev")).containsExactlyElementsOf(
+                config.fuelMapping().get("electric"));
     }
 
     @Test
@@ -46,8 +59,6 @@ class AutoExportMarseilleVehicleParserTest {
 
     @Test
     void brokenCharsetLabelsAreStillMatched() {
-        // The site declares UTF-8 but serves windows-1252 bytes: accented
-        // labels arrive as U+FFFD. ASCII-normalized keys must still win.
         VehicleListing v = parse(page(
                 "21 500 \u20AC",
                 "<h1>NEUF DACIA DUSTER</h1>",
@@ -101,6 +112,33 @@ class AutoExportMarseilleVehicleParserTest {
     }
 
     @Test
+    void brokenCharsetElectricValueStillMapsViaConfigKeywords() {
+        VehicleListing v = parse(page(
+                "25 900 \u20AC",
+                "<h1>NEUF GAC GS3 EMZOOM</h1>",
+                attribute("Marque", "Gac"),
+                attribute("Mod" + REPLACEMENT + "le", "GS3"),
+                attribute("Ann" + REPLACEMENT + "e", "2026"),
+                attribute("Carburant", REPLACEMENT + "lectrique")));
+
+        assertThat(v.getFuelType()).isEqualTo(FuelType.ELECTRIQUE);
+    }
+
+    @Test
+    void displacementReadsFromFallbackKey() {
+        VehicleListing v = parse(page(
+                "8 990 \u20AC",
+                "<h1>2023 PEUGEOT 208</h1>",
+                attribute("Marque", "Peugeot"),
+                attribute("Mod" + REPLACEMENT + "le", "208"),
+                attribute("Ann" + REPLACEMENT + "e", "2023"),
+                attribute("Carburant", "Essence"),
+                attribute("Moteur", "1.2 L PureTech")));
+
+        assertThat(v.getEngineDisplacementCm3()).isEqualTo(1200);
+    }
+
+    @Test
     void missingDisplacementStaysNull() {
         VehicleListing v = parse(page(
                 "8 990 \u20AC",
@@ -111,6 +149,21 @@ class AutoExportMarseilleVehicleParserTest {
                 attribute("Carburant", "Essence")));
 
         assertThat(v.getEngineDisplacementCm3()).isNull();
+    }
+
+    @Test
+    void partsPageWithoutVehicleDataIsSkipped() {
+        String partsPage = "<html><body>"
+                + "<div class=\"vehica-car-attributes\">"
+                + attribute("Marque", "Renault")
+                + "</div>"
+                + "<div class=\"vehica-car-price\"></div>"
+                + "<h1>PIECES AUTO EXPORT RENAULT</h1>"
+                + "</body></html>";
+
+        assertThatThrownBy(() -> connector.parse(Jsoup.parse(partsPage),
+                "https://autoexportmarseille.com/annonce/pieces-auto-export-renault-algerie/"))
+                .isInstanceOf(ConfigDrivenConnector.NotAVehicleException.class);
     }
 
     private static String page(String price, String headline, String... attributes) {

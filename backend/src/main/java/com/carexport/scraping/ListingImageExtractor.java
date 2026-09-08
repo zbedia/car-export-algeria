@@ -19,11 +19,11 @@ import org.jsoup.nodes.Element;
  * Returns {@code null} when the page exposes no usable image, in which case
  * the frontend simply renders the card without a photo.
  */
-final class ListingImageExtractor {
+public final class ListingImageExtractor {
 
     private ListingImageExtractor() {}
 
-    static String extract(JsonNode vehicleNode, Document doc) {
+    public static String extract(JsonNode vehicleNode, Document doc) {
         if (vehicleNode != null) {
             String fromJsonLd = resolve(vehicleNode.path("image"));
             if (fromJsonLd != null) {
