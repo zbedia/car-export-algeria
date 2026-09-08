@@ -58,6 +58,42 @@
   margin-bottom: 16px;
 }
 
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: white;
+  font-size: 0.9rem;
+}
+
+.stat-total {
+  border-color: #0ea5e9;
+  background: #f0f9ff;
+}
+
+.stat-icon {
+  font-size: 1.05rem;
+}
+
+.stat-label {
+  color: #555;
+}
+
+.stat-count {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
 .group-section {
   margin-bottom: 32px;
 }

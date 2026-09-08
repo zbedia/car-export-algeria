@@ -29,6 +29,8 @@ const FUEL_TYPE_ICONS: Record<(typeof SELECTABLE_FUEL_TYPES)[number], string> = 
   ELECTRIQUE: '⚡'
 };
 
+const TOTAL_ICON = '🚗';
+
 function isSelectableFuelType(fuelType: FuelType): fuelType is (typeof SELECTABLE_FUEL_TYPES)[number] {
   return (SELECTABLE_FUEL_TYPES as readonly FuelType[]).includes(fuelType);
 }
@@ -53,6 +55,16 @@ export class VehicleSearchComponent {
   loading = false;
   errorMessage = '';
   hasSearched = false;
+
+  // Summary strip: one listing counts once, regardless of how models are
+  // grouped on screen. Diesel can never reach the client (server-side filter),
+  // so the per-fuel counts below only cover the three selectable fuel types.
+  totalCount = 0;
+  private fuelCounts: Record<(typeof SELECTABLE_FUEL_TYPES)[number], number> = {
+    ESSENCE: 0,
+    HYBRIDE: 0,
+    ELECTRIQUE: 0
+  };
 
   pageSize = 10;
   currentPage = 1;
@@ -93,6 +105,29 @@ export class VehicleSearchComponent {
   // (banned for private import), so offering it as a filter option would
   // just lead to a confusing "no results" every time.
   selectableFuelTypes: readonly FuelType[] = [...SELECTABLE_FUEL_TYPES];
+
+  totalIcon = TOTAL_ICON;
+
+  // Recomputed from every search response (the flat listing array), NOT from
+  // the grouped-and-paginated view: a total must never shrink to the current
+  // page size.
+  private updateStats(results: VehicleSearchResult[]): void {
+    this.totalCount = results.length;
+    this.fuelCounts = { ESSENCE: 0, HYBRIDE: 0, ELECTRIQUE: 0 };
+    for (const v of results) {
+      if (isSelectableFuelType(v.fuelType)) {
+        this.fuelCounts[v.fuelType]++;
+      }
+    }
+  }
+
+  fuelCount(fuelType: FuelType): number {
+    return isSelectableFuelType(fuelType) ? this.fuelCounts[fuelType] : 0;
+  }
+
+  formatCount(value: number): string {
+    return this.formatNumber(value, { maximumFractionDigits: 0 });
+  }
 
   // Shipping estimate state, keyed by vehicle id. The route itself
   // (origin/destination) is shared across every vehicle via
@@ -143,6 +178,7 @@ export class VehicleSearchComponent {
     this.vehicleService.search(filters).subscribe({
       next: (data) => {
         this.groupedResults = this.groupByModel(data);
+        this.updateStats(data);
         this.currentPage = 1;
         this.loading = false;
       },

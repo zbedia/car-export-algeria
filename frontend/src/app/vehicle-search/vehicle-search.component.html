@@ -42,6 +42,21 @@
   <div *ngIf="loading" class="loading">{{ 'search.loading' | translate }}</div>
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
+  <div *ngIf="hasSearched" class="stats-bar" role="status">
+    <span class="stat-chip stat-total">
+      <span class="stat-icon" aria-hidden="true">{{ totalIcon }}</span>
+      <span class="stat-label">{{ 'stats.total' | translate }}</span>
+      <span class="stat-count">{{ formatCount(totalCount) }}</span>
+    </span>
+    <ng-container *ngFor="let f of selectableFuelTypes">
+      <span class="stat-chip" *ngIf="fuelCount(f) > 0">
+        <span class="stat-icon" aria-hidden="true">{{ fuelIcon(f) }}</span>
+        <span class="stat-label">{{ 'fuel.' + f | translate }}</span>
+        <span class="stat-count">{{ formatCount(fuelCount(f)) }}</span>
+      </span>
+    </ng-container>
+  </div>
+
   <div *ngIf="hasSearched && !loading && groupedResults.length === 0" class="no-results">
     {{ 'search.noResults' | translate }}
   </div>

@@ -30,6 +30,7 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'modal.cancel': 'Cancel',
     'modal.update': 'Update',
     'search.customsDiscount': 'Customs discount:',
+    'stats.total': 'Total vehicles',
 
     'discountReason.ELECTRIC': 'Electric vehicles get an 80% customs duty reduction.',
     'discountReason.DIESEL_NOT_ELIGIBLE': 'Diesel vehicles are not eligible for private import.',
@@ -94,6 +95,7 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'modal.cancel': 'Annuler',
     'modal.update': 'Mettre à jour',
     'search.customsDiscount': 'Réduction douanière :',
+    'stats.total': 'Total véhicules',
 
     'discountReason.ELECTRIC': "Les véhicules électriques bénéficient d'une réduction de 80% des droits de douane.",
     'discountReason.DIESEL_NOT_ELIGIBLE':
@@ -160,6 +162,7 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'modal.cancel': 'إلغاء',
     'modal.update': 'تحديث',
     'search.customsDiscount': 'تخفيض الرسوم الجمركية:',
+    'stats.total': 'إجمالي السيارات',
 
     'discountReason.ELECTRIC': 'تستفيد السيارات الكهربائية من تخفيض 80% على الرسوم الجمركية.',
     'discountReason.DIESEL_NOT_ELIGIBLE': 'سيارات الديزل غير مؤهلة للاستيراد من قبل الأفراد.',

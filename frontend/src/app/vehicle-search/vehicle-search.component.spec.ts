@@ -106,4 +106,30 @@ describe('VehicleSearchComponent', () => {
     expect(component.isImageBroken(7)).toBeTrue();
     expect(component.isImageBroken(8)).toBeFalse();
   });
+
+  it('computes total and per-fuel counts in the stats strip', () => {
+    const data = [
+      listing(1, { fuelType: 'ESSENCE' }),
+      listing(2, { fuelType: 'HYBRIDE' }),
+      listing(3, { fuelType: 'ELECTRIQUE' }),
+      listing(4, { fuelType: 'ESSENCE', model: '3008' })
+    ];
+    searchSpy.and.returnValue(of(data));
+
+    component.onSearch();
+
+    expect(component.totalCount).toBe(4);
+    expect(component.fuelCount('ESSENCE')).toBe(2);
+    expect(component.fuelCount('HYBRIDE')).toBe(1);
+    expect(component.fuelCount('ELECTRIQUE')).toBe(1);
+  });
+
+  it('resets counts to zero on an empty result set', () => {
+    searchSpy.and.returnValue(of([]));
+
+    component.onSearch();
+
+    expect(component.totalCount).toBe(0);
+    expect(component.fuelCount('ESSENCE')).toBe(0);
+  });
 });
