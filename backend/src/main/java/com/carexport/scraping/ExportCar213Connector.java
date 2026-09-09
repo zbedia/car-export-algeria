@@ -66,7 +66,7 @@ public class ExportCar213Connector implements VehicleSourceConnector {
     private static final String BASE_URL = "https://exportcar213.com/inventaire";
     private static final String SOURCE_NAME = "ExportCar213";
     private static final String USER_AGENT =
-            "Mozilla/5.0 (compatible; CarExportAlgeriaBot/1.0; +https://github.com/YOUR_USERNAME/car-export-algeria)";
+            "Mozilla/5.0 (compatible; CarExportAlgeriaBot/1.0)";
     private static final int REQUEST_TIMEOUT_MS = 10_000;
     private static final long DETAIL_REQUEST_DELAY_MS = 300;
     private static final DateTimeFormatter FRENCH_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
