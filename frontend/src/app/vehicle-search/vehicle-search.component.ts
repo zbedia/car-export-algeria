@@ -189,6 +189,30 @@ export class VehicleSearchComponent {
     });
   }
 
+  // Clears every filter, wipes the results and returns the form to its
+  // pristine state (used by the "clear filters" button).
+  clearFilters(): void {
+    this.brand = '';
+    this.model = '';
+    this.maxPrice = null;
+    this.maxMileageKm = null;
+    this.garageCity = '';
+    this.fuelType = '';
+
+    this.groupedResults = [];
+    this.currentPage = 1;
+    this.hasSearched = false;
+    this.errorMessage = '';
+    this.totalCount = 0;
+    this.fuelCounts = { ESSENCE: 0, HYBRIDE: 0, ELECTRIQUE: 0 };
+
+    this.shippingExpandedIds.clear();
+    this.shippingLoadingIds.clear();
+    this.shippingResults.clear();
+    this.shippingErrors.clear();
+    this.brokenImageIds.clear();
+  }
+
   // --- Pagination (client-side over the model groups) ---
   get pagedGroups(): VehicleGroup[] {
     const start = (this.currentPage - 1) * this.pageSize;

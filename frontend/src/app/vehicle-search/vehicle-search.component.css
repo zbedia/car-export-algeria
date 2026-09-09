@@ -44,6 +44,21 @@
   cursor: not-allowed;
 }
 
+.search-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.search-actions button {
+  font-size: 1.4rem;
+}
+
+.search-actions .clear-filters {
+  background: transparent;
+  color: #b91c1c;
+  font-weight: 700;
+}
+
 .loading,
 .no-results {
   padding: 16px;

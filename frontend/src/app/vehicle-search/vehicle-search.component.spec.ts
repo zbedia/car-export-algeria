@@ -132,4 +132,28 @@ describe('VehicleSearchComponent', () => {
     expect(component.totalCount).toBe(0);
     expect(component.fuelCount('ESSENCE')).toBe(0);
   });
+
+  it('clears every filter and wipes the results', () => {
+    component.brand = 'Peugeot';
+    component.model = '308';
+    component.maxPrice = 20000;
+    component.maxMileageKm = 50000;
+    component.garageCity = 'Marseille';
+    component.fuelType = 'HYBRIDE';
+    component.loading = false;
+    searchSpy.and.returnValue(of([listing(1)]));
+    component.onSearch();
+
+    component.clearFilters();
+
+    expect(component.brand).toBe('');
+    expect(component.model).toBe('');
+    expect(component.maxPrice).toBeNull();
+    expect(component.maxMileageKm).toBeNull();
+    expect(component.garageCity).toBe('');
+    expect(component.fuelType).toBe('');
+    expect(component.groupedResults).toEqual([]);
+    expect(component.hasSearched).toBeFalse();
+    expect(component.totalCount).toBe(0);
+  });
 });

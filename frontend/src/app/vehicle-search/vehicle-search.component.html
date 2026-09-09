@@ -36,7 +36,28 @@
       <option value="">{{ 'search.fuelTypeAll' | translate }}</option>
       <option *ngFor="let f of selectableFuelTypes" [value]="f">{{ 'fuel.' + f | translate }}</option>
     </select>
-    <button type="submit" [disabled]="loading">{{ 'search.button' | translate }}</button>
+    <div class="search-actions">
+      <button
+        type="submit"
+        class="icon-button"
+        [disabled]="loading"
+        [attr.aria-label]="'search.button' | translate"
+        [attr.title]="'search.button' | translate"
+      >
+        🔍
+      </button>
+      <button
+        type="button"
+        class="clear-filters"
+        *ngIf="hasSearched"
+        [disabled]="loading"
+        (click)="clearFilters()"
+        [attr.aria-label]="'search.reset' | translate"
+        [attr.title]="'search.reset' | translate"
+      >
+        ↺
+      </button>
+    </div>
   </form>
 
   <div *ngIf="loading" class="loading">{{ 'search.loading' | translate }}</div>
