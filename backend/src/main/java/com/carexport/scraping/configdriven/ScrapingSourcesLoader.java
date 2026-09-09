@@ -64,6 +64,7 @@ public class ScrapingSourcesLoader {
                 string(m, "titleMileagePattern", "(?i)(\\d{3,})\\s*kms?"),
                 string(m, "dateFormat", "dd/MM/yyyy"),
                 longOf(m.get("politenessMs"), 300L),
+                intOf(m.get("detailConcurrency"), 4),
                 longOf(m.get("requestTimeoutMs"), 30_000L),
                 intOf(m.get("fetchAttempts"), 3),
                 longOf(m.get("retryDelayMs"), 2_000L),

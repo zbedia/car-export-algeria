@@ -11,6 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -73,6 +74,9 @@ public class ExportCar213Connector implements VehicleSourceConnector {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Value("${scraping.exportcar213.detail-concurrency:4}")
+    private int detailConcurrency;
+
     @Override
     public String getSourceName() {
         return SOURCE_NAME;
@@ -83,19 +87,11 @@ public class ExportCar213Connector implements VehicleSourceConnector {
         List<String> detailUrls = fetchDetailUrls();
         log.info("[{}] Found {} vehicle cards on the listing page", SOURCE_NAME, detailUrls.size());
 
-        List<VehicleListing> results = new ArrayList<>();
-        int failures = 0;
-        for (String detailUrl : detailUrls) {
-            try {
-                results.add(fetchVehicleDetail(detailUrl));
-            } catch (Exception e) {
-                failures++;
-                log.warn("[{}] Failed to parse detail page {}: {}", SOURCE_NAME, detailUrl, e.toString());
-            }
-            politeDelay();
-        }
-        log.info("[{}] Finished: {} vehicles parsed successfully, {} failed", SOURCE_NAME, results.size(), failures);
-        return results;
+        ScrapeRunner.ScrapeOutcome outcome = ScrapeRunner.run(
+                SOURCE_NAME, detailUrls, detailConcurrency, DETAIL_REQUEST_DELAY_MS, this::fetchVehicleDetail);
+        log.info("[{}] Finished: {} vehicles parsed successfully, {} failed",
+                SOURCE_NAME, outcome.results().size(), outcome.failures());
+        return outcome.results();
     }
 
     private List<String> fetchDetailUrls() {
@@ -216,13 +212,5 @@ public class ExportCar213Connector implements VehicleSourceConnector {
             case "DIESEL" -> FuelType.DIESEL;
             default -> FuelType.ESSENCE;
         };
-    }
-
-    private void politeDelay() {
-        try {
-            Thread.sleep(DETAIL_REQUEST_DELAY_MS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 }

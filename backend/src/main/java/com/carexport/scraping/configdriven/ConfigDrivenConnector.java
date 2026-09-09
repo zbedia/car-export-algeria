@@ -4,6 +4,7 @@ import com.carexport.exception.ScrapingException;
 import com.carexport.model.FuelType;
 import com.carexport.model.VehicleListing;
 import com.carexport.scraping.ListingImageExtractor;
+import com.carexport.scraping.ScrapeRunner;
 import com.carexport.scraping.SearchCriteria;
 import com.carexport.scraping.VehicleSourceConnector;
 import org.jsoup.Jsoup;
@@ -72,24 +73,20 @@ public class ConfigDrivenConnector implements VehicleSourceConnector {
         List<String> detailUrls = fetchDetailUrls();
         log.info("[{}] Found {} vehicle URLs in the sitemap", sourceName, detailUrls.size());
 
-        List<VehicleListing> results = new ArrayList<>();
-        int failures = 0;
-        int skipped = 0;
-        for (String detailUrl : detailUrls) {
-            try {
-                results.add(parse(fetchDetail(detailUrl), detailUrl));
-            } catch (NotAVehicleException e) {
-                skipped++;
-                log.debug("[{}] Skipped non-vehicle listing {}: {}", sourceName, detailUrl, e.getMessage());
-            } catch (Exception e) {
-                failures++;
-                log.warn("[{}] Failed to parse detail page {}: {}", sourceName, detailUrl, e.getMessage());
-            }
-            politenessDelay();
-        }
+        ScrapeRunner.ScrapeOutcome outcome = ScrapeRunner.run(
+                sourceName, detailUrls, config.detailConcurrency(), config.politenessMs(), this::fetchAndParse);
         log.info("[{}] Finished: {} vehicles parsed successfully, {} skipped, {} failed",
-                sourceName, results.size(), skipped, failures);
-        return results;
+                sourceName, outcome.results().size(), outcome.skipped(), outcome.failures());
+        return outcome.results();
+    }
+
+    private VehicleListing fetchAndParse(String detailUrl) throws IOException {
+        try {
+            return parse(fetchDetail(detailUrl), detailUrl);
+        } catch (NotAVehicleException e) {
+            log.debug("[{}] Skipped non-vehicle listing {}: {}", sourceName, detailUrl, e.getMessage());
+            return null;
+        }
     }
 
     /**
@@ -255,10 +252,6 @@ public class ConfigDrivenConnector implements VehicleSourceConnector {
                 .userAgent(config.userAgent())
                 .timeout((int) config.requestTimeoutMs())
                 .get();
-    }
-
-    private void politenessDelay() {
-        sleepQuietly(config.politenessMs());
     }
 
     private void sleepQuietly(long millis) {

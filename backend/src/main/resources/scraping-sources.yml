@@ -23,6 +23,7 @@ sources:
     titleMileagePattern: '(?i)(\d{3,})\s*kms?'
     dateFormat: "dd/MM/yyyy"
     politenessMs: 300
+    detailConcurrency: 4
     requestTimeoutMs: 30000
     fetchAttempts: 3
     retryDelayMs: 2000

@@ -19,6 +19,8 @@ import java.util.Map;
  *                              figure out of the headline, e.g. « … 25000kms »
  * @param dateFormat            format of the « first registration » spec value
  * @param politenessMs          sleep between two detail-page requests
+ * @param detailConcurrency     worker threads fetching/parsing the detail pages
+ *                              concurrently
  * @param requestTimeoutMs      per-request connect/read timeout
  * @param fetchAttempts         sitemap fetch retries before giving up
  * @param retryDelayMs          wait before a sitemap retry
@@ -44,6 +46,7 @@ public record SourceConfig(
         String titleMileagePattern,
         String dateFormat,
         long politenessMs,
+        int detailConcurrency,
         long requestTimeoutMs,
         int fetchAttempts,
         long retryDelayMs,

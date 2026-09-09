@@ -8,6 +8,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -31,6 +33,7 @@ import java.util.regex.Pattern;
  * Enumerating the payload therefore recovers every offer, not a 24-car slice.
  */
 @Component
+@ConditionalOnProperty(name = "scraping.carxport.enabled", havingValue = "true", matchIfMissing = true)
 public class CarXExportConnector implements VehicleSourceConnector {
 
     private static final Logger log = LoggerFactory.getLogger(CarXExportConnector.class);
@@ -55,6 +58,9 @@ public class CarXExportConnector implements VehicleSourceConnector {
 
     private final CarXExportVehicleParser parser = new CarXExportVehicleParser(SOURCE_NAME);
 
+    @Value("${scraping.carxport.detail-concurrency:4}")
+    private int detailConcurrency;
+
     @Override
     public String getSourceName() {
         return SOURCE_NAME;
@@ -65,19 +71,12 @@ public class CarXExportConnector implements VehicleSourceConnector {
         List<String> detailUrls = fetchDetailUrls();
         log.info("[{}] Found {} vehicle cards on the listing page", SOURCE_NAME, detailUrls.size());
 
-        List<VehicleListing> results = new ArrayList<>();
-        int failures = 0;
-        for (String detailUrl : detailUrls) {
-            try {
-                results.add(parser.parse(fetchDetail(detailUrl), detailUrl));
-            } catch (Exception e) {
-                failures++;
-                log.warn("[{}] Failed to parse detail page {}: {}", SOURCE_NAME, detailUrl, e.getMessage());
-            }
-            politeDelay();
-        }
-        log.info("[{}] Finished: {} vehicles parsed successfully, {} failed", SOURCE_NAME, results.size(), failures);
-        return results;
+        ScrapeRunner.ScrapeOutcome outcome = ScrapeRunner.run(
+                SOURCE_NAME, detailUrls, detailConcurrency, DETAIL_REQUEST_DELAY_MS,
+                url -> parser.parse(fetchDetail(url), url));
+        log.info("[{}] Finished: {} vehicles parsed successfully, {} failed",
+                SOURCE_NAME, outcome.results().size(), outcome.failures());
+        return outcome.results();
     }
 
     private List<String> fetchDetailUrls() {
@@ -176,14 +175,6 @@ public class CarXExportConnector implements VehicleSourceConnector {
     private void sleepQuietly(long millis) {
         try {
             Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    private void politeDelay() {
-        try {
-            Thread.sleep(DETAIL_REQUEST_DELAY_MS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
