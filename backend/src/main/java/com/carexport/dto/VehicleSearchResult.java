@@ -24,4 +24,10 @@ public class VehicleSearchResult {
     private BigDecimal customsDiscountPercentage;
     private String customsDiscountReasonCode;
     private String imageUrl;
+
+    /** Age of the vehicle in whole months since first registration, for the eligibility badge. */
+    private Integer ageMonths;
+
+    /** Decomposed customs estimate (duty after discount + VAT), in EUR and DZD. */
+    private CustomsEstimate customs;
 }

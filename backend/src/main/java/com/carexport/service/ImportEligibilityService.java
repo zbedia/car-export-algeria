@@ -1,5 +1,6 @@
 package com.carexport.service;
 
+import com.carexport.dto.CustomsEstimate;
 import com.carexport.model.CustomsDiscountReasonCode;
 import com.carexport.model.FuelType;
 import com.carexport.model.VehicleListing;
@@ -39,4 +40,10 @@ public interface ImportEligibilityService {
      * The frontend maps it to a translated explanation.
      */
     CustomsDiscountReasonCode getCustomsDiscountReasonCode(VehicleListing vehicle);
+
+    /**
+     * Estimated customs cost (duty after discount + VAT) for importing the
+     * vehicle into Algeria, expressed in EUR and DZD.
+     */
+    CustomsEstimate estimateCustoms(VehicleListing vehicle);
 }

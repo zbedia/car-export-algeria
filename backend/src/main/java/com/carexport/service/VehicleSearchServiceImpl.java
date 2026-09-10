@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,6 +133,15 @@ public class VehicleSearchServiceImpl implements VehicleSearchService {
         r.setCustomsDiscountPercentage(eligibilityService.getCustomsDiscountPercentage(v));
         r.setCustomsDiscountReasonCode(eligibilityService.getCustomsDiscountReasonCode(v).name());
         r.setImageUrl(v.getImageUrl());
+        r.setAgeMonths(ageInMonths(v.getFirstRegistrationDate()));
+        r.setCustoms(eligibilityService.estimateCustoms(v));
         return r;
+    }
+
+    private static Integer ageInMonths(LocalDate firstRegistrationDate) {
+        if (firstRegistrationDate == null) {
+            return null;
+        }
+        return (int) ChronoUnit.MONTHS.between(firstRegistrationDate, LocalDate.now());
     }
 }

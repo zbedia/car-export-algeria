@@ -34,6 +34,15 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.quickFrance': 'Vehicles in France',
     'search.quickSweden': 'Vehicles in Sweden',
 
+    'eligibility.eligible': 'Eligible',
+    'eligibility.conformsLaw': 'Meets Finance Law',
+    'eligibility.age': '{years} yr {months} mo',
+
+    'cost.vehiclePrice': 'Vehicle price (EUR)',
+    'cost.customs': 'Estimated customs (DZD / EUR)',
+    'cost.shipping': 'Sea freight (EUR)',
+    'cost.totalDelivered': 'Total delivered to Algeria',
+
     'pagination.previous': 'Previous',
     'pagination.next': 'Next',
     'pagination.page': 'Page {page} / {total}',
@@ -111,6 +120,15 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.quickElectricHybrid': 'Électrique / Hybride',
     'search.quickFrance': 'Véhicules en France',
     'search.quickSweden': 'Véhicules en Suède',
+
+    'eligibility.eligible': 'Éligible',
+    'eligibility.conformsLaw': 'Conforme Loi de Finances',
+    'eligibility.age': '{years} ans et {months} mois',
+
+    'cost.vehiclePrice': 'Prix du véhicule (EUR)',
+    'cost.customs': 'Estimation douane (DZD / EUR)',
+    'cost.shipping': 'Transport maritime (EUR)',
+    'cost.totalDelivered': 'Prix total rendu Algérie',
 
     'pagination.previous': 'Précédent',
     'pagination.next': 'Suivant',
@@ -191,6 +209,15 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'search.quickElectricHybrid': 'كهربائية / هجينة',
     'search.quickFrance': 'سيارات في فرنسا',
     'search.quickSweden': 'سيارات في السويد',
+
+    'eligibility.eligible': 'مؤهلة',
+    'eligibility.conformsLaw': 'مطابقة لقانون المالية',
+    'eligibility.age': '{years} سنة و {months} شهر',
+
+    'cost.vehiclePrice': 'سعر السيارة (€)',
+    'cost.customs': 'تقدير الرسوم الجمركية (دج / €)',
+    'cost.shipping': 'النقل البحري (€)',
+    'cost.totalDelivered': 'السعر الإجمالي في الجزائر',
 
     'pagination.previous': 'السابق',
     'pagination.next': 'التالي',

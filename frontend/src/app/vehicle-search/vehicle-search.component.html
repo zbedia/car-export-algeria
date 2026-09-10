@@ -187,6 +187,13 @@
     </p>
     <div class="results-grid">
       <div class="vehicle-card" *ngFor="let v of group.vehicles" [class.best-price]="v.bestPrice">
+        <span class="eligibility-badge">
+          <span aria-hidden="true">✔</span>
+          <ng-container *ngIf="v.ageMonths !== null; else conformsLaw">
+            {{ 'eligibility.eligible' | translate }} — {{ formatAge(v.ageMonths) }}
+          </ng-container>
+          <ng-template #conformsLaw>{{ 'eligibility.conformsLaw' | translate }}</ng-template>
+        </span>
         <span *ngIf="v.bestPrice" class="badge">{{ 'search.bestPrice' | translate }}</span>
         <ng-container *ngIf="v.imageUrl">
           <img
@@ -201,50 +208,51 @@
           <div *ngIf="isImageBroken(v.id)" class="vehicle-image placeholder" aria-hidden="true">🚗</div>
         </ng-container>
         <p>
-          {{ formatMileage(v.mileageKm) }} km<span *ngIf="v.garageCity"> — {{ v.garageCity }}</span>
+          {{ v.year }} · {{ formatMileage(v.mileageKm) }} km<span *ngIf="v.garageCity"> · {{ v.garageCity }}</span>
         </p>
         <p class="fuel">
           {{ fuelIcon(v.fuelType) }} {{ 'fuel.' + v.fuelType | translate }}
           <span *ngIf="v.engineDisplacementCm3 as displacement">— {{ displacement }} cm³</span>
         </p>
-        <p class="price">{{ formatPrice(v.price, v.currency) }}</p>
+        <div class="cost-grid">
+          <div class="cost-row">
+            <span class="cost-label">{{ 'cost.vehiclePrice' | translate }}</span>
+            <span class="cost-value">{{ formatPrice(v.price, v.currency) }}</span>
+          </div>
+          <div class="cost-row">
+            <span class="cost-label">{{ 'cost.customs' | translate }}</span>
+            <span class="cost-value" *ngIf="v.customs">
+              {{ formatDzd(v.customs.totalDzd) }}
+              <span class="cost-sub">({{ formatPrice(v.customs.totalEur, 'EUR') }})</span>
+            </span>
+            <span class="cost-value" *ngIf="!v.customs">—</span>
+          </div>
+          <div class="cost-row" *ngIf="routeShipping; else shippingUnavailable">
+            <span class="cost-label">{{ 'cost.shipping' | translate }}</span>
+            <span class="cost-value">
+              {{ formatPrice(routeShipping.totalCost, routeShipping.currency) }}
+              <button type="button" class="route-edit" (click)="openEditModal()">
+                {{ 'modal.edit' | translate }}
+              </button>
+            </span>
+          </div>
+          <ng-template #shippingUnavailable>
+            <div class="cost-row">
+              <span class="cost-label">{{ 'cost.shipping' | translate }}</span>
+              <span class="cost-value">{{ routeShippingError || '—' }}</span>
+            </div>
+          </ng-template>
+        </div>
+        <div class="total-row" *ngIf="totalDeliveredFor(v) as total">
+          <span class="total-label">{{ 'cost.totalDelivered' | translate }}</span>
+          <span class="total-value">{{ formatPrice(total, 'EUR') }}</span>
+        </div>
         <p class="customs" [title]="customsDiscountReasonText(v)">
           {{ 'search.customsDiscount' | translate }} -{{ v.customsDiscountPercentage }}%
           <span class="info-icon">ⓘ</span>
         </p>
         <p class="customs-reason">{{ customsDiscountReasonText(v) }}</p>
         <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
-        <button
-          type="button"
-          class="link-button"
-          (click)="toggleShippingEstimate(v)"
-          [attr.aria-expanded]="isShippingExpanded(v.id)"
-        >
-          {{ 'search.estimateShipping' | translate }}
-        </button>
-        <div *ngIf="isShippingExpanded(v.id)" class="shipping-inline">
-          <span *ngIf="isShippingLoading(v.id)" class="shipping-loading">{{ 'shipping.loading' | translate }}</span>
-          <span *ngIf="shippingErrorFor(v.id) as err" class="shipping-error">{{ err }}</span>
-          <div *ngIf="shippingResultFor(v.id) as result" class="shipping-detail">
-            <p class="shipping-route">
-              {{ result.originPort }} → {{ result.destinationPort }}
-              <button type="button" class="edit-link" (click)="openEditModal()">{{ 'modal.edit' | translate }}</button>
-            </p>
-            <div class="shipping-line">
-              <span>{{ 'shipping.baseFreight' | translate }}</span>
-              <span>{{ formatPrice(result.baseFreightCost, result.currency) }}</span>
-            </div>
-            <div class="shipping-line">
-              <span>{{ 'shipping.handlingFee' | translate }}</span>
-              <span>{{ formatPrice(result.handlingFee, result.currency) }}</span>
-            </div>
-            <div class="shipping-line shipping-total">
-              <span>{{ 'shipping.total' | translate }}</span>
-              <span>{{ formatPrice(result.totalCost, result.currency) }}</span>
-            </div>
-            <p class="shipping-disclaimer">{{ 'shipping.disclaimer' | translate }}</p>
-          </div>
-        </div>
         <a [href]="v.externalUrl" target="_blank" rel="noopener">{{ 'search.viewListing' | translate }}</a>
       </div>
     </div>

@@ -4,6 +4,16 @@ import { VehicleSearchComponent } from './vehicle-search.component';
 import { VehicleService } from '../services/vehicle.service';
 import { ShippingService } from '../services/shipping.service';
 import { FuelType, VehicleSearchResult } from '../models/vehicle-search-result.model';
+import { ShippingEstimateResponse } from '../models/shipping.model';
+
+const routeStub: ShippingEstimateResponse = {
+  originPort: 'MARSEILLE',
+  destinationPort: 'ALGER',
+  baseFreightCost: 850,
+  handlingFee: 150,
+  totalCost: 1000,
+  currency: 'EUR'
+};
 
 function listing(id: number, overrides: Partial<VehicleSearchResult> = {}): VehicleSearchResult {
   return {
@@ -25,6 +35,8 @@ function listing(id: number, overrides: Partial<VehicleSearchResult> = {}): Vehi
     customsDiscountPercentage: 50,
     customsDiscountReasonCode: 'SMALL_ENGINE',
     imageUrl: null,
+    ageMonths: 10,
+    customs: null,
     ...overrides
   };
 }
@@ -39,7 +51,7 @@ describe('VehicleSearchComponent', () => {
       imports: [VehicleSearchComponent],
       providers: [
         { provide: VehicleService, useValue: { search: searchSpy } },
-        { provide: ShippingService, useValue: { estimate: jasmine.createSpy('estimate') } }
+        { provide: ShippingService, useValue: { estimate: jasmine.createSpy('estimate').and.returnValue(of(routeStub)) } }
       ]
     });
     const fixture = TestBed.createComponent(VehicleSearchComponent);
@@ -201,5 +213,30 @@ describe('VehicleSearchComponent', () => {
     component.fuelType = 'ESSENCE';
     component.onFuelTypeChange();
     expect(component.quickFuelTypes).toBeNull();
+  });
+
+  it('loads the shared route freight on creation', () => {
+    const shipping = TestBed.inject(ShippingService) as unknown as { estimate: jasmine.Spy };
+    expect(shipping.estimate).toHaveBeenCalledWith('MARSEILLE', 'ALGER');
+    expect(component.routeShipping?.totalCost).toBe(1000);
+  });
+
+  it('computes the total delivered price from price + customs + freight', () => {
+    const vehicle = listing(1, {
+      customs: { dutyEur: 2250, vatEur: 3277.5, totalEur: 5527.5, totalDzd: 1381875, dutyRatePercent: 30 }
+    });
+    component.routeShipping = routeStub;
+
+    expect(component.totalDeliveredFor(vehicle)).toBe(15000 + 5527.5 + 1000);
+    expect(component.totalDeliveredFor(listing(2, { customs: null }))).toBeNull();
+    expect(component.totalDeliveredFor(vehicle)).toBeCloseTo(21527.5, 2);
+  });
+
+  it('formats age into years and months via the translate service', () => {
+    const t = jasmine.createSpy('t').and.returnValue('2 ans et 4 mois');
+    (component as unknown as { translationService: { t: jasmine.Spy } }).translationService = { t };
+
+    expect(component.formatAge(28)).toBe('2 ans et 4 mois');
+    expect(t).toHaveBeenCalledWith('eligibility.age', { years: 2, months: 4 });
   });
 });

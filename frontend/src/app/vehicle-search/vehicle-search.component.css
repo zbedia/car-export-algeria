@@ -378,6 +378,7 @@
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
+  border: 1.5px solid #ffffff;
 }
 
 .group-cheapest {
@@ -387,11 +388,19 @@
   font-weight: 600;
 }
 
-.price {
-  font-size: 1.6rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #0f172a;
+.eligibility-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: -16px -16px 14px;
+  padding: 8px 12px;
+  background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 12px 12px 0 0;
+  letter-spacing: 0.01em;
 }
 
 .source {
@@ -446,64 +455,80 @@
   color: #047857;
 }
 
-.shipping-inline {
-  margin-top: 6px;
-  padding: 8px 10px;
-  background: #ecfdf5;
+.cost-grid {
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
+  background: #f8fafc;
+  padding: 8px 12px;
+  margin: 10px 0;
   font-size: 0.85rem;
 }
 
-.shipping-loading {
-  color: #64748b;
-}
-
-.shipping-error {
-  color: #b91c1c;
-}
-
-.shipping-route {
-  margin: 0 0 6px;
-  font-weight: 600;
-  color: #064e3b;
-}
-
-.shipping-line {
+.cost-row {
   display: flex;
   justify-content: space-between;
-  padding: 2px 0;
-  color: #064e3b;
+  align-items: baseline;
+  gap: 10px;
+  padding: 3px 0;
 }
 
-.shipping-total {
-  font-weight: 700;
-  border-top: 1px solid #a7f3d0;
-  margin-top: 4px;
-  padding-top: 6px;
-}
-
-.shipping-disclaimer {
-  margin: 6px 0 0;
-  font-size: 0.7rem;
+.cost-label {
   color: #64748b;
-  font-style: italic;
+  flex-shrink: 0;
 }
 
-.edit-link {
+.cost-value {
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+}
+
+.cost-sub {
+  color: #94a3b8;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+.route-edit {
   background: none;
   border: none;
   padding: 0;
   margin-left: 6px;
   color: #059669;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
 }
 
-[dir='rtl'] .edit-link {
+[dir='rtl'] .route-edit {
   margin-left: 0;
   margin-right: 6px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  background: #0f172a;
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+.total-label {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.total-value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #34d399;
 }
 
 .vehicle-card a {

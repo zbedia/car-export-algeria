@@ -8,7 +8,7 @@ import { TranslationService } from '../services/translation.service';
 import { TranslatePipe } from '../pipes/translate.pipe';
 import { ShippingEditModalComponent, ShippingEditResult } from '../shipping-edit-modal/shipping-edit-modal.component';
 import { FuelType, VehicleSearchResult } from '../models/vehicle-search-result.model';
-import { DestinationPort, OriginPort, ShippingEstimateResponse } from '../models/shipping.model';
+import { ShippingEstimateResponse } from '../models/shipping.model';
 import { BRAND_LOGO_SLUGS, CAR_BRANDS } from '../data/car-brands';
 import { ALL_MODELS, CAR_MODELS_BY_BRAND } from '../data/car-models';
 
@@ -158,15 +158,12 @@ export class VehicleSearchComponent {
     return this.formatNumber(value, { maximumFractionDigits: 0 });
   }
 
-  // Shipping estimate state, keyed by vehicle id. The route itself
-  // (origin/destination) is shared across every vehicle via
-  // ShippingSelectionService — editing it from any card refreshes all
-  // cards that already have a result, instead of each card tracking
-  // its own independent route.
-  private shippingExpandedIds = new Set<number>();
-  private shippingLoadingIds = new Set<number>();
-  private shippingResults = new Map<number, ShippingEstimateResponse>();
-  private shippingErrors = new Map<number, string>();
+  // Shared sea-freight estimate for the route selected in
+  // ShippingSelectionService. Freight depends only on origin/destination,
+  // so a single estimate backs the cost breakdown on every vehicle card;
+  // changing the route re-fetches it once for all cards.
+  routeShipping: ShippingEstimateResponse | null = null;
+  routeShippingError = '';
 
   editingShipping = false;
 
@@ -176,20 +173,35 @@ export class VehicleSearchComponent {
     public shippingSelection: ShippingSelectionService,
     private translationService: TranslationService,
     private el: ElementRef
-  ) {}
+  ) {
+    this.loadRouteShipping();
+  }
+
+  private loadRouteShipping(): void {
+    this.routeShippingError = '';
+    this.shippingService
+      .estimate(this.shippingSelection.originPort(), this.shippingSelection.destinationPort())
+      .subscribe({
+        next: (result) => {
+          this.routeShipping = result;
+          this.routeShippingError = '';
+        },
+        error: () => {
+          this.routeShipping = null;
+          this.routeShippingError = this.translationService.t('errors.shippingEstimate');
+        }
+      });
+  }
 
   onSearch(): void {
     // Enter in a form field triggers ngSubmit even when the submit button
     // is disabled — guard against out-of-order parallel searches.
     if (this.loading) return;
 
-    // Drop shipping state from any previous search: stale expanded cards,
-    // cached estimates and in-flight requests would otherwise accumulate
-    // forever and leak across unrelated result sets.
-    this.shippingExpandedIds.clear();
-    this.shippingLoadingIds.clear();
-    this.shippingResults.clear();
-    this.shippingErrors.clear();
+    // Drop shipping state from any previous search: stale estimates and
+    // in-flight requests would otherwise accumulate forever and leak
+    // across unrelated result sets. The route freight itself is shared
+    // and stays cached in routeShipping.
     this.brokenImageIds.clear();
 
     this.loading = true;
@@ -241,10 +253,6 @@ export class VehicleSearchComponent {
     this.totalCount = 0;
     this.fuelCounts = { ESSENCE: 0, HYBRIDE: 0, ELECTRIQUE: 0 };
 
-    this.shippingExpandedIds.clear();
-    this.shippingLoadingIds.clear();
-    this.shippingResults.clear();
-    this.shippingErrors.clear();
     this.brokenImageIds.clear();
   }
 
@@ -449,56 +457,26 @@ export class VehicleSearchComponent {
     });
   }
 
-  toggleShippingEstimate(vehicle: VehicleSearchResult): void {
-    if (this.shippingExpandedIds.has(vehicle.id)) {
-      this.shippingExpandedIds.delete(vehicle.id);
-      return;
+  // --- Cost breakdown on each card ---
+
+  formatDzd(value: number): string {
+    return `${this.formatNumber(value, { maximumFractionDigits: 0 })} DZD`;
+  }
+
+  // Total delivered in Algeria: purchase price + customs (EUR) + sea freight.
+  // Null while the components aren't available (no customs data or freight).
+  totalDeliveredFor(vehicle: VehicleSearchResult): number | null {
+    if (!this.routeShipping || !vehicle.customs) {
+      return null;
     }
-
-    this.shippingExpandedIds.add(vehicle.id);
-
-    // Already fetched (or currently fetching) — just show what we have.
-    if (this.shippingResults.has(vehicle.id) || this.shippingLoadingIds.has(vehicle.id)) {
-      return;
-    }
-
-    this.fetchShippingEstimate(
-      vehicle.id,
-      this.shippingSelection.originPort(),
-      this.shippingSelection.destinationPort()
-    );
+    return vehicle.price + vehicle.customs.totalEur + this.routeShipping.totalCost;
   }
 
-  private fetchShippingEstimate(vehicleId: number, origin: OriginPort, destination: DestinationPort): void {
-    this.shippingLoadingIds.add(vehicleId);
-    this.shippingErrors.delete(vehicleId);
-
-    this.shippingService.estimate(origin, destination).subscribe({
-      next: (result) => {
-        this.shippingResults.set(vehicleId, result);
-        this.shippingLoadingIds.delete(vehicleId);
-      },
-      error: (err) => {
-        this.shippingErrors.set(vehicleId, err.error?.message || this.translationService.t('errors.shippingEstimate'));
-        this.shippingLoadingIds.delete(vehicleId);
-      }
-    });
-  }
-
-  isShippingExpanded(vehicleId: number): boolean {
-    return this.shippingExpandedIds.has(vehicleId);
-  }
-
-  isShippingLoading(vehicleId: number): boolean {
-    return this.shippingLoadingIds.has(vehicleId);
-  }
-
-  shippingResultFor(vehicleId: number): ShippingEstimateResponse | undefined {
-    return this.shippingResults.get(vehicleId);
-  }
-
-  shippingErrorFor(vehicleId: number): string | undefined {
-    return this.shippingErrors.get(vehicleId);
+  // Age is stored server-side as whole months; "Éligible — 2 ans et 4 mois".
+  formatAge(ageMonths: number): string {
+    const years = Math.floor(ageMonths / 12);
+    const months = ageMonths % 12;
+    return this.translationService.t('eligibility.age', { years, months });
   }
 
   openEditModal(): void {
@@ -513,12 +491,8 @@ export class VehicleSearchComponent {
     this.shippingSelection.originPort.set(result.originPort);
     this.shippingSelection.destinationPort.set(result.destinationPort);
 
-    // Refresh every card that already has a visible estimate so they
-    // all reflect the new route immediately, without the user needing
-    // to re-open each one individually.
-    for (const vehicleId of this.shippingResults.keys()) {
-      this.fetchShippingEstimate(vehicleId, result.originPort, result.destinationPort);
-    }
+    // A single freight estimate backs every card; refresh it in bulk.
+    this.loadRouteShipping();
 
     this.editingShipping = false;
   }
