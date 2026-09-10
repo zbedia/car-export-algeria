@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VehicleService, VehicleSearchFilters } from '../services/vehicle.service';
@@ -9,7 +9,7 @@ import { TranslatePipe } from '../pipes/translate.pipe';
 import { ShippingEditModalComponent, ShippingEditResult } from '../shipping-edit-modal/shipping-edit-modal.component';
 import { FuelType, VehicleSearchResult } from '../models/vehicle-search-result.model';
 import { DestinationPort, OriginPort, ShippingEstimateResponse } from '../models/shipping.model';
-import { CAR_BRANDS } from '../data/car-brands';
+import { BRAND_LOGO_SLUGS, CAR_BRANDS } from '../data/car-brands';
 import { ALL_MODELS, CAR_MODELS_BY_BRAND } from '../data/car-models';
 
 interface VehicleGroup {
@@ -55,6 +55,12 @@ export class VehicleSearchComponent {
   loading = false;
   errorMessage = '';
   hasSearched = false;
+
+  // Autocomplete dropdowns (brand/model) and the collapsible advanced filters.
+  brandDropdownOpen = false;
+  modelDropdownOpen = false;
+  advancedOpen = false;
+  private brokenBrandLogos = new Set<string>();
 
   // Summary strip: one listing counts once, regardless of how models are
   // grouped on screen. Diesel can never reach the client (server-side filter),
@@ -145,7 +151,8 @@ export class VehicleSearchComponent {
     private vehicleService: VehicleService,
     private shippingService: ShippingService,
     public shippingSelection: ShippingSelectionService,
-    private translationService: TranslationService
+    private translationService: TranslationService,
+    private el: ElementRef
   ) {}
 
   onSearch(): void {
@@ -199,6 +206,8 @@ export class VehicleSearchComponent {
     this.garageCity = '';
     this.fuelType = '';
 
+    this.brandDropdownOpen = false;
+    this.modelDropdownOpen = false;
     this.groupedResults = [];
     this.currentPage = 1;
     this.hasSearched = false;
@@ -266,6 +275,53 @@ export class VehicleSearchComponent {
 
   get modelSuggestions(): string[] {
     return CAR_MODELS_BY_BRAND[this.brand] ?? ALL_MODELS;
+  }
+
+  get brandSuggestions(): string[] {
+    const q = this.brand.trim().toLowerCase();
+    if (!q) return [];
+    return this.carBrands.filter((b) => b.toLowerCase().includes(q)).slice(0, 8);
+  }
+
+  get filteredModels(): string[] {
+    const q = this.model.trim().toLowerCase();
+    const all = CAR_MODELS_BY_BRAND[this.brand] ?? ALL_MODELS;
+    if (!q) return all.slice(0, 8);
+    return all.filter((m) => m.toLowerCase().includes(q)).slice(0, 8);
+  }
+
+  selectBrand(brand: string): void {
+    this.onBrandChange(brand);
+    this.brandDropdownOpen = false;
+  }
+
+  selectModel(model: string): void {
+    this.model = model;
+    this.modelDropdownOpen = false;
+  }
+
+  brandLogoUrl(brand: string): string {
+    const slug = BRAND_LOGO_SLUGS[brand];
+    return slug ? `https://cdn.simpleicons.org/${slug}` : '';
+  }
+
+  logoFailed(brand: string): boolean {
+    return this.brokenBrandLogos.has(brand);
+  }
+
+  markLogoFailed(brand: string): void {
+    if (BRAND_LOGO_SLUGS[brand]) {
+      this.brokenBrandLogos.add(brand);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  private closeDropdownsOnOutsideClick(event: MouseEvent): void {
+    const clickedInside = this.el.nativeElement.contains(event.target);
+    if (!clickedInside) {
+      this.brandDropdownOpen = false;
+      this.modelDropdownOpen = false;
+    }
   }
 
   onBrandChange(value: string): void {

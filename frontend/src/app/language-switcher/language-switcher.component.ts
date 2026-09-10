@@ -5,7 +5,7 @@ import { Lang } from '../i18n/translations';
 
 interface LanguageOption {
   code: Lang;
-  flag: string;
+  flagUrl: string;
   label: string;
 }
 
@@ -18,9 +18,9 @@ interface LanguageOption {
 })
 export class LanguageSwitcherComponent {
   languages: LanguageOption[] = [
-    { code: 'fr', flag: '🇫🇷', label: 'Français' },
-    { code: 'en', flag: '🇬🇧', label: 'English' },
-    { code: 'ar', flag: '🇩🇿', label: 'العربية' }
+    { code: 'fr', flagUrl: 'https://flagcdn.com/fr.svg', label: 'Français' },
+    { code: 'en', flagUrl: 'https://flagcdn.com/gb.svg', label: 'English' },
+    { code: 'ar', flagUrl: 'https://flagcdn.com/dz.svg', label: 'العربية' }
   ];
 
   constructor(public translationService: TranslationService) {}

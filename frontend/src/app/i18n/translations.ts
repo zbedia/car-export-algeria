@@ -7,6 +7,12 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'app.title': 'Car Export Algeria',
     'app.subtitle': 'Comparison tool for vehicles under 3 years old',
 
+    'hero.title': 'Import your vehicle under 3 years old into Algeria at the best price',
+    'hero.customsCalculator': 'Integrated customs calculator',
+    'hero.shippingEstimate': 'Estimated sea freight',
+    'hero.verifiedListings': 'Verified listings',
+
+    'search.advanced': 'Advanced filters',
     'search.brandPlaceholder': 'Brand (e.g. Peugeot)',
     'search.modelPlaceholder': 'Model (e.g. 308)',
     'search.maxPricePlaceholder': 'Max price (€)',
@@ -74,6 +80,12 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'app.title': 'Export Voitures Algérie',
     'app.subtitle': 'Outil de comparaison pour véhicules de moins de 3 ans',
 
+    'hero.title': 'Importez votre véhicule de moins de 3 ans en Algérie au meilleur prix',
+    'hero.customsCalculator': 'Calculateur de douane intégré',
+    'hero.shippingEstimate': 'Transport maritime estimé',
+    'hero.verifiedListings': 'Annonces vérifiées',
+
+    'search.advanced': 'Filtres avancés',
     'search.brandPlaceholder': 'Marque (ex: Peugeot)',
     'search.modelPlaceholder': 'Modèle (ex: 308)',
     'search.maxPricePlaceholder': 'Prix max (€)',
@@ -143,6 +155,12 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'app.title': 'تصدير السيارات إلى الجزائر',
     'app.subtitle': 'أداة مقارنة للسيارات التي يقل عمرها عن 3 سنوات',
 
+    'hero.title': 'استورد سيارتك الأقل من 3 سنوات إلى الجزائر بأفضل سعر',
+    'hero.customsCalculator': 'حاسبة جمركية مدمجة',
+    'hero.shippingEstimate': 'تقدير الشحن البحري',
+    'hero.verifiedListings': 'إعلانات موثّقة',
+
+    'search.advanced': 'فلاتر متقدمة',
     'search.brandPlaceholder': 'الماركة (مثال: بيجو)',
     'search.modelPlaceholder': 'الطراز (مثال: 308)',
     'search.maxPricePlaceholder': 'السعر الأقصى (€)',

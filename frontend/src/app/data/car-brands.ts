@@ -1,8 +1,8 @@
 /**
  * Reference list of car brands, used to power the autocomplete
- * suggestions on the brand search field (via a native HTML <datalist>).
- * The search itself still accepts free text — this list only suggests,
- * it doesn't restrict what the user can type.
+ * suggestions on the brand search field. The search itself still
+ * accepts free text — this list only suggests, it doesn't restrict
+ * what the user can type.
  */
 export const CAR_BRANDS: string[] = [
   'Abarth',
@@ -88,3 +88,81 @@ export const CAR_BRANDS: string[] = [
   'Xpeng',
   'Zeekr'
 ].sort((a, b) => a.localeCompare(b));
+
+/**
+ * Brand → Simple Icons slug mapping used to render brand logos inside the
+ * autocomplete dropdown. Slugs that don't exist on the CDN simply fail to
+ * load and the UI falls back to a car emoji, so the list is conservative
+ * rather than exhaustive.
+ */
+export const BRAND_LOGO_SLUGS: Record<string, string> = {
+  Acura: 'acura',
+  'Alfa Romeo': 'alfaromeo',
+  Alpine: 'alpine',
+  'Aston Martin': 'astonmartin',
+  Audi: 'audi',
+  Bentley: 'bentley',
+  BMW: 'bmw',
+  BYD: 'byd',
+  Buick: 'buick',
+  Cadillac: 'cadillac',
+  Chevrolet: 'chevrolet',
+  Chrysler: 'chrysler',
+  Citroën: 'citroen',
+  Dacia: 'dacia',
+  Daewoo: 'daewoo',
+  Dodge: 'dodge',
+  Ferrari: 'ferrari',
+  Fiat: 'fiat',
+  Fisker: 'fisker',
+  Ford: 'ford',
+  Genesis: 'genesis',
+  GMC: 'gmc',
+  Haval: 'haval',
+  Honda: 'honda',
+  Hyundai: 'hyundai',
+  Infiniti: 'infiniti',
+  Isuzu: 'isuzu',
+  Jaguar: 'jaguar',
+  Jeep: 'jeep',
+  Kia: 'kia',
+  Koenigsegg: 'koenigsegg',
+  Lada: 'lada',
+  Lamborghini: 'lamborghini',
+  Lancia: 'lancia',
+  'Land Rover': 'landrover',
+  Lexus: 'lexus',
+  Lincoln: 'lincoln',
+  Lotus: 'lotus',
+  Maserati: 'maserati',
+  Mazda: 'mazda',
+  McLaren: 'mclaren',
+  'Mercedes-Benz': 'mercedes',
+  MG: 'mg',
+  Mini: 'mini',
+  Mitsubishi: 'mitsubishi',
+  Nissan: 'nissan',
+  Opel: 'opel',
+  Pagani: 'pagani',
+  Peugeot: 'peugeot',
+  Polestar: 'polestar',
+  Pontiac: 'pontiac',
+  Porsche: 'porsche',
+  Proton: 'proton',
+  Ram: 'ram',
+  Renault: 'renault',
+  'Rolls-Royce': 'rollsroyce',
+  Saab: 'saab',
+  Seat: 'seat',
+  Škoda: 'skoda',
+  Smart: 'smart',
+  Subaru: 'subaru',
+  Suzuki: 'suzuki',
+  Tata: 'tata',
+  Tesla: 'tesla',
+  Toyota: 'toyota',
+  Volkswagen: 'volkswagen',
+  Volvo: 'volvo',
+  Xpeng: 'xpeng',
+  Zeekr: 'zeekr'
+};

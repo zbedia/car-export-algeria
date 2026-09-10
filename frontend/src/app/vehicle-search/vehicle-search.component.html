@@ -1,62 +1,141 @@
+<section class="hero">
+  <h2 class="hero-title">{{ 'hero.title' | translate }}</h2>
+  <ul class="hero-bullets">
+    <li><span aria-hidden="true">🧾</span> {{ 'hero.customsCalculator' | translate }}</li>
+    <li><span aria-hidden="true">🚢</span> {{ 'hero.shippingEstimate' | translate }}</li>
+    <li><span aria-hidden="true">✅</span> {{ 'hero.verifiedListings' | translate }}</li>
+  </ul>
+</section>
+
 <div class="search-container">
   <form (ngSubmit)="onSearch()" class="search-form">
-    <input
-      [ngModel]="brand"
-      (ngModelChange)="onBrandChange($event)"
-      name="brand"
-      list="brand-options"
-      [attr.placeholder]="'search.brandPlaceholder' | translate"
-    />
-    <datalist id="brand-options">
-      <option *ngFor="let b of carBrands" [value]="b"></option>
-    </datalist>
-    <input
-      [(ngModel)]="model"
-      name="model"
-      list="model-options"
-      [attr.placeholder]="'search.modelPlaceholder' | translate"
-    />
-    <datalist id="model-options">
-      <option *ngFor="let m of modelSuggestions" [value]="m"></option>
-    </datalist>
-    <input
-      [(ngModel)]="maxPrice"
-      name="maxPrice"
-      type="number"
-      [attr.placeholder]="'search.maxPricePlaceholder' | translate"
-    />
-    <input
-      [(ngModel)]="maxMileageKm"
-      name="maxMileageKm"
-      type="number"
-      [attr.placeholder]="'search.maxMileagePlaceholder' | translate"
-    />
-    <input [(ngModel)]="garageCity" name="garageCity" [attr.placeholder]="'search.cityPlaceholder' | translate" />
-    <select [(ngModel)]="fuelType" name="fuelType">
-      <option value="">{{ 'search.fuelTypeAll' | translate }}</option>
-      <option *ngFor="let f of selectableFuelTypes" [value]="f">{{ 'fuel.' + f | translate }}</option>
-    </select>
-    <div class="search-actions">
-      <button
-        type="submit"
-        class="icon-button"
-        [disabled]="loading"
-        [attr.aria-label]="'search.button' | translate"
-        [attr.title]="'search.button' | translate"
-      >
-        🔍
-      </button>
+    <div class="search-main">
+      <div class="autocomplete">
+        <span class="field-icon" aria-hidden="true">🚗</span>
+        <input
+          [ngModel]="brand"
+          (ngModelChange)="onBrandChange($event)"
+          name="brand"
+          autocomplete="off"
+          class="with-icon"
+          (focus)="brandDropdownOpen = true"
+          (keydown.escape)="brandDropdownOpen = false"
+          [attr.placeholder]="'search.brandPlaceholder' | translate"
+        />
+        <ul *ngIf="brandDropdownOpen && brandSuggestions.length" class="dropdown">
+          <li
+            *ngFor="let b of brandSuggestions"
+            (mousedown)="$event.preventDefault()"
+            (click)="selectBrand(b)"
+          >
+            <ng-container *ngIf="brandLogoUrl(b)">
+              <img
+                *ngIf="!logoFailed(b)"
+                [src]="brandLogoUrl(b)"
+                alt=""
+                class="brand-logo"
+                (error)="markLogoFailed(b)"
+              />
+              <span *ngIf="logoFailed(b)" class="brand-logo-fallback" aria-hidden="true">🚗</span>
+            </ng-container>
+            <span *ngIf="!brandLogoUrl(b)" class="brand-logo-fallback" aria-hidden="true">🚗</span>
+            {{ b }}
+          </li>
+        </ul>
+      </div>
+      <div class="autocomplete">
+        <span class="field-icon" aria-hidden="true">🚙</span>
+        <input
+          [(ngModel)]="model"
+          name="model"
+          autocomplete="off"
+          class="with-icon"
+          (focus)="modelDropdownOpen = true"
+          (keydown.escape)="modelDropdownOpen = false"
+          [attr.placeholder]="'search.modelPlaceholder' | translate"
+        />
+        <ul *ngIf="modelDropdownOpen && filteredModels.length" class="dropdown">
+          <li
+            *ngFor="let m of filteredModels"
+            (mousedown)="$event.preventDefault()"
+            (click)="selectModel(m)"
+          >
+            {{ m }}
+          </li>
+        </ul>
+      </div>
+      <div class="field">
+        <span class="field-icon" aria-hidden="true">💶</span>
+        <input
+          [(ngModel)]="maxPrice"
+          name="maxPrice"
+          type="number"
+          class="with-icon"
+          [attr.placeholder]="'search.maxPricePlaceholder' | translate"
+        />
+      </div>
+      <div class="field">
+        <span class="field-icon" aria-hidden="true">⛽</span>
+        <select [(ngModel)]="fuelType" name="fuelType" class="with-icon">
+          <option value="">{{ 'search.fuelTypeAll' | translate }}</option>
+          <option *ngFor="let f of selectableFuelTypes" [value]="f">{{ 'fuel.' + f | translate }}</option>
+        </select>
+      </div>
+      <div class="search-actions">
+        <button
+          type="submit"
+          class="icon-button"
+          [disabled]="loading"
+          [attr.aria-label]="'search.button' | translate"
+          [attr.title]="'search.button' | translate"
+        >
+          🔍
+        </button>
+        <button
+          type="button"
+          class="clear-filters"
+          *ngIf="hasSearched"
+          [disabled]="loading"
+          (click)="clearFilters()"
+          [attr.aria-label]="'search.reset' | translate"
+          [attr.title]="'search.reset' | translate"
+        >
+          ↺
+        </button>
+      </div>
+    </div>
+
+    <div class="advanced-filters">
       <button
         type="button"
-        class="clear-filters"
-        *ngIf="hasSearched"
-        [disabled]="loading"
-        (click)="clearFilters()"
-        [attr.aria-label]="'search.reset' | translate"
-        [attr.title]="'search.reset' | translate"
+        class="advanced-toggle"
+        (click)="advancedOpen = !advancedOpen"
+        [attr.aria-expanded]="advancedOpen"
       >
-        ↺
+        {{ 'search.advanced' | translate }}
+        <span class="chevron" aria-hidden="true">{{ advancedOpen ? '▲' : '▼' }}</span>
       </button>
+      <div *ngIf="advancedOpen" class="advanced-grid">
+        <div class="field">
+          <span class="field-icon" aria-hidden="true">📏</span>
+          <input
+            [(ngModel)]="maxMileageKm"
+            name="maxMileageKm"
+            type="number"
+            class="with-icon"
+            [attr.placeholder]="'search.maxMileagePlaceholder' | translate"
+          />
+        </div>
+        <div class="field">
+          <span class="field-icon" aria-hidden="true">📍</span>
+          <input
+            [(ngModel)]="garageCity"
+            name="garageCity"
+            class="with-icon"
+            [attr.placeholder]="'search.cityPlaceholder' | translate"
+          />
+        </div>
+      </div>
     </div>
   </form>
 

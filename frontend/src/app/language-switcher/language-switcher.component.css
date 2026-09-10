@@ -6,8 +6,8 @@
 
 .lang-button {
   border: 2px solid transparent;
-  background: rgba(154, 52, 18, 0.08);
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
   width: 40px;
   height: 32px;
   cursor: pointer;
@@ -20,15 +20,18 @@
 }
 
 .lang-button:hover {
-  background: rgba(154, 52, 18, 0.15);
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .lang-button.active {
-  border-color: #0ea5e9;
-  background: rgba(14, 165, 233, 0.25);
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.25);
 }
 
 .flag {
-  font-size: 1.1rem;
-  line-height: 1;
+  width: 26px;
+  height: 18px;
+  border-radius: 3px;
+  object-fit: cover;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
