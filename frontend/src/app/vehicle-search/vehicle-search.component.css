@@ -215,6 +215,52 @@
   background: #fef2f2;
 }
 
+.quick-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.quick-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.quick-badge:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.quick-badge.active {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+  font-weight: 600;
+}
+
+.quick-icon {
+  font-size: 0.95rem;
+}
+
+.quick-flag {
+  width: 19px;
+  height: 14px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+}
+
 .loading,
 .no-results {
   padding: 16px;

@@ -42,7 +42,7 @@ public class VehicleSearchServiceImpl implements VehicleSearchService {
      */
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(cacheNames = "vehicleSearch", key = "{#request.brand, #request.model, #request.maxPrice, #request.maxMileageKm, #request.garageCity, #request.fuelType}")
+    @Cacheable(cacheNames = "vehicleSearch", key = "{#request.brand, #request.model, #request.maxPrice, #request.maxMileageKm, #request.garageCity, #request.fuelTypes, #request.source}")
     public List<VehicleSearchResult> search(SearchRequest request) {
         BigDecimal maxPrice = request.getMaxPrice() != null
             ? request.getMaxPrice()
@@ -60,9 +60,10 @@ public class VehicleSearchServiceImpl implements VehicleSearchService {
             .and(VehicleSpecifications.priceAtMost(maxPrice))
             .and(VehicleSpecifications.mileageAtMost(request.getMaxMileageKm()))
             .and(VehicleSpecifications.cityContains(request.getGarageCity()))
-            .and(VehicleSpecifications.fuelTypeEquals(request.getFuelType()))
+            .and(VehicleSpecifications.fuelTypesIn(request.getFuelTypes()))
             .and(VehicleSpecifications.fuelTypeNot(FuelType.DIESEL))
-            .and(VehicleSpecifications.registeredOnOrAfter(eligibilityService.getOldestEligibleRegistrationDate()));
+            .and(VehicleSpecifications.registeredOnOrAfter(eligibilityService.getOldestEligibleRegistrationDate()))
+            .and(VehicleSpecifications.sourceEquals(request.getSource()));
 
         List<VehicleListing> listings = repository.findAll(spec, Sort.by(Sort.Direction.ASC, "price"));
 

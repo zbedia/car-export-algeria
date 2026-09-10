@@ -76,7 +76,12 @@
       </div>
       <div class="field">
         <span class="field-icon" aria-hidden="true">⛽</span>
-        <select [(ngModel)]="fuelType" name="fuelType" class="with-icon">
+        <select
+          [(ngModel)]="fuelType"
+          (ngModelChange)="onFuelTypeChange()"
+          name="fuelType"
+          class="with-icon"
+        >
           <option value="">{{ 'search.fuelTypeAll' | translate }}</option>
           <option *ngFor="let f of selectableFuelTypes" [value]="f">{{ 'fuel.' + f | translate }}</option>
         </select>
@@ -138,6 +143,20 @@
       </div>
     </div>
   </form>
+
+  <div class="quick-badges" role="group" [attr.aria-label]="'search.quickBadgesLabel' | translate">
+    <button
+      *ngFor="let b of quickBadges"
+      type="button"
+      class="quick-badge"
+      [class.active]="b.active"
+      (click)="b.apply()"
+    >
+      <img *ngIf="b.flagUrl" [src]="b.flagUrl" alt="" class="quick-flag" />
+      <span *ngIf="!b.flagUrl" class="quick-icon" aria-hidden="true">{{ b.icon }}</span>
+      {{ b.key | translate }}
+    </button>
+  </div>
 
   <div *ngIf="loading" class="loading">{{ 'search.loading' | translate }}</div>
   <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>

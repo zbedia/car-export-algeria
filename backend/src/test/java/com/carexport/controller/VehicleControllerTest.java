@@ -72,6 +72,19 @@ class VehicleControllerTest {
     }
 
     @Test
+    void search_acceptsMultipleFuelTypesAndSource() throws Exception {
+        when(searchService.search(any(SearchRequest.class)))
+            .thenReturn(List.of());
+
+        mockMvc.perform(get("/api/vehicles/search")
+                .param("fuelType", "ESSENCE")
+                .param("fuelType", "HYBRIDE")
+                .param("source", "CarXExport"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
     void search_returns400_whenMaxPriceIsInvalid() throws Exception {
         mockMvc.perform(get("/api/vehicles/search")
                 .param("brand", "Peugeot")

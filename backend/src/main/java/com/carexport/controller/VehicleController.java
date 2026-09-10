@@ -27,7 +27,8 @@ public class VehicleController {
         @RequestParam(required = false) BigDecimal maxPrice,
         @RequestParam(required = false) Integer maxMileageKm,
         @RequestParam(required = false) String garageCity,
-        @RequestParam(required = false) FuelType fuelType
+        @RequestParam(required = false) List<FuelType> fuelType,
+        @RequestParam(required = false) String source
     ) {
         SearchRequest request = new SearchRequest();
         request.setBrand(brand);
@@ -35,7 +36,8 @@ public class VehicleController {
         request.setMaxPrice(maxPrice);
         request.setMaxMileageKm(maxMileageKm);
         request.setGarageCity(garageCity);
-        request.setFuelType(fuelType);
+        request.setFuelTypes(fuelType);
+        request.setSource(source);
 
         List<VehicleSearchResult> results = searchService.search(request);
         return ResponseEntity.ok(results);

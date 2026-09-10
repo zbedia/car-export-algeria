@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Reusable, composable search predicates for VehicleListing, used with
@@ -74,6 +75,21 @@ public class VehicleSpecifications {
             return null;
         }
         return (root, query, cb) -> cb.equal(root.get("fuelType"), fuelType);
+    }
+
+    /** Matches any of the given fuel types (e.g. "Électrique / Hybride"). */
+    public static Specification<VehicleListing> fuelTypesIn(List<FuelType> fuelTypes) {
+        if (fuelTypes == null || fuelTypes.isEmpty()) {
+            return null;
+        }
+        return (root, query, cb) -> root.get("fuelType").in(fuelTypes);
+    }
+
+    public static Specification<VehicleListing> sourceEquals(String source) {
+        if (source == null || source.isBlank()) {
+            return null;
+        }
+        return (root, query, cb) -> cb.equal(root.get("source"), source);
     }
 
     public static Specification<VehicleListing> fuelTypeNot(FuelType fuelType) {

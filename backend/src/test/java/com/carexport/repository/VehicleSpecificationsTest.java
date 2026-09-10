@@ -83,12 +83,56 @@ class VehicleSpecificationsTest {
         Specification<VehicleListing> spec = Specification
             .where(VehicleSpecifications.cityContains("rennes"))
             .and(VehicleSpecifications.mileageAtMost(50000))
-            .and(VehicleSpecifications.fuelTypeEquals(FuelType.ESSENCE));
+            .and(VehicleSpecifications.fuelTypesIn(List.of(FuelType.ESSENCE)));
 
         List<VehicleListing> results = repository.findAll(spec);
 
         assertThat(results).hasSize(1);
         assertThat(results.get(0).getMileageKm()).isEqualTo(15000);
+    }
+
+    @Test
+    void fuelTypesIn_matchesAnyOfTheFuelTypes() {
+        repository.save(buildListing("Nantes", FuelType.ESSENCE, 1600, 15000));
+        repository.save(buildListing("Nantes", FuelType.HYBRIDE, 1600, 15000));
+        repository.save(buildListing("Nantes", FuelType.ELECTRIQUE, 1600, 15000));
+
+        List<VehicleListing> results = repository.findAll(
+            Specification.where(VehicleSpecifications.cityContains("nantes"))
+                .and(VehicleSpecifications.fuelTypesIn(List.of(FuelType.HYBRIDE, FuelType.ELECTRIQUE)))
+        );
+
+        assertThat(results).hasSize(2);
+        assertThat(results).extracting(VehicleListing::getFuelType)
+            .containsExactlyInAnyOrder(FuelType.HYBRIDE, FuelType.ELECTRIQUE);
+    }
+
+    @Test
+    void fuelTypesIn_returnsNothing_whenListEmpty() {
+        repository.save(buildListing("Nantes", FuelType.ESSENCE, 1600, 15000));
+
+        List<VehicleListing> results = repository.findAll(
+            Specification.where(VehicleSpecifications.cityContains("nantes"))
+                .and(VehicleSpecifications.fuelTypesIn(List.of()))
+        );
+
+        assertThat(results).hasSize(1); // empty list means "no restriction"
+    }
+
+    @Test
+    void sourceEquals_filtersByExactSource() {
+        repository.save(buildListing("Nantes", FuelType.ESSENCE, 1600, 15000));
+        VehicleListing carXport = buildListing("Nantes", FuelType.ESSENCE, 1600, 15000);
+        carXport.setSource("CarXExport");
+        repository.save(carXport);
+
+        List<VehicleListing> results = repository.findAll(
+            Specification.where(VehicleSpecifications.cityContains("nantes"))
+                .and(VehicleSpecifications.sourceEquals("CarXExport"))
+        );
+
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).getSource()).isEqualTo("CarXExport");
     }
 
     private VehicleListing buildListing(String city, FuelType fuelType, Integer displacementCm3, int mileageKm) {

@@ -156,4 +156,50 @@ describe('VehicleSearchComponent', () => {
     expect(component.hasSearched).toBeFalse();
     expect(component.totalCount).toBe(0);
   });
+
+  it('applies the "under €15,000" badge and searches with that price', () => {
+    searchSpy.and.returnValue(of([]));
+
+    const badge = component.quickBadges.find((b) => b.key === 'search.quickUnder15000')!;
+    badge.apply();
+
+    expect(component.maxPrice).toBe(15000);
+    expect(searchSpy).toHaveBeenCalledWith(jasmine.objectContaining({ maxPrice: 15000 }));
+  });
+
+  it('toggles the electric/hybrid badge to send both fuel types', () => {
+    searchSpy.and.returnValue(of([]));
+    const badge = component.quickBadges.find((b) => b.key === 'search.quickElectricHybrid')!;
+
+    badge.apply();
+    expect(searchSpy.calls.mostRecent().args[0].fuelTypes).toEqual(['ELECTRIQUE', 'HYBRIDE']);
+
+    badge.apply();
+    expect(searchSpy.calls.mostRecent().args[0].fuelTypes).toBeUndefined();
+  });
+
+  it('toggles a country badge to filter by listing source', () => {
+    searchSpy.and.returnValue(of([]));
+    const france = component.quickBadges.find((b) => b.key === 'search.quickFrance')!;
+    const sweden = component.quickBadges.find((b) => b.key === 'search.quickSweden')!;
+
+    france.apply();
+    expect(searchSpy.calls.mostRecent().args[0].source).toBe('AutoExportMarseille');
+
+    sweden.apply();
+    expect(searchSpy.calls.mostRecent().args[0].source).toBe('CarXExport');
+
+    sweden.apply();
+    expect(searchSpy.calls.mostRecent().args[0].source).toBeUndefined();
+  });
+
+  it('a country badge wins over the other and manual fuel selection clears the eco badge', () => {
+    searchSpy.and.returnValue(of([]));
+    component.quickBadges.find((b) => b.key === 'search.quickElectricHybrid')!.apply();
+    expect(component.quickFuelTypes).toEqual(['ELECTRIQUE', 'HYBRIDE']);
+
+    component.fuelType = 'ESSENCE';
+    component.onFuelTypeChange();
+    expect(component.quickFuelTypes).toBeNull();
+  });
 });

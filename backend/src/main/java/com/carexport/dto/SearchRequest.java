@@ -4,6 +4,7 @@ import com.carexport.model.FuelType;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class SearchRequest {
@@ -12,5 +13,6 @@ public class SearchRequest {
     private BigDecimal maxPrice;
     private Integer maxMileageKm;
     private String garageCity;
-    private FuelType fuelType;
+    private List<FuelType> fuelTypes;
+    private String source;
 }

@@ -29,6 +29,24 @@ const FUEL_TYPE_ICONS: Record<(typeof SELECTABLE_FUEL_TYPES)[number], string> = 
   ELECTRIQUE: '⚡'
 };
 
+// Quick-search badges under the search bar: each one combines filters
+// directly supported by the search API (max price, a list of fuel types,
+// or an exact listing source) so a single click kicks off a real search.
+const QUICK_MAX_PRICE_EUR = 15_000;
+const QUICK_ECO_FUEL_TYPES: readonly FuelType[] = ['ELECTRIQUE', 'HYBRIDE'];
+const QUICK_SOURCE_FRANCE = 'AutoExportMarseille';
+const QUICK_SOURCE_SWEDEN = 'CarXExport';
+const FLAG_FRANCE_URL = 'https://flagcdn.com/fr.svg';
+const FLAG_SWEDEN_URL = 'https://flagcdn.com/se.svg';
+
+interface QuickBadge {
+  key: string;
+  icon: string;
+  flagUrl: string | null;
+  active: boolean;
+  apply: () => void;
+}
+
 const TOTAL_ICON = '🚗';
 
 function isSelectableFuelType(fuelType: FuelType): fuelType is (typeof SELECTABLE_FUEL_TYPES)[number] {
@@ -51,6 +69,11 @@ export class VehicleSearchComponent {
   maxMileageKm: number | null = null;
   garageCity = '';
   fuelType: FuelType | '' = '';
+  // Filters applied by the quick-search badges (not bound to the form):
+  // the combined fuel badge drives both fuel types at once, and the
+  // country badges restrict by listing source.
+  quickFuelTypes: FuelType[] | null = null;
+  quickSource: string | null = null;
   groupedResults: VehicleGroup[] = [];
   loading = false;
   errorMessage = '';
@@ -179,7 +202,8 @@ export class VehicleSearchComponent {
       maxPrice: this.maxPrice,
       maxMileageKm: this.maxMileageKm,
       garageCity: this.garageCity,
-      fuelType: this.fuelType
+      fuelTypes: this.selectedFuelTypes,
+      source: this.quickSource ?? undefined
     };
 
     this.vehicleService.search(filters).subscribe({
@@ -205,6 +229,8 @@ export class VehicleSearchComponent {
     this.maxMileageKm = null;
     this.garageCity = '';
     this.fuelType = '';
+    this.quickFuelTypes = null;
+    this.quickSource = null;
 
     this.brandDropdownOpen = false;
     this.modelDropdownOpen = false;
@@ -220,6 +246,75 @@ export class VehicleSearchComponent {
     this.shippingResults.clear();
     this.shippingErrors.clear();
     this.brokenImageIds.clear();
+  }
+
+  // --- Quick-search badges ---
+  // A badge maps to a single click that runs a real search. When reached,
+  // its "apply" sets the underlying filter directly on the form state
+  // (max price) or in the badge-only state (fuel/source), then searches.
+  get quickBadges(): QuickBadge[] {
+    return [
+      {
+        key: 'search.quickUnder15000',
+        icon: '💶',
+        flagUrl: null,
+        active: this.maxPrice === QUICK_MAX_PRICE_EUR,
+        apply: () => {
+          this.maxPrice = QUICK_MAX_PRICE_EUR;
+          this.onSearch();
+        }
+      },
+      {
+        key: 'search.quickElectricHybrid',
+        icon: '🔋',
+        flagUrl: null,
+        active: this.quickFuelTypes !== null && this.sameFuelTypes(this.quickFuelTypes, QUICK_ECO_FUEL_TYPES),
+        apply: () => {
+          this.quickFuelTypes = this.quickFuelTypes !== null ? null : [...QUICK_ECO_FUEL_TYPES];
+          this.onSearch();
+        }
+      },
+      {
+        key: 'search.quickFrance',
+        icon: '',
+        flagUrl: FLAG_FRANCE_URL,
+        active: this.quickSource === QUICK_SOURCE_FRANCE,
+        apply: () => {
+          this.quickSource = this.quickSource === QUICK_SOURCE_FRANCE ? null : QUICK_SOURCE_FRANCE;
+          this.onSearch();
+        }
+      },
+      {
+        key: 'search.quickSweden',
+        icon: '',
+        flagUrl: FLAG_SWEDEN_URL,
+        active: this.quickSource === QUICK_SOURCE_SWEDEN,
+        apply: () => {
+          this.quickSource = this.quickSource === QUICK_SOURCE_SWEDEN ? null : QUICK_SOURCE_SWEDEN;
+          this.onSearch();
+        }
+      }
+    ];
+  }
+
+  // The badge-driven fuel list takes precedence; otherwise the single
+  // fuel <select> supplies a one-element list. Diesel can never appear:
+  // it is filtered out server-side.
+  get selectedFuelTypes(): FuelType[] | undefined {
+    if (this.quickFuelTypes) {
+      return this.quickFuelTypes;
+    }
+    return this.fuelType ? [this.fuelType] : undefined;
+  }
+
+  // Manually choosing a fuel type in the <select> overrides the "Electric /
+  // Hybrid" badge, so the badge stops claiming to be the active filter.
+  onFuelTypeChange(): void {
+    this.quickFuelTypes = null;
+  }
+
+  private sameFuelTypes(a: FuelType[], b: readonly FuelType[]): boolean {
+    return a.length === b.length && b.every((f) => a.includes(f));
   }
 
   // --- Pagination (client-side over the model groups) ---

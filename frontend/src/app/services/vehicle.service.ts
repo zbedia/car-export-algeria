@@ -10,7 +10,8 @@ export interface VehicleSearchFilters {
   maxPrice?: number | null;
   maxMileageKm?: number | null;
   garageCity?: string;
-  fuelType?: FuelType | '';
+  fuelTypes?: FuelType[];
+  source?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -26,7 +27,10 @@ export class VehicleService {
     if (filters.maxPrice) params = params.set('maxPrice', filters.maxPrice.toString());
     if (filters.maxMileageKm) params = params.set('maxMileageKm', filters.maxMileageKm.toString());
     if (filters.garageCity) params = params.set('garageCity', filters.garageCity);
-    if (filters.fuelType) params = params.set('fuelType', filters.fuelType);
+    if (filters.fuelTypes?.length) {
+      for (const f of filters.fuelTypes) params = params.append('fuelType', f);
+    }
+    if (filters.source) params = params.set('source', filters.source);
 
     return this.http.get<VehicleSearchResult[]>(`${this.apiUrl}/search`, { params });
   }
