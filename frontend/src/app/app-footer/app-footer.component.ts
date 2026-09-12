@@ -20,7 +20,7 @@ export class AppFooterComponent {
   get rightsText(): string {
     return this.translationService.t('footer.rights', {
       year: this.currentYear,
-      app: this.translationService.t('app.title')
+      app: 'DZautoFinder'
     });
   }
 
