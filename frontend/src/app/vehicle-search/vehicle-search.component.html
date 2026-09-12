@@ -246,14 +246,14 @@
             </span>
             <span class="cost-value" *ngIf="!v.customs">—</span>
           </div>
-          <div class="cost-row" *ngIf="routeShipping; else shippingUnavailable">
+          <div class="cost-row shipping" *ngIf="routeShipping; else shippingUnavailable">
             <span class="cost-label">{{ 'cost.shipping' | translate }}</span>
             <span class="cost-value">
               {{ formatPrice(routeShipping.totalCost, routeShipping.currency) }}
-              <button type="button" class="route-edit" (click)="openEditModal()">
-                {{ 'modal.edit' | translate }}
-              </button>
             </span>
+            <button type="button" class="route-edit" (click)="openEditModal()">
+              {{ 'modal.edit' | translate }}
+            </button>
           </div>
           <ng-template #shippingUnavailable>
             <div class="cost-row">

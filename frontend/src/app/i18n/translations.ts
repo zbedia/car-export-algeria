@@ -38,9 +38,9 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'eligibility.conformsLaw': 'Meets Finance Law',
     'eligibility.age': '{years} yr {months} mo',
 
-    'cost.vehiclePrice': 'Vehicle price (EUR)',
+    'cost.vehiclePrice': 'Vehicle price',
     'cost.customs': 'Estimated customs (DZD / EUR)',
-    'cost.shipping': 'Sea freight (EUR)',
+    'cost.shipping': 'Sea freight',
     'cost.totalDelivered': 'Total delivered to Algeria',
 
     'pagination.previous': 'Previous',
@@ -146,9 +146,9 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'eligibility.conformsLaw': 'Conforme Loi de Finances',
     'eligibility.age': '{years} ans et {months} mois',
 
-    'cost.vehiclePrice': 'Prix du véhicule (EUR)',
+    'cost.vehiclePrice': 'Prix du véhicule',
     'cost.customs': 'Estimation douane (DZD / EUR)',
-    'cost.shipping': 'Transport maritime (EUR)',
+    'cost.shipping': 'Transport maritime',
     'cost.totalDelivered': 'Prix total rendu Algérie',
 
     'pagination.previous': 'Précédent',
@@ -257,9 +257,9 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'eligibility.conformsLaw': 'مطابقة لقانون المالية',
     'eligibility.age': '{years} سنة و {months} شهر',
 
-    'cost.vehiclePrice': 'سعر السيارة (€)',
+    'cost.vehiclePrice': 'سعر السيارة',
     'cost.customs': 'تقدير الرسوم الجمركية (دج / €)',
-    'cost.shipping': 'النقل البحري (€)',
+    'cost.shipping': 'النقل البحري',
     'cost.totalDelivered': 'السعر الإجمالي في الجزائر',
 
     'pagination.previous': 'السابق',

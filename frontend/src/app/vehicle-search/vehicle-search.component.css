@@ -470,6 +470,7 @@
   align-items: baseline;
   gap: 10px;
   padding: 3px 0;
+  flex-wrap: wrap;
 }
 
 .cost-label {
@@ -477,10 +478,18 @@
   flex-shrink: 0;
 }
 
+/* The value keeps its horizontal layout (e.g. "1 409 420 DZD (5 638 €)" on
+   one line); when the card is too narrow the whole value wraps below the
+   label as a single unbreakable unit instead of overflowing the card.
+   inline-block keeps the value baseline-aligned with the other rows' values
+   (the row uses align-items: baseline), so prices line up horizontally. */
 .cost-value {
   color: #0f172a;
   font-weight: 600;
   text-align: right;
+  min-width: 0;
+  white-space: nowrap;
+  display: inline-block;
 }
 
 .cost-sub {
@@ -489,21 +498,30 @@
   font-size: 0.75rem;
 }
 
+/* The shipping row keeps its price next to the label; the "Edit" link
+   wraps to its own full-width line below, horizontally centered. */
+.cost-row.shipping .cost-value {
+  align-self: flex-start;
+}
+
+.cost-row.shipping .route-edit {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
 .route-edit {
   background: none;
   border: none;
   padding: 0;
-  margin-left: 6px;
+  margin: 0 0 0 8px;
+  vertical-align: middle;
   color: #059669;
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
-}
-
-[dir='rtl'] .route-edit {
-  margin-left: 0;
-  margin-right: 6px;
 }
 
 .total-row {
