@@ -81,13 +81,17 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'footer.disclaimer': 'Prices and eligibility are indicative. Customs regulations may change.',
     'footer.contact': 'Contact',
     'footer.email': 'Send an email',
-    'footer.whatsapp': 'WhatsApp',
     'footer.feedback': 'Leave feedback',
     'footer.sources': 'Listing sources',
     'footer.sourceCarXport': 'CarXport – Sweden',
     'footer.sourceExportCar213': 'ExportCar213',
     'footer.sourceAutoExportMarseille': 'AutoExportMarseille – France',
-    'footer.rights': '© {year} {app}. All rights reserved.'
+    'footer.rights': '© {year} {app}. All rights reserved.',
+
+    'whatsapp.button': 'Chat on WhatsApp',
+    'whatsapp.message.default': 'Hello, I would like more information about the vehicles available on DZautoFinder.',
+    'whatsapp.message.vehicle':
+      'Hello, I am interested in vehicle {reference} found on DZautoFinder. Could you give me more information?'
   },
 
   fr: {
@@ -170,13 +174,18 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'footer.disclaimer': "Les prix et l'éligibilité sont indicatifs. La réglementation douanière peut évoluer.",
     'footer.contact': 'Contact',
     'footer.email': 'Envoyer un e-mail',
-    'footer.whatsapp': 'WhatsApp',
     'footer.feedback': 'Laisser un avis',
     'footer.sources': 'Sources des annonces',
     'footer.sourceCarXport': 'CarXport – Suède',
     'footer.sourceExportCar213': 'ExportCar213',
     'footer.sourceAutoExportMarseille': 'AutoExportMarseille – France',
-    'footer.rights': '© {year} {app}. Tous droits réservés.'
+    'footer.rights': '© {year} {app}. Tous droits réservés.',
+
+    'whatsapp.button': 'Discuter sur WhatsApp',
+    'whatsapp.message.default':
+      'Bonjour, je souhaite obtenir des informations sur les véhicules disponibles sur DZautoFinder.',
+    'whatsapp.message.vehicle':
+      'Bonjour, je suis intéressé par le véhicule {reference} trouvé sur DZautoFinder. Pouvez-vous m\u2019en dire plus ?'
   },
 
   ar: {
@@ -257,12 +266,16 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'footer.disclaimer': 'الأسعار والجدارة بالاستيراد إرشادية. قد تتغير اللوائح الجمركية.',
     'footer.contact': 'اتصل بنا',
     'footer.email': 'إرسال بريد إلكتروني',
-    'footer.whatsapp': 'واتساب',
     'footer.feedback': 'أرسل تقييمك',
     'footer.sources': 'مصادر الإعلانات',
     'footer.sourceCarXport': 'CarXport – السويد',
     'footer.sourceExportCar213': 'ExportCar213',
     'footer.sourceAutoExportMarseille': 'AutoExportMarseille – فرنسا',
-    'footer.rights': 'جميع الحقوق محفوظة © {year} {app}.'
+    'footer.rights': 'جميع الحقوق محفوظة © {year} {app}.',
+
+    'whatsapp.button': 'الدردشة عبر واتساب',
+    'whatsapp.message.default': 'مرحباً، أود الحصول على معلومات حول السيارات المتوفرة على DZautoFinder.',
+    'whatsapp.message.vehicle':
+      'مرحباً، أنا مهتم بالسيارة {reference} الموجودة على DZautoFinder. هل يمكنكم تزويدي بمزيد من المعلومات؟'
   }
 };

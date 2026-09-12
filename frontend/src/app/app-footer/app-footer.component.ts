@@ -14,7 +14,6 @@ export class AppFooterComponent {
   readonly exportCar213Url = 'https://exportcar213.com/inventaire';
   readonly autoExportMarseilleUrl = 'https://autoexportmarseille.com/';
   readonly contactEmail = 'contact@dzautoimport.com';
-  readonly whatsappUrl = 'https://wa.me/21355000000';
   readonly currentYear = new Date().getFullYear();
 
   get rightsText(): string {

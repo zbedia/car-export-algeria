@@ -106,3 +106,36 @@ main {
 [dir='rtl'] .header-text {
   text-align: center;
 }
+
+/* Floating WhatsApp quick-contact button: fixed at the bottom edge of the
+   viewport. It lives outside the RTL mirrored layout (bottom-right always),
+   so no dir-specific overrides are needed. */
+.whatsapp-float {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25d366;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+    right: 14px;
+    bottom: 14px;
+  }
+}

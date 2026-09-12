@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { VehicleService, VehicleSearchFilters } from '../services/vehicle.service';
 import { ShippingService } from '../services/shipping.service';
 import { ShippingSelectionService } from '../services/shipping-selection.service';
+import { WhatsAppService } from '../services/whatsapp.service';
 import { TranslationService } from '../services/translation.service';
 import { TranslatePipe } from '../pipes/translate.pipe';
 import { ShippingEditModalComponent, ShippingEditResult } from '../shipping-edit-modal/shipping-edit-modal.component';
@@ -171,10 +172,17 @@ export class VehicleSearchComponent {
     private vehicleService: VehicleService,
     private shippingService: ShippingService,
     public shippingSelection: ShippingSelectionService,
+    private whatsapp: WhatsAppService,
     private translationService: TranslationService,
     private el: ElementRef
   ) {
     this.loadRouteShipping();
+  }
+
+  // Remembers the listing the user most recently opened, so the floating
+  // WhatsApp button can pre-fill its message with that vehicle's reference.
+  consultVehicle(vehicle: VehicleSearchResult): void {
+    this.whatsapp.consult(`${vehicle.brand} ${vehicle.model} ${vehicle.year} (ref. #${vehicle.id})`);
   }
 
   private loadRouteShipping(): void {

@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { VehicleSearchComponent } from './vehicle-search/vehicle-search.component';
 import { LanguageSwitcherComponent } from './language-switcher/language-switcher.component';
 import { AppFooterComponent } from './app-footer/app-footer.component';
+import { WhatsAppButtonComponent } from './whatsapp-button/whatsapp-button.component';
 import { TranslatePipe } from './pipes/translate.pipe';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [VehicleSearchComponent, LanguageSwitcherComponent, AppFooterComponent, TranslatePipe],
+  imports: [VehicleSearchComponent, LanguageSwitcherComponent, AppFooterComponent, WhatsAppButtonComponent, TranslatePipe],
   template: `
     <header class="app-header">
       <div class="header-content">
@@ -23,6 +24,7 @@ import { TranslatePipe } from './pipes/translate.pipe';
       <app-vehicle-search></app-vehicle-search>
     </main>
     <app-footer></app-footer>
+    <app-whatsapp-button></app-whatsapp-button>
   `
 })
 export class AppComponent {}

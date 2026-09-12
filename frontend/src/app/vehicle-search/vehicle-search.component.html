@@ -253,7 +253,7 @@
         </p>
         <p class="customs-reason">{{ customsDiscountReasonText(v) }}</p>
         <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
-        <a [href]="v.externalUrl" target="_blank" rel="noopener">{{ 'search.viewListing' | translate }}</a>
+        <a [href]="v.externalUrl" target="_blank" rel="noopener" (click)="consultVehicle(v)">{{ 'search.viewListing' | translate }}</a>
       </div>
     </div>
   </div>
