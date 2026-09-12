@@ -239,7 +239,10 @@
             <span class="cost-value">{{ formatPrice(v.price, v.currency) }}</span>
           </div>
           <div class="cost-row">
-            <span class="cost-label">{{ 'cost.customs' | translate }}</span>
+            <span class="cost-label" [title]="customsDiscountTooltip(v)" role="note">
+              {{ 'cost.customs' | translate }}
+              <span class="cost-info-icon" aria-hidden="true">ⓘ</span>
+            </span>
             <span class="cost-value" *ngIf="v.customs">
               {{ formatDzd(v.customs.totalDzd) }}
               <span class="cost-sub">({{ formatPrice(v.customs.totalEur, 'EUR') }})</span>
@@ -266,11 +269,6 @@
           <span class="total-label">{{ 'cost.totalDelivered' | translate }}</span>
           <span class="total-value">{{ formatPrice(total, 'EUR') }}</span>
         </div>
-        <p class="customs" [title]="customsDiscountReasonText(v)">
-          {{ 'search.customsDiscount' | translate }} -{{ v.customsDiscountPercentage }}%
-          <span class="info-icon">ⓘ</span>
-        </p>
-        <p class="customs-reason">{{ customsDiscountReasonText(v) }}</p>
         <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
         <div class="card-actions">
           <a [href]="v.externalUrl" target="_blank" rel="noopener" (click)="consultVehicle(v)">{{

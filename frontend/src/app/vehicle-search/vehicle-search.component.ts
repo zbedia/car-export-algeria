@@ -529,6 +529,12 @@ editingShipping = false;
     });
   }
 
+  // Tooltip for the "Estimated customs" row: the discount already applied to
+  // the shown amount, plus the reason explaining which tier it belongs to.
+  customsDiscountTooltip(vehicle: VehicleSearchResult): string {
+    return `${this.translationService.t('search.customsDiscount')} -${vehicle.customsDiscountPercentage}%. ${this.customsDiscountReasonText(vehicle)}`;
+  }
+
   // --- Cost breakdown on each card ---
 
   formatDzd(value: number): string {
