@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Carré aux coins arrondis, fond Bleu Nuit -->
+  <rect x="8" y="8" width="496" height="496" rx="96" fill="#0F172A"/>
+
+  <!-- Monogramme DZ entrelacé -->
+  <text x="256" y="252"
+        font-family="'Plus Jakarta Sans','Outfit',-apple-system,sans-serif"
+        font-size="230" font-weight="800" letter-spacing="-8" text-anchor="middle"
+        fill="#10B981">D<tspan fill="#ECFDF5">Z</tspan></text>
+
+  <!-- Conteneur vert émeraude + flèche d'importation -->
+  <rect x="136" y="286" width="240" height="80" rx="16"
+        fill="none" stroke="#10B981" stroke-width="8"/>
+  <!-- Sangle du conteneur -->
+  <line x1="256" y1="286" x2="256" y2="366" stroke="#10B981" stroke-width="8"/>
+
+  <!-- Flèche pointant vers le haut : importation vers l'Algérie -->
+  <path d="M256 344 V302 M244 316 L256 302 L268 316"
+        stroke="#ECFDF5" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

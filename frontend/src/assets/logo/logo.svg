@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 200" fill="none">
+  <defs>
+    <clipPath id="shieldClip">
+      <path d="M100 26 C62 26 34 46 28 82 C22 118 42 152 100 182 C158 152 178 118 172 82 C166 46 138 26 100 26 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Carte blanche derrière le pictogramme : rend le fennec lisible
+       sur le header bleu nuit, dans la veine du badge DZ -->
+  <rect x="24" y="20" width="152" height="160" rx="26" fill="#ffffff"/>
+
+  <!-- ====== Pictogramme : fennec sur voiture, dans le bouclier ====== -->
+  <g transform="translate(12, 8) scale(0.88)">
+    <!-- Bouclier (structure) - Bleu Nuit -->
+    <path d="M100 26 C62 26 34 46 28 82 C22 118 42 152 100 182 C158 152 178 118 172 82 C166 46 138 26 100 26 Z"
+          stroke="#0F172A" stroke-width="7" stroke-linejoin="round"/>
+
+    <!-- Fennec sur voiture, masqué dans la découpe du bouclier (remplit le bouclier) -->
+    <g clip-path="url(#shieldClip)">
+      <image x="28" y="26" width="144" height="156"
+             href="fennec-sur-voiture.png"
+             preserveAspectRatio="xMidYMid meet"/>
+    </g>
+  </g>
+
+  <!-- ====== Wordmark : badge DZ + autoFinder ====== -->
+  <!-- Badge carré arrondi agrandi, fond blanc, contour émeraude, DZ bien centré
+       aux couleurs du drapeau algérien (vert #00A651, rouge #E21034). -->
+  <rect x="194" y="34" width="88" height="88" rx="24" fill="#ffffff" stroke="#10B981" stroke-width="4"/>
+  <text x="238" y="92"
+        font-family="'Plus Jakarta Sans','Outfit',-apple-system,sans-serif"
+        font-size="54" font-weight="800" letter-spacing="0" text-anchor="middle" fill="#00A651">D<tspan fill="#E21034">Z</tspan></text>
+
+  <text x="294" y="92"
+        font-family="'Plus Jakarta Sans','Outfit',-apple-system,sans-serif"
+        font-size="46" font-weight="800" letter-spacing="1" fill="#10B981">autoFinder</text>
+
+  <!-- Slogan : Compare & Import -->
+  <text x="296" y="128"
+        font-family="'Plus Jakarta Sans','Outfit',-apple-system,sans-serif"
+        font-size="20" font-weight="400" letter-spacing="3" fill="#475569">Compare &amp; Import</text>
+
+  <!-- Accent émeraude sous le slogan (action / validation) -->
+  <rect x="296" y="147" width="120" height="5" rx="2.5" fill="#10B981"/>
+</svg>
