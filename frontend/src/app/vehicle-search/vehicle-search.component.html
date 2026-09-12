@@ -176,6 +176,25 @@
     </ng-container>
   </div>
 
+  <div *ngIf="selectedVehicles.length > 0" class="compare-bar">
+    <span class="compare-bar-label">
+      {{ 'compare.title' | translate }}
+      <span class="compare-bar-count">{{ 'compare.label' | translate: { count: selectedVehicles.length } }}</span>
+    </span>
+    <button
+      type="button"
+      class="compare-bar-open"
+      [disabled]="selectedVehicles.length < 2"
+      (click)="openCompare()"
+      [attr.title]="selectedVehicles.length < 2 ? ('compare.hintTwo' | translate) : null"
+    >
+      {{ 'compare.open' | translate }}
+    </button>
+    <button type="button" class="compare-bar-clear" (click)="clearComparison()">
+      {{ 'compare.clear' | translate }}
+    </button>
+  </div>
+
   <div *ngIf="hasSearched && !loading && groupedResults.length === 0" class="no-results">
     {{ 'search.noResults' | translate }}
   </div>
@@ -253,7 +272,23 @@
         </p>
         <p class="customs-reason">{{ customsDiscountReasonText(v) }}</p>
         <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
-        <a [href]="v.externalUrl" target="_blank" rel="noopener" (click)="consultVehicle(v)">{{ 'search.viewListing' | translate }}</a>
+        <div class="card-actions">
+          <a [href]="v.externalUrl" target="_blank" rel="noopener" (click)="consultVehicle(v)">{{
+            'search.viewListing' | translate
+          }}</a>
+          <button
+            type="button"
+            class="compare-toggle"
+            [class.active]="isVehicleSelected(v)"
+            [disabled]="!isVehicleSelected(v) && selectedVehicles.length >= compareLimit"
+            (click)="toggleCompare(v)"
+            [attr.aria-pressed]="isVehicleSelected(v)"
+            [attr.title]="'compare.select' | translate"
+          >
+            <span class="compare-check" aria-hidden="true">{{ isVehicleSelected(v) ? '✓' : '+' }}</span>
+            {{ 'compare.select' | translate }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -285,4 +320,120 @@
     (cancelRequest)="onModalCancel()"
   >
   </app-shipping-edit-modal>
+
+  <div
+    *ngIf="compareOpen"
+    class="compare-overlay"
+    (click)="closeCompare()"
+  >
+    <div class="compare-panel" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <div class="compare-panel-header">
+        <div>
+          <h3 class="compare-panel-title">{{ 'compare.title' | translate }}</h3>
+          <p class="compare-panel-subtitle">{{ 'compare.subtitle' | translate }}</p>
+        </div>
+        <button type="button" class="compare-close" (click)="closeCompare()" [attr.aria-label]="'compare.close' | translate">
+          ✕
+        </button>
+      </div>
+
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th class="compare-attr"></th>
+              <th *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                <div class="compare-vehicle-head">
+                  <span class="compare-vehicle-name">{{ v.brand }} {{ v.model }}</span>
+                  <span class="compare-vehicle-elig">{{ compareEligibilityText(v) }}</span>
+                  <span *ngIf="i === bestCompareIndex" class="compare-best-chip">{{ 'compare.best' | translate }}</span>
+                  <button
+                    type="button"
+                    class="compare-remove"
+                    (click)="removeFromCompare(i)"
+                    [attr.aria-label]="'compare.remove' | translate"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-template #compareNa><span class="compare-na">—</span></ng-template>
+
+            <tr>
+              <th class="compare-attr" scope="row">{{ 'compare.year' | translate }}</th>
+              <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                {{ v.year }}
+              </td>
+            </tr>
+            <tr>
+              <th class="compare-attr" scope="row">{{ 'compare.mileage' | translate }}</th>
+              <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                {{ formatMileage(v.mileageKm) }} km
+              </td>
+            </tr>
+            <tr>
+              <th class="compare-attr" scope="row">{{ 'compare.fuel' | translate }}</th>
+              <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                {{ fuelIcon(v.fuelType) }} {{ 'fuel.' + v.fuelType | translate
+                }}<span *ngIf="v.engineDisplacementCm3"> · {{ v.engineDisplacementCm3 }} cm³</span>
+              </td>
+            </tr>
+            <tr>
+              <th class="compare-attr" scope="row">{{ 'compare.source' | translate }}</th>
+              <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                {{ v.source }}
+              </td>
+            </tr>
+            <tr>
+              <th class="compare-attr" scope="row">{{ 'compare.price' | translate }}</th>
+              <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                {{ formatPrice(v.price, v.currency) }}
+              </td>
+            </tr>
+            <tr>
+              <th class="compare-attr" scope="row">{{ 'cost.customs' | translate }}</th>
+              <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                <ng-container *ngIf="v.customs; else compareNa">
+                  {{ formatDzd(v.customs.totalDzd) }}
+                  <span class="compare-sub">({{ formatPrice(v.customs.totalEur, 'EUR') }})</span>
+                </ng-container>
+              </td>
+            </tr>
+            <tr>
+              <th class="compare-attr" scope="row">{{ 'cost.shipping' | translate }}</th>
+              <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                <ng-container *ngIf="routeShipping; else compareNa">
+                  {{ formatPrice(routeShipping.totalCost, routeShipping.currency) }}
+                </ng-container>
+              </td>
+            </tr>
+            <tr>
+              <th class="compare-attr" scope="row">{{ 'compare.discount' | translate }}</th>
+              <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                -{{ v.customsDiscountPercentage }}%
+              </td>
+            </tr>
+            <tr class="compare-total-row">
+              <th class="compare-attr" scope="row">{{ 'cost.totalDelivered' | translate }}</th>
+              <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                <ng-container *ngIf="totalDeliveredFor(v) as total; else compareNa">
+                  <span class="compare-total-value">{{ formatPrice(total, 'EUR') }}</span>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="compare-panel-footer">
+        <button type="button" class="compare-bar-clear" (click)="clearComparison()">
+          {{ 'compare.clear' | translate }}
+        </button>
+        <button type="button" class="compare-bar-open" (click)="closeCompare()">{{ 'compare.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -239,4 +239,34 @@ describe('VehicleSearchComponent', () => {
     expect(component.formatAge(28)).toBe('2 ans et 4 mois');
     expect(t).toHaveBeenCalledWith('eligibility.age', { years: 2, months: 4 });
   });
+
+  it('selects and unselects vehicles in the comparison list (max 3)', () => {
+    const a = listing(1);
+    const b = listing(2);
+    const c = listing(3);
+    const d = listing(4);
+
+    component.toggleCompare(a);
+    component.toggleCompare(b);
+    component.toggleCompare(c);
+    component.toggleCompare(d);
+
+    expect(component.selectedVehicles.map((v) => v.id)).toEqual([1, 2, 3]);
+
+    component.toggleCompare(a);
+    component.toggleCompare(d);
+    expect(component.selectedVehicles.map((v) => v.id)).toEqual([2, 3, 4]);
+    expect(component.isVehicleSelected(a)).toBeFalse();
+  });
+
+  it('marks the column with the lowest delivered price as the best', () => {
+    component.routeShipping = routeStub;
+    component.selectedVehicles = [
+      listing(1, { price: 10000, customs: { dutyEur: 1000, vatEur: 100, totalEur: 1100, totalDzd: 275000, dutyRatePercent: 10 } }),
+      listing(2, { price: 9000, customs: { dutyEur: 2000, vatEur: 200, totalEur: 2200, totalDzd: 550000, dutyRatePercent: 20 } }),
+      listing(3, { customs: null })
+    ];
+
+    expect(component.bestCompareIndex).toBe(0); // 10000+1100+1000 < 9000+2200+1000
+  });
 });

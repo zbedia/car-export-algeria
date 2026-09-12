@@ -91,7 +91,24 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'whatsapp.button': 'Chat on WhatsApp',
     'whatsapp.message.default': 'Hello, I would like more information about the vehicles available on DZautoFinder.',
     'whatsapp.message.vehicle':
-      'Hello, I am interested in vehicle {reference} found on DZautoFinder. Could you give me more information?'
+      'Hello, I am interested in vehicle {reference} found on DZautoFinder. Could you give me more information?',
+
+    'compare.title': 'Compare cars',
+    'compare.subtitle': 'Select up to 3 vehicles to compare the import cost.',
+    'compare.select': 'Compare',
+    'compare.open': 'Compare',
+    'compare.clear': 'Clear',
+    'compare.close': 'Close',
+    'compare.remove': 'Remove from comparison',
+    'compare.label': '{count}/3 selected',
+    'compare.hintTwo': 'Select at least 2 vehicles to compare.',
+    'compare.year': 'Year',
+    'compare.mileage': 'Mileage',
+    'compare.fuel': 'Fuel',
+    'compare.source': 'Source',
+    'compare.price': 'Price',
+    'compare.discount': 'Customs discount',
+    'compare.best': 'Best landed price'
   },
 
   fr: {
@@ -185,7 +202,24 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'whatsapp.message.default':
       'Bonjour, je souhaite obtenir des informations sur les véhicules disponibles sur DZautoFinder.',
     'whatsapp.message.vehicle':
-      'Bonjour, je suis intéressé par le véhicule {reference} trouvé sur DZautoFinder. Pouvez-vous m\u2019en dire plus ?'
+      'Bonjour, je suis intéressé par le véhicule {reference} trouvé sur DZautoFinder. Pouvez-vous m\u2019en dire plus ?',
+
+    'compare.title': 'Comparateur',
+    'compare.subtitle': 'Sélectionnez jusqu\u2019à 3 véhicules pour comparer le coût d\u2019importation.',
+    'compare.select': 'Comparer',
+    'compare.open': 'Comparer',
+    'compare.clear': 'Vider',
+    'compare.close': 'Fermer',
+    'compare.remove': 'Retirer de la comparaison',
+    'compare.label': '{count}/3 sélectionnés',
+    'compare.hintTwo': 'Sélectionnez au moins 2 véhicules pour comparer.',
+    'compare.year': 'Année',
+    'compare.mileage': 'Kilométrage',
+    'compare.fuel': 'Motorisation',
+    'compare.source': 'Source',
+    'compare.price': 'Prix',
+    'compare.discount': 'Réduction douanière',
+    'compare.best': 'Meilleur prix rendu'
   },
 
   ar: {
@@ -276,6 +310,23 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'whatsapp.button': 'الدردشة عبر واتساب',
     'whatsapp.message.default': 'مرحباً، أود الحصول على معلومات حول السيارات المتوفرة على DZautoFinder.',
     'whatsapp.message.vehicle':
-      'مرحباً، أنا مهتم بالسيارة {reference} الموجودة على DZautoFinder. هل يمكنكم تزويدي بمزيد من المعلومات؟'
+      'مرحباً، أنا مهتم بالسيارة {reference} الموجودة على DZautoFinder. هل يمكنكم تزويدي بمزيد من المعلومات؟',
+
+    'compare.title': 'مقارنة',
+    'compare.subtitle': 'اختر ما يصل إلى 3 سيارات لمقارنة تكلفة الاستيراد.',
+    'compare.select': 'قارن',
+    'compare.open': 'قارن',
+    'compare.clear': 'مسح',
+    'compare.close': 'إغلاق',
+    'compare.remove': 'إزالة من المقارنة',
+    'compare.label': 'تم اختيار {count}/3',
+    'compare.hintTwo': 'اختر سيارتين على الأقل للمقارنة.',
+    'compare.year': 'السنة',
+    'compare.mileage': 'المسافة المقطوعة',
+    'compare.fuel': 'نوع الوقود',
+    'compare.source': 'المصدر',
+    'compare.price': 'السعر',
+    'compare.discount': 'التخفيض الجمركي',
+    'compare.best': 'أفضل سعر نهائي'
   }
 };

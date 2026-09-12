@@ -50,6 +50,10 @@ interface QuickBadge {
 
 const TOTAL_ICON = '🚗';
 
+// Comparison supports up to 3 vehicles side by side; the toolbar disables
+// further picks once the limit is reached.
+const MAX_COMPARED_VEHICLES = 3;
+
 function isSelectableFuelType(fuelType: FuelType): fuelType is (typeof SELECTABLE_FUEL_TYPES)[number] {
   return (SELECTABLE_FUEL_TYPES as readonly FuelType[]).includes(fuelType);
 }
@@ -166,7 +170,67 @@ export class VehicleSearchComponent {
   routeShipping: ShippingEstimateResponse | null = null;
   routeShippingError = '';
 
-  editingShipping = false;
+editingShipping = false;
+
+  // --- Side-by-side comparison (up to 3 vehicles) ---
+  selectedVehicles: VehicleSearchResult[] = [];
+  compareOpen = false;
+
+  get compareLimit(): number {
+    return MAX_COMPARED_VEHICLES;
+  }
+
+  isVehicleSelected(vehicle: VehicleSearchResult): boolean {
+    return this.selectedVehicles.some((v) => v.id === vehicle.id);
+  }
+
+  toggleCompare(vehicle: VehicleSearchResult): void {
+    const index = this.selectedVehicles.findIndex((v) => v.id === vehicle.id);
+    if (index >= 0) {
+      this.selectedVehicles.splice(index, 1);
+    } else if (this.selectedVehicles.length < MAX_COMPARED_VEHICLES) {
+      this.selectedVehicles.push(vehicle);
+    }
+  }
+
+  removeFromCompare(index: number): void {
+    this.selectedVehicles.splice(index, 1);
+  }
+
+  openCompare(): void {
+    this.compareOpen = true;
+  }
+
+  closeCompare(): void {
+    this.compareOpen = false;
+  }
+
+  clearComparison(): void {
+    this.selectedVehicles = [];
+    this.compareOpen = false;
+  }
+
+  // Index of the column with the lowest delivered price (highlighted as the
+  // best deal). Null while fewer than 2 comparable totals are available.
+  get bestCompareIndex(): number | null {
+    const totals = this.selectedVehicles.map((v) => this.totalDeliveredFor(v));
+    let best: number | null = null;
+    for (let i = 0; i < totals.length; i++) {
+      if (totals[i] === null) continue;
+      if (best === null || (totals[i] as number) < (totals[best] as number)) {
+        best = i;
+      }
+    }
+    return best !== null && this.selectedVehicles.length > 1 ? best : null;
+  }
+
+  // Eligibility line rendered in the comparison table header (age-based when
+  // the server provides the vehicle age, Finance Law compliance otherwise).
+  compareEligibilityText(vehicle: VehicleSearchResult): string {
+    return vehicle.ageMonths !== null
+      ? `${this.translationService.t('eligibility.eligible')} — ${this.formatAge(vehicle.ageMonths)}`
+      : this.translationService.t('eligibility.conformsLaw');
+  }
 
   constructor(
     private vehicleService: VehicleService,
