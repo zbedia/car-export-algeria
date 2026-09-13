@@ -14,7 +14,9 @@ import { TranslatePipe } from './pipes/translate.pipe';
       <div class="header-content">
         <img class="header-logo" src="assets/logo/logo_fennec_car_export_modif.svg" alt="DZautoFinder" />
         <div class="header-text">
-          <h1>{{ 'app.title' | translate }}</h1>
+          <h1 class="app-title" aria-label="DZautoFinder">
+            <span class="app-title-d">D</span><span class="app-title-z">Z</span><span class="app-title-rest">autoFinder</span>
+          </h1>
           <p>{{ 'app.subtitle' | translate }}</p>
         </div>
         <app-language-switcher></app-language-switcher>
