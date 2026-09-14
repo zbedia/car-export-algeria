@@ -60,6 +60,7 @@ public class VehicleSearchServiceImpl implements VehicleSearchService {
             .where(VehicleSpecifications.brandEquals(request.getBrand()))
             .and(VehicleSpecifications.modelEquals(request.getModel()))
             .and(VehicleSpecifications.priceAtMost(maxPrice))
+            .and(VehicleSpecifications.priceKnown())
             .and(VehicleSpecifications.mileageAtMost(request.getMaxMileageKm()))
             .and(VehicleSpecifications.cityContains(request.getGarageCity()))
             .and(VehicleSpecifications.fuelTypesIn(request.getFuelTypes()))

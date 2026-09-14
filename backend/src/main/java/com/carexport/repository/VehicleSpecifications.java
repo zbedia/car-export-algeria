@@ -54,6 +54,17 @@ public class VehicleSpecifications {
         return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("price"), maxPrice);
     }
 
+    /**
+     * Excludes listings whose scraped price was never found (null or 0).
+     * Such listings are typically ads where the seller hasn't fixed a price
+     * yet, and showing them at €0 skews the best-price badge and cost
+     * estimates — hiding them entirely is cleaner than displaying a
+     * meaningless "0 €".
+     */
+    public static Specification<VehicleListing> priceKnown() {
+        return (root, query, cb) -> cb.greaterThan(root.get("price"), BigDecimal.ZERO);
+    }
+
     public static Specification<VehicleListing> mileageAtMost(Integer maxMileageKm) {
         if (maxMileageKm == null) {
             return null;

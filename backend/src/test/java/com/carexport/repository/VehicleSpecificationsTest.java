@@ -27,6 +27,24 @@ class VehicleSpecificationsTest {
     private VehicleListingRepository repository;
 
     @Test
+    void priceKnown_excludesZeroPrices() {
+        VehicleListing zeroPrice = buildListing("Angers", FuelType.ESSENCE, 1600, 15000);
+        zeroPrice.setPrice(new BigDecimal("0"));
+        repository.save(zeroPrice);
+        VehicleListing priced = buildListing("Angers", FuelType.ESSENCE, 1600, 15000);
+        priced.setPrice(new BigDecimal("12000"));
+        repository.save(priced);
+
+        List<VehicleListing> results = repository.findAll(
+            Specification.where(VehicleSpecifications.cityContains("angers"))
+                .and(VehicleSpecifications.priceKnown())
+        );
+
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).getPrice()).isEqualByComparingTo(new BigDecimal("12000"));
+    }
+
+    @Test
     void cityContains_matchesPartially_caseInsensitive() {
         // "Bordeaux" doesn't appear in data.sql's seed cities (Lyon, Marseille,
         // Paris, Toulouse, Nice), so searching "bord" can only match this row —
