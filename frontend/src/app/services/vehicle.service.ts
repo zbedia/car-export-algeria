@@ -24,8 +24,10 @@ export class VehicleService {
     let params = new HttpParams();
     if (filters.brand) params = params.set('brand', filters.brand);
     if (filters.model) params = params.set('model', filters.model);
-    if (filters.maxPrice) params = params.set('maxPrice', filters.maxPrice.toString());
-    if (filters.maxMileageKm) params = params.set('maxMileageKm', filters.maxMileageKm.toString());
+    if (filters.maxPrice !== null && filters.maxPrice !== undefined)
+      params = params.set('maxPrice', filters.maxPrice.toString());
+    if (filters.maxMileageKm !== null && filters.maxMileageKm !== undefined)
+      params = params.set('maxMileageKm', filters.maxMileageKm.toString());
     if (filters.garageCity) params = params.set('garageCity', filters.garageCity);
     if (filters.fuelTypes?.length) {
       for (const f of filters.fuelTypes) params = params.append('fuelType', f);
