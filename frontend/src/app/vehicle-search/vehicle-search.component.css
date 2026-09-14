@@ -44,35 +44,159 @@
   margin-bottom: 24px;
 }
 
-.search-main {
+/* Barre de recherche "pill" */
+.search-pill {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: stretch;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 28px;
+  box-shadow: 0 12px 32px -12px rgba(2, 6, 23, 0.18);
+  padding: 10px;
+  gap: 4px;
 }
 
-.field {
+@media (min-width: 900px) {
+  .search-pill {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    border-radius: 999px;
+  }
+}
+
+.pill-segment {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+@media (min-width: 900px) {
+  .pill-segment + .pill-segment {
+    border-left: 1px solid #e9eef4;
+  }
+}
+
+.pill-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   flex: 1;
-  min-width: 140px;
+  min-width: 0;
 }
 
-.field-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  pointer-events: none;
+.pill-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
 }
 
-.with-icon {
-  padding-left: 36px !important;
+.pill-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #94a3b8;
+}
+
+.pill-currency {
+  color: #94a3b8;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.search-pill input,
+.search-pill select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  font-family: inherit;
+  color: #334155;
+}
+
+.search-pill input:focus,
+.search-pill select:focus {
+  outline: none;
+  box-shadow: none;
+  border: none;
+}
+
+.pill-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 26px;
+  border: none;
+  border-radius: 20px;
+  background: #10b981;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: 0 10px 20px -8px rgba(16, 185, 129, 0.5);
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+@media (min-width: 900px) {
+  .pill-cta {
+    width: auto;
+    border-radius: 999px;
+  }
+}
+
+.pill-cta svg {
+  width: 20px;
+  height: 20px;
+}
+
+.pill-cta:hover:not(:disabled) {
+  background: #059669;
+}
+
+.pill-cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pill-reset {
+  align-self: center;
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.pill-reset:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+@media (min-width: 900px) {
+  .pill-segment + .pill-reset {
+    margin-left: 6px;
+  }
 }
 
 .autocomplete {
   position: relative;
-  flex: 1;
-  min-width: 140px;
+  min-width: 0;
 }
 
 .dropdown {
@@ -155,64 +279,42 @@
   width: 100%;
 }
 
-.search-form input,
-.search-form select {
+/* Filtres avancés (camembert) */
+.advanced-grid .field {
+  position: relative;
+  flex: 1;
+  min-width: 140px;
+}
+
+.advanced-grid .field-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.advanced-grid .with-icon {
+  padding-left: 36px !important;
+}
+
+.advanced-grid input {
   padding: 10px 14px;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   font-size: 0.95rem;
   font-family: inherit;
-  flex: 1;
-  min-width: 140px;
+  width: 100%;
   background: #ffffff;
   color: #0f172a;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.search-form input:focus,
-.search-form select:focus {
+.advanced-grid input:focus {
   outline: none;
   border-color: #10b981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
-}
-
-.search-form button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  background: #10b981;
-  color: #ffffff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.search-form button:hover:not(:disabled) {
-  background: #059669;
-}
-
-.search-form button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.search-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.search-actions button {
-  font-size: 1.4rem;
-}
-
-.search-actions .clear-filters {
-  background: transparent;
-  color: #ef4444;
-  font-weight: 700;
-}
-
-.search-actions .clear-filters:hover:not(:disabled) {
-  background: #fef2f2;
 }
 
 .quick-badges {
