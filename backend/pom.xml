@@ -19,6 +19,12 @@
 
     <properties>
         <java.version>21</java.version>
+        <!-- WS-2026-0003: the Jackson line managed by Boot 3.3.x (2.17.3) is
+             vulnerable — the async JSON parser bypasses
+             StreamReadConstraints.maxNumberLength → DoS. Overriding the
+             jackson-bom.version property bumps ALL jackson-* artifacts to
+             the patched 2.21.4 line recommended by the Mend scan. -->
+        <jackson-bom.version>2.21.4</jackson-bom.version>
     </properties>
 
     <dependencies>
@@ -50,6 +56,22 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <!-- Flyway: schema management replacing ddl-auto/schema.sql.
+             flyway-core = the migration engine; flyway-database-postgresql =
+             the PostgreSQL support module (a separate artifact since Flyway
+             10, required even when only building against PG). The JSON
+             support would go in flyway-database-postgresql extra if we ever
+             need PostgreSQL JSON columns via Flyway config. -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
 
         <dependency>
