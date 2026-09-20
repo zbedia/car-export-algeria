@@ -36,7 +36,7 @@ class VehicleSpecificationsTest {
         repository.save(priced);
 
         List<VehicleListing> results = repository.findAll(
-            Specification.where(VehicleSpecifications.cityContains("angers"))
+            VehicleSpecifications.cityContains("angers")
                 .and(VehicleSpecifications.priceKnown())
         );
 
@@ -70,7 +70,7 @@ class VehicleSpecificationsTest {
         repository.save(buildListing("Strasbourg", FuelType.ESSENCE, 1600, 90000));
 
         List<VehicleListing> results = repository.findAll(
-            Specification.where(VehicleSpecifications.cityContains("strasbourg"))
+            VehicleSpecifications.cityContains("strasbourg")
                 .and(VehicleSpecifications.mileageAtMost(50000))
         );
 
@@ -84,7 +84,7 @@ class VehicleSpecificationsTest {
         repository.save(buildListing("LeHavre", FuelType.ESSENCE, 1600, 15000));
 
         List<VehicleListing> results = repository.findAll(
-            Specification.where(VehicleSpecifications.cityContains("lehavre"))
+            VehicleSpecifications.cityContains("lehavre")
                 .and(VehicleSpecifications.fuelTypeNot(FuelType.DIESEL))
         );
 
@@ -98,10 +98,11 @@ class VehicleSpecificationsTest {
         repository.save(buildListing("Rennes", FuelType.ESSENCE, 1600, 80000)); // mileage too high
         repository.save(buildListing("Rennes", FuelType.DIESEL, 1600, 15000));  // wrong fuel type
 
-        Specification<VehicleListing> spec = Specification
-            .where(VehicleSpecifications.cityContains("rennes"))
-            .and(VehicleSpecifications.mileageAtMost(50000))
-            .and(VehicleSpecifications.fuelTypesIn(List.of(FuelType.ESSENCE)));
+        Specification<VehicleListing> spec = Specification.allOf(
+            VehicleSpecifications.cityContains("rennes"),
+            VehicleSpecifications.mileageAtMost(50000),
+            VehicleSpecifications.fuelTypesIn(List.of(FuelType.ESSENCE))
+        );
 
         List<VehicleListing> results = repository.findAll(spec);
 
@@ -116,7 +117,7 @@ class VehicleSpecificationsTest {
         repository.save(buildListing("Nantes", FuelType.ELECTRIQUE, 1600, 15000));
 
         List<VehicleListing> results = repository.findAll(
-            Specification.where(VehicleSpecifications.cityContains("nantes"))
+            VehicleSpecifications.cityContains("nantes")
                 .and(VehicleSpecifications.fuelTypesIn(List.of(FuelType.HYBRIDE, FuelType.ELECTRIQUE)))
         );
 
@@ -130,7 +131,7 @@ class VehicleSpecificationsTest {
         repository.save(buildListing("Nantes", FuelType.ESSENCE, 1600, 15000));
 
         List<VehicleListing> results = repository.findAll(
-            Specification.where(VehicleSpecifications.cityContains("nantes"))
+            VehicleSpecifications.cityContains("nantes")
                 .and(VehicleSpecifications.fuelTypesIn(List.of()))
         );
 
@@ -145,7 +146,7 @@ class VehicleSpecificationsTest {
         repository.save(carXport);
 
         List<VehicleListing> results = repository.findAll(
-            Specification.where(VehicleSpecifications.cityContains("nantes"))
+            VehicleSpecifications.cityContains("nantes")
                 .and(VehicleSpecifications.sourceEquals("CarXExport"))
         );
 
