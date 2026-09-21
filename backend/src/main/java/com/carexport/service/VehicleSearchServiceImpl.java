@@ -56,8 +56,8 @@ public class VehicleSearchServiceImpl implements VehicleSearchService {
         // The last two specifications enforce the Algerian import
         // eligibility rules: fuel type must not be DIESEL, and the vehicle
         // must not be older than the eligibility cutoff (2 years 10 months).
-        Specification<VehicleListing> spec = Specification
-            .where(VehicleSpecifications.brandEquals(request.getBrand()))
+        Specification<VehicleListing> spec = Specification.<VehicleListing>unrestricted()
+            .and(VehicleSpecifications.brandEquals(request.getBrand()))
             .and(VehicleSpecifications.modelEquals(request.getModel()))
             .and(VehicleSpecifications.priceAtMost(maxPrice))
             .and(VehicleSpecifications.priceKnown())
