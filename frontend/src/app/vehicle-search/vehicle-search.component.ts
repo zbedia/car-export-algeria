@@ -2,6 +2,7 @@ import { Component, ElementRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VehicleService, VehicleSearchFilters } from '../services/vehicle.service';
+import { FavoritesService } from '../services/favorites.service';
 import { ShippingService } from '../services/shipping.service';
 import { ShippingSelectionService } from '../services/shipping-selection.service';
 import { WhatsAppService } from '../services/whatsapp.service';
@@ -238,6 +239,7 @@ editingShipping = false;
     public shippingSelection: ShippingSelectionService,
     private whatsapp: WhatsAppService,
     private translationService: TranslationService,
+    public favoritesService: FavoritesService,
     private el: ElementRef
   ) {
     this.loadRouteShipping();
@@ -533,6 +535,41 @@ editingShipping = false;
   // the shown amount, plus the reason explaining which tier it belongs to.
   customsDiscountTooltip(vehicle: VehicleSearchResult): string {
     return `${this.translationService.t('search.customsDiscount')} -${vehicle.customsDiscountPercentage}%. ${this.customsDiscountReasonText(vehicle)}`;
+  }
+
+  // --- Favorites ---
+  favoritesOpen = false;
+
+  // Whether the favorites bar was revealed by the user in this session
+  // (a heart was tapped). False at startup so the bar never pops up on
+  // its own.
+  favoritesBarOpen = false;
+
+  isFavorite(vehicle: VehicleSearchResult): boolean {
+    return this.favoritesService.isFavorite(vehicle.id);
+  }
+
+  toggleFavorite(vehicle: VehicleSearchResult): void {
+    this.favoritesService.toggle(vehicle);
+    this.favoritesBarOpen = true;
+  }
+
+  removeFavorite(id: number): void {
+    this.favoritesService.remove(id);
+  }
+
+  clearFavorites(): void {
+    this.favoritesService.clear();
+    this.favoritesBarOpen = false;
+    this.favoritesOpen = false;
+  }
+
+  openFavorites(): void {
+    this.favoritesOpen = true;
+  }
+
+  closeFavorites(): void {
+    this.favoritesOpen = false;
   }
 
   // --- Cost breakdown on each card ---

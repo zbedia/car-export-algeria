@@ -269,4 +269,45 @@ describe('VehicleSearchComponent', () => {
 
     expect(component.bestCompareIndex).toBe(0); // 10000+1100+1000 < 9000+2200+1000
   });
+
+  it('toggles a vehicle in and out of the favorites list', () => {
+    component.toggleFavorite(listing(1));
+    expect(component.isFavorite(listing(1))).toBeTrue();
+
+    component.toggleFavorite(listing(1));
+    expect(component.isFavorite(listing(1))).toBeFalse();
+  });
+
+  it('only reveals the favorites bar after a heart is tapped in this session', () => {
+    expect(component.favoritesBarOpen).toBeFalse();
+
+    component.toggleFavorite(listing(1));
+    expect(component.favoritesBarOpen).toBeTrue();
+
+    component.clearFavorites();
+    expect(component.favoritesBarOpen).toBeFalse();
+  });
+
+  it('removes a favorite and clears the whole list', () => {
+    component.toggleFavorite(listing(1));
+    component.toggleFavorite(listing(2));
+
+    component.removeFavorite(1);
+    expect(component.isFavorite(listing(1))).toBeFalse();
+    expect(component.favoritesService.count).toBe(1);
+
+    component.clearFavorites();
+    expect(component.favoritesService.count).toBe(0);
+    expect(component.favoritesOpen).toBeFalse();
+    expect(component.favoritesBarOpen).toBeFalse();
+  });
+
+  it('opens and closes the favorites panel', () => {
+    component.favoritesOpen = false;
+    component.openFavorites();
+    expect(component.favoritesOpen).toBeTrue();
+
+    component.closeFavorites();
+    expect(component.favoritesOpen).toBeFalse();
+  });
 });

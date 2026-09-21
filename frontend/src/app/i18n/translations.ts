@@ -112,7 +112,16 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'compare.source': 'Source',
     'compare.price': 'Price',
     'compare.discount': 'Customs discount',
-    'compare.best': 'Best landed price'
+    'compare.best': 'Best landed price',
+
+    'favorites.title': 'Favorites',
+    'favorites.subtitle': 'Vehicles you saved with the heart.',
+    'favorites.add': 'Add to favorites',
+    'favorites.remove': 'Remove from favorites',
+    'favorites.open': 'Open favorites',
+    'favorites.clear': 'Clear',
+    'favorites.close': 'Close',
+    'favorites.empty': 'No favorites yet. Tap the heart on a listing to save it.'
   },
 
   fr: {
@@ -227,7 +236,16 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'compare.source': 'Source',
     'compare.price': 'Prix',
     'compare.discount': 'Réduction douanière',
-    'compare.best': 'Meilleur prix rendu'
+    'compare.best': 'Meilleur prix rendu',
+
+    'favorites.title': 'Favoris',
+    'favorites.subtitle': 'Véhicules sauvegardés grâce au cœur.',
+    'favorites.add': 'Ajouter aux favoris',
+    'favorites.remove': 'Retirer des favoris',
+    'favorites.open': 'Ouvrir les favoris',
+    'favorites.clear': 'Vider',
+    'favorites.close': 'Fermer',
+    'favorites.empty': "Aucun favori pour l'instant. Touchez le cœur d'une annonce pour l'enregistrer."
   },
 
   ar: {
@@ -339,6 +357,15 @@ export const TRANSLATIONS: Record<Lang, Dictionary> = {
     'compare.source': 'المصدر',
     'compare.price': 'السعر',
     'compare.discount': 'التخفيض الجمركي',
-    'compare.best': 'أفضل سعر نهائي'
+    'compare.best': 'أفضل سعر نهائي',
+
+    'favorites.title': 'المفضلة',
+    'favorites.subtitle': 'السيارات التي حفظتها بالقلب.',
+    'favorites.add': 'إضافة إلى المفضلة',
+    'favorites.remove': 'إزالة من المفضلة',
+    'favorites.open': 'فتح المفضلة',
+    'favorites.clear': 'مسح',
+    'favorites.close': 'إغلاق',
+    'favorites.empty': 'لا توجد مفضلة بعد. المس القلب في الإعلان لحفظه.'
   }
 };

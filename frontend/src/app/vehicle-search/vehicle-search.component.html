@@ -225,6 +225,20 @@
     </button>
   </div>
 
+  <div *ngIf="favoritesBarOpen && favoritesService.count > 0" class="compare-bar favorites-bar">
+    <span class="compare-bar-label">
+      <span aria-hidden="true">❤</span>
+      {{ 'favorites.title' | translate }}
+      <span class="compare-bar-count">{{ favoritesService.count }}</span>
+    </span>
+    <button type="button" class="compare-bar-open" (click)="openFavorites()">
+      {{ 'favorites.open' | translate }}
+    </button>
+    <button type="button" class="compare-bar-clear" (click)="clearFavorites()">
+      {{ 'favorites.clear' | translate }}
+    </button>
+  </div>
+
   <div *ngIf="hasSearched && !loading && groupedResults.length === 0" class="no-results">
     {{ 'search.noResults' | translate }}
   </div>
@@ -236,13 +250,38 @@
     </p>
     <div class="results-grid">
       <div class="vehicle-card" *ngFor="let v of group.vehicles" [class.best-price]="v.bestPrice">
-        <span class="eligibility-badge">
-          <span aria-hidden="true">✔</span>
-          <ng-container *ngIf="v.ageMonths !== null; else conformsLaw">
-            {{ 'eligibility.eligible' | translate }} — {{ formatAge(v.ageMonths) }}
-          </ng-container>
-          <ng-template #conformsLaw>{{ 'eligibility.conformsLaw' | translate }}</ng-template>
-        </span>
+        <div class="card-topbar">
+          <button
+            type="button"
+            class="favorite-toggle"
+            [class.active]="isFavorite(v)"
+            (click)="toggleFavorite(v)"
+            [attr.aria-pressed]="isFavorite(v)"
+            [attr.title]="(isFavorite(v) ? 'favorites.remove' : 'favorites.add') | translate"
+            [attr.aria-label]="(isFavorite(v) ? 'favorites.remove' : 'favorites.add') | translate"
+          >
+            <svg
+              [attr.fill]="isFavorite(v) ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
+          </button>
+          <span class="eligibility-badge">
+            <span aria-hidden="true">✔</span>
+            <ng-container *ngIf="v.ageMonths !== null; else conformsLaw">
+              {{ 'eligibility.eligible' | translate }} — {{ formatAge(v.ageMonths) }}
+            </ng-container>
+            <ng-template #conformsLaw>{{ 'eligibility.conformsLaw' | translate }}</ng-template>
+          </span>
+        </div>
         <span *ngIf="v.bestPrice" class="badge">{{ 'search.bestPrice' | translate }}</span>
         <ng-container *ngIf="v.imageUrl">
           <img
@@ -461,6 +500,77 @@
           {{ 'compare.clear' | translate }}
         </button>
         <button type="button" class="compare-bar-open" (click)="closeCompare()">{{ 'compare.close' | translate }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="favoritesOpen"
+    class="compare-overlay"
+    (click)="closeFavorites()"
+  >
+    <div class="compare-panel favorites-panel" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+      <div class="compare-panel-header">
+        <div>
+          <h3 class="compare-panel-title">{{ 'favorites.title' | translate }}</h3>
+          <p class="compare-panel-subtitle">{{ 'favorites.subtitle' | translate }}</p>
+        </div>
+        <button type="button" class="compare-close" (click)="closeFavorites()" [attr.aria-label]="'favorites.close' | translate">
+          ✕
+        </button>
+      </div>
+
+      <div class="favorites-grid" *ngIf="favoritesService.count > 0">
+        <div class="favorite-card" *ngFor="let v of favoritesService.list">
+          <ng-container *ngIf="v.imageUrl">
+            <img
+              *ngIf="!isImageBroken(v.id)"
+              [src]="v.imageUrl"
+              [alt]="v.brand + ' ' + v.model"
+              [attr.data-vehicle-id]="v.id"
+              class="favorite-image"
+              loading="lazy"
+              (error)="onImageError($event)"
+            />
+            <div *ngIf="isImageBroken(v.id)" class="favorite-image placeholder" aria-hidden="true">🚗</div>
+          </ng-container>
+          <div class="favorite-body">
+            <p class="favorite-name">{{ v.brand }} {{ v.model }}</p>
+            <p class="favorite-meta">
+              {{ v.year }} · {{ formatMileage(v.mileageKm) }} km<span *ngIf="v.garageCity"> · {{ v.garageCity }}</span>
+            </p>
+            <p class="favorite-price">{{ formatPrice(v.price, v.currency) }}</p>
+            <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
+          </div>
+          <div class="favorite-actions">
+            <a [href]="v.externalUrl" target="_blank" rel="noopener" (click)="consultVehicle(v)">{{
+              'search.viewListing' | translate
+            }}</a>
+            <button
+              type="button"
+              class="favorite-toggle active"
+              [attr.title]="'favorites.remove' | translate"
+              [attr.aria-label]="'favorites.remove' | translate"
+              (click)="removeFavorite(v.id)"
+            >
+              <svg fill="currentColor" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="favoritesService.count === 0" class="favorites-empty">
+        {{ 'favorites.empty' | translate }}
+      </div>
+
+      <div class="compare-panel-footer">
+        <button type="button" class="compare-bar-open" (click)="closeFavorites()">{{ 'favorites.close' | translate }}</button>
       </div>
     </div>
   </div>
