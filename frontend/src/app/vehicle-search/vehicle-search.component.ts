@@ -89,6 +89,9 @@ export class VehicleSearchComponent {
   brandDropdownOpen = false;
   modelDropdownOpen = false;
   advancedOpen = false;
+  // Mobile bottom sheet: on small screens the search form slides up from a
+  // fixed button instead of taking over the page.
+  searchSheetOpen = false;
   private brokenBrandLogos = new Set<string>();
 
   // Summary strip: one listing counts once, regardless of how models are
@@ -272,6 +275,9 @@ editingShipping = false;
     // is disabled — guard against out-of-order parallel searches.
     if (this.loading) return;
 
+    // The mobile bottom sheet hands over to the results once a search runs.
+    this.searchSheetOpen = false;
+
     // Drop shipping state from any previous search: stale estimates and
     // in-flight requests would otherwise accumulate forever and leak
     // across unrelated result sets. The route freight itself is shared
@@ -328,6 +334,30 @@ editingShipping = false;
     this.fuelCounts = { ESSENCE: 0, HYBRIDE: 0, ELECTRIQUE: 0 };
 
     this.brokenImageIds.clear();
+  }
+
+  // --- Mobile search bottom sheet ---
+  openSearchSheet(): void {
+    this.searchSheetOpen = true;
+  }
+
+  closeSearchSheet(): void {
+    this.searchSheetOpen = false;
+  }
+
+  // Number of filters currently set (only non-badge form fields + badge state
+  // are counted) — displayed as a badge on the mobile search button.
+  get activeFilterCount(): number {
+    let count = 0;
+    if (this.brand) count++;
+    if (this.model) count++;
+    if (this.maxPrice !== null) count++;
+    if (this.maxMileageKm !== null) count++;
+    if (this.garageCity) count++;
+    if (this.fuelType) count++;
+    if (this.quickFuelTypes) count++;
+    if (this.quickSource) count++;
+    return count;
   }
 
   // --- Quick-search badges ---

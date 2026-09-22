@@ -8,7 +8,22 @@
 </section>
 
 <div class="search-container">
-  <form (ngSubmit)="onSearch()" class="search-form">
+  <div class="search-sheet" [class.open]="searchSheetOpen">
+    <div class="search-sheet-scrim" (click)="closeSearchSheet()"></div>
+    <div class="search-sheet-panel" [attr.role]="searchSheetOpen ? 'dialog' : null" [attr.aria-modal]="searchSheetOpen ? 'true' : null">
+      <div class="search-sheet-handle" aria-hidden="true"></div>
+      <header class="search-sheet-header">
+        <h2 class="search-sheet-title">{{ 'search.sheetTitle' | translate }}</h2>
+        <button
+          type="button"
+          class="search-sheet-close"
+          (click)="closeSearchSheet()"
+          [attr.aria-label]="'search.sheetClose' | translate"
+        >
+          ✕
+        </button>
+      </header>
+      <form (ngSubmit)="onSearch()" class="search-form">
     <div class="search-pill">
       <!-- Filtre : Marque -->
       <div class="pill-segment">
@@ -172,7 +187,24 @@
         </div>
       </div>
     </div>
-  </form>
+    </form>
+  </div>
+</div>
+
+<button
+  type="button"
+  class="mobile-search-fab"
+  (click)="openSearchSheet()"
+  [attr.aria-label]="'search.sheetOpen' | translate"
+>
+  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4v4m0 0v4m0-4h4m8 0a8 8 0 11-16 0 8 8 0 0116 0z" />
+  </svg>
+  <span class="mobile-search-fab-label">{{ 'search.sheetButton' | translate }}</span>
+  <span *ngIf="activeFilterCount > 0" class="mobile-search-fab-badge" [attr.title]="'search.filtersActive' | translate">
+    {{ activeFilterCount }}
+  </span>
+</button>
 
   <div class="quick-badges" role="group" [attr.aria-label]="'search.quickBadgesLabel' | translate">
     <button

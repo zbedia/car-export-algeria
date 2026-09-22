@@ -1195,3 +1195,178 @@
 .compare-panel-footer .compare-bar-open {
   margin-left: 0;
 }
+
+/* --- Mobile search bottom sheet --- */
+
+/* Desktop layout: the sheet wrapper is a plain block that keeps the search
+   form exactly where it always was; every sheet-only element stays hidden. */
+.search-sheet {
+  position: static;
+}
+
+.search-sheet-scrim,
+.search-sheet-handle,
+.search-sheet-header,
+.mobile-search-fab {
+  display: none;
+}
+
+/* Mobile (below the 900px desktop breakpoint): the search form no longer
+   occupies the page — it lives in a fixed bottom sheet revealed by a fixed
+   FAB button. */
+@media (max-width: 899px) {
+  .search-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: 210;
+    visibility: hidden;
+    pointer-events: none;
+    transition: visibility 0s linear 0.3s;
+  }
+
+  .search-sheet.open {
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  .search-sheet-scrim {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    opacity: 0;
+    transition: opacity 0.28s ease;
+  }
+
+  .search-sheet.open .search-sheet-scrim {
+    opacity: 1;
+  }
+
+  .search-sheet-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 88vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 16px 18px;
+    background: #ffffff;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    transform: translateY(105%);
+    transition: transform 0.36s cubic-bezier(0.32, 0.72, 0.22, 1);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .search-sheet.open .search-sheet-panel {
+    transform: translateY(0);
+  }
+
+  .search-sheet-handle {
+    display: block;
+    width: 44px;
+    height: 5px;
+    margin: 2px auto 10px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    flex-shrink: 0;
+  }
+
+  .search-sheet-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .search-sheet-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .search-sheet-close {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.95rem;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+
+  .search-sheet-close:active {
+    background: #e2e8f0;
+  }
+
+  /* Fixed search button pinned to the bottom edge of the viewport. */
+  .mobile-search-fab {
+    position: fixed;
+    left: 50%;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    z-index: 205;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 22px;
+    border: none;
+    border-radius: 999px;
+    background: #10b981;
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 12px 24px -8px rgba(16, 185, 129, 0.6);
+    transition: background 0.15s, transform 0.15s;
+  }
+
+  .mobile-search-fab svg {
+    width: 19px;
+    height: 19px;
+    flex-shrink: 0;
+  }
+
+  .mobile-search-fab:active {
+    transform: translateX(-50%) scale(0.96);
+    background: #059669;
+  }
+
+  .mobile-search-fab-label {
+    white-space: nowrap;
+  }
+
+  .mobile-search-fab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    margin-left: 2px;
+    border-radius: 999px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    box-shadow: 0 0 0 2px #ffffff;
+  }
+}
+
+@media (max-width: 899px) and (prefers-reduced-motion: reduce) {
+  .search-sheet-scrim,
+  .search-sheet-panel,
+  .mobile-search-fab {
+    transition: none;
+  }
+}

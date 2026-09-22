@@ -310,4 +310,35 @@ describe('VehicleSearchComponent', () => {
     component.closeFavorites();
     expect(component.favoritesOpen).toBeFalse();
   });
+
+  it('opens and closes the mobile search bottom sheet', () => {
+    expect(component.searchSheetOpen).toBeFalse();
+
+    component.openSearchSheet();
+    expect(component.searchSheetOpen).toBeTrue();
+
+    component.closeSearchSheet();
+    expect(component.searchSheetOpen).toBeFalse();
+  });
+
+  it('closes the mobile sheet when a search runs', () => {
+    component.openSearchSheet();
+    expect(component.searchSheetOpen).toBeTrue();
+
+    searchSpy.and.returnValue(of([]));
+    component.onSearch();
+
+    expect(component.searchSheetOpen).toBeFalse();
+  });
+
+  it('counts the active filters shown on the mobile button', () => {
+    expect(component.activeFilterCount).toBe(0);
+
+    component.brand = 'Peugeot';
+    component.maxPrice = 15000;
+    expect(component.activeFilterCount).toBe(2);
+
+    component.clearFilters();
+    expect(component.activeFilterCount).toBe(0);
+  });
 });
