@@ -370,7 +370,24 @@
           <span class="total-label">{{ 'cost.totalDelivered' | translate }}</span>
           <span class="total-value">{{ formatPrice(total, 'EUR') }}</span>
         </div>
-        <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
+        <p class="source">
+          <span
+            *ngIf="sourceFlagEmoji(v.source)"
+            class="source-flag"
+            role="img"
+            [attr.aria-label]="sourceCountryAccessibleLabel(v.source)"
+          >{{ sourceFlagEmoji(v.source) }}</span>
+          {{ 'search.source' | translate }} {{ v.source }}
+          <span
+            class="source-status"
+            [class.verified]="sourceVerified(v.source)"
+            [class.unverified]="!sourceVerified(v.source)"
+            [attr.aria-label]="(sourceVerified(v.source) ? 'search.verifiedBadge' : 'search.unverifiedBadge') | translate"
+          >
+            <span aria-hidden="true">{{ sourceVerified(v.source) ? '✓' : '!' }}</span>
+            {{ (sourceVerified(v.source) ? 'search.verifiedBadge' : 'search.unverifiedBadge') | translate }}
+          </span>
+        </p>
         <div class="card-actions">
           <a [href]="v.externalUrl" target="_blank" rel="noopener" (click)="consultVehicle(v)">{{
             'search.viewListing' | translate
@@ -483,6 +500,12 @@
             <tr>
               <th class="compare-attr" scope="row">{{ 'compare.source' | translate }}</th>
               <td *ngFor="let v of selectedVehicles; index as i" [class.best-total]="i === bestCompareIndex">
+                <span
+                  *ngIf="sourceFlagEmoji(v.source)"
+                  class="source-flag"
+                  role="img"
+                  [attr.aria-label]="sourceCountryAccessibleLabel(v.source)"
+                >{{ sourceFlagEmoji(v.source) }}</span>
                 {{ v.source }}
               </td>
             </tr>
@@ -572,7 +595,24 @@
               {{ v.year }} · {{ formatMileage(v.mileageKm) }} km<span *ngIf="v.garageCity"> · {{ v.garageCity }}</span>
             </p>
             <p class="favorite-price">{{ formatPrice(v.price, v.currency) }}</p>
-            <p class="source">{{ 'search.source' | translate }} {{ v.source }}</p>
+            <p class="source">
+              <span
+                *ngIf="sourceFlagEmoji(v.source)"
+                class="source-flag"
+                role="img"
+                [attr.aria-label]="sourceCountryAccessibleLabel(v.source)"
+              >{{ sourceFlagEmoji(v.source) }}</span>
+              {{ 'search.source' | translate }} {{ v.source }}
+              <span
+                class="source-status"
+                [class.verified]="sourceVerified(v.source)"
+                [class.unverified]="!sourceVerified(v.source)"
+                [attr.aria-label]="(sourceVerified(v.source) ? 'search.verifiedBadge' : 'search.unverifiedBadge') | translate"
+              >
+                <span aria-hidden="true">{{ sourceVerified(v.source) ? '✓' : '!' }}</span>
+                {{ (sourceVerified(v.source) ? 'search.verifiedBadge' : 'search.unverifiedBadge') | translate }}
+              </span>
+            </p>
           </div>
           <div class="favorite-actions">
             <a [href]="v.externalUrl" target="_blank" rel="noopener" (click)="consultVehicle(v)">{{

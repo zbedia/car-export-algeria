@@ -341,4 +341,20 @@ describe('VehicleSearchComponent', () => {
     component.clearFilters();
     expect(component.activeFilterCount).toBe(0);
   });
+
+  it('exposes a flag, country label and verified badge per known source', () => {
+    expect(component.sourceFlagEmoji('AutoExportMarseille')).toBe('🇫🇷');
+    expect(component.sourceCountryCode('AutoExportMarseille')).toBe('FR');
+    expect(component.sourceVerified('AutoExportMarseille')).toBeTrue();
+
+    expect(component.sourceFlagEmoji('CarXExport')).toBe('🇸🇪');
+    expect(component.sourceCountryCode('CarXExport')).toBe('SE');
+    expect(component.sourceVerified('CarXExport')).toBeTrue();
+  });
+
+  it('treats unknown sources as unverified with no flag', () => {
+    expect(component.sourceFlagEmoji('UnknownSource')).toBe('');
+    expect(component.sourceCountryCode('UnknownSource')).toBeNull();
+    expect(component.sourceVerified('UnknownSource')).toBeFalse();
+  });
 });

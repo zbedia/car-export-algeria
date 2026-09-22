@@ -13,6 +13,12 @@ import { FuelType, VehicleSearchResult } from '../models/vehicle-search-result.m
 import { ShippingEstimateResponse } from '../models/shipping.model';
 import { BRAND_LOGO_SLUGS, CAR_BRANDS } from '../data/car-brands';
 import { ALL_MODELS, CAR_MODELS_BY_BRAND } from '../data/car-models';
+import {
+  getSourceCountryCode,
+  getSourceCountryNameKey,
+  getSourceFlag,
+  isSourceVerified
+} from '../data/source-meta';
 
 interface VehicleGroup {
   brand: string;
@@ -622,6 +628,29 @@ editingShipping = false;
     const years = Math.floor(ageMonths / 12);
     const months = ageMonths % 12;
     return this.translationService.t('eligibility.age', { years, months });
+  }
+
+  // --- Source origin & verification ---
+  // The country of provenance and the verification status are static
+  // properties of each listing source (see data/source-meta.ts), rendered
+  // on every vehicle card and in the comparison table.
+
+  // Accessibility label for the flag emoji, e.g. "France".
+  sourceCountryAccessibleLabel(source: string): string {
+    const key = getSourceCountryNameKey(source);
+    return key ? this.translationService.t(key) : '';
+  }
+
+  sourceCountryCode(source: string): string | null {
+    return getSourceCountryCode(source);
+  }
+
+  sourceFlagEmoji(source: string): string {
+    return getSourceFlag(source);
+  }
+
+  sourceVerified(source: string): boolean {
+    return isSourceVerified(source);
   }
 
   openEditModal(): void {
